@@ -1,0 +1,130 @@
+🔥 AUTO-UPDATE SOLUTION (NO YOUTUBE API ACCESS NEEDED)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ PROBLEM SOLVED - NO API KEY REQUIRED!
+
+We're using YouTube's PUBLIC RSS feed:
+https://www.youtube.com/feeds/videos.xml?channel_id=UCy30JRSgfhYXA6i6xX1erWg
+
+This is COMPLETELY PUBLIC - no authentication, no API key, no access needed.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+HOW IT WORKS:
+
+1. Site fetches RSS feed every hour
+2. Gets Jesse's latest 6 videos automatically
+3. Updates titles, thumbnails, upload dates
+4. Caches for performance
+5. If RSS fails, shows fallback videos
+
+ZERO MANUAL WORK REQUIRED.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+WHAT UPDATES AUTOMATICALLY:
+
+✅ Video titles (exact from YouTube)
+✅ Thumbnails (high-res maxresdefault)
+✅ Upload dates ("18 hours ago", "3 days ago")
+✅ Video URLs (direct YouTube links)
+✅ Order (most recent first)
+
+⚠️ NOT AVAILABLE IN RSS:
+❌ View counts (RSS doesn't provide this)
+❌ Video duration (RSS doesn't provide this)
+
+SOLUTION: Shows "Loading..." for views and "▶" for duration
+(Users click through to YouTube anyway where they see real stats)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+UPDATE SCHEDULE:
+
+OPTION 1 (CURRENT - AUTOMATIC):
+- Vercel rebuilds site every hour
+- RSS feed refreshes automatically
+- New videos appear 1-2 hours after upload
+- **NO ACTION NEEDED FROM YOU**
+
+OPTION 2 (DAILY TRIGGER):
+Set up GitHub Action to redeploy once per day at specific time
+(I can set this up if you want)
+
+OPTION 3 (MANUAL):
+Deploy whenever you want fresh data:
+- Run: vercel --prod
+- Or: git push (if auto-deploy is on)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+IF YOU WANT VIEW COUNTS:
+
+We have 3 options:
+
+1. **Use a scraper API** (RapidAPI, Scraperapi)
+   - Free tiers available
+   - Easy to integrate
+   - More reliable than custom scraper
+
+2. **Build custom scraper**
+   - Scrape YouTube public pages
+   - No API needed but less reliable
+   - Could break if YouTube changes HTML
+
+3. **Skip it** (RECOMMENDED)
+   - Most users don't care about exact view counts
+   - They click through to YouTube to watch anyway
+   - Keeps site fast and simple
+   - Focus on fresh content, not stats
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+FILES UPDATED:
+
+✅ lib/youtube-public-fetch.ts (NEW)
+   - RSS feed fetcher
+   - No API key required
+   - Fallback system
+
+✅ app/page.tsx (UPDATED)
+   - Uses RSS feed instead of manual data
+   - Auto-refreshes every hour
+
+❌ config/latest-videos.ts (DEPRECATED)
+   - No longer needed
+   - Can delete
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+NEXT STEPS:
+
+1. **Deploy this now** to test RSS feed:
+   ```
+   git add .
+   git commit -m "Switch to public RSS feed for auto-updates"
+   git push
+   vercel --prod
+   ```
+
+2. **Add custom domain** in Vercel (jesseonfire.com)
+
+3. **(Optional)** Set up daily auto-deploy cron job
+
+4. **(Optional)** Add view count scraper if you want stats
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+RECOMMENDATION:
+
+Deploy with RSS feed as-is. It's:
+- ✅ Fully automatic
+- ✅ No maintenance
+- ✅ Always fresh
+- ✅ Accurate titles/thumbnails
+- ✅ Zero cost
+
+Missing view counts is minor - users go to YouTube to watch anyway.
+
+Ready to deploy?

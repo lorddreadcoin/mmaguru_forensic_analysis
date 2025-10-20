@@ -1,0 +1,50 @@
+Subject: 🔥 Jesse - DNS Setup for Your Site (5 Minutes)
+
+Jesse,
+
+BUILDAI here. Your site is live at https://jesseonfire.vercel.app but we need to connect your custom domain.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎯 WHAT I NEED FROM YOU
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Text me back with:
+1. **Your domain name** (jesseonfire.com, etc.)
+2. **Where you bought it** (GoDaddy, Namecheap, etc.)
+3. **Can you log into it?** (yes/no)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔧 QUICK SETUP (Once I know your registrar)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+You'll add these DNS records:
+```
+Type: A
+Name: @
+Value: 76.76.19.61
+
+Type: CNAME  
+Name: www
+Value: cname.vercel-dns.com
+```
+
+Takes 5-10 minutes. SSL certificate auto-installs. Zero downtime.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔥 THE BOTTOM LINE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Your 517K warriors deserve jesseonfire.com (not some Vercel subdomain).
+
+Send me your domain info. I'll give you exact steps for your registrar.
+
+The fortress is ready. Just need to point the domain.
+
+**LIVE SITE:** https://jesseonfire.vercel.app  
+**GITHUB:** https://github.com/lorddreadcoin/jesseonfire
+
+Let's get this done.
+
+- BUILDAI
+
+*"Digital sovereignty in 5 minutes. No excuses."*

@@ -1,0 +1,98 @@
+🔥 JESSEONFIRE.COM → VERCEL DNS SETUP (GoDaddy)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+STEP 1: ADD DOMAIN IN VERCEL
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Go to: https://vercel.com/dashboard
+2. Click on the "jesseonfire" project
+3. Click "Settings" → "Domains"
+4. Type in: jesseonfire.com
+5. Click "Add"
+6. Also add: www.jesseonfire.com
+7. Click "Add"
+
+Vercel will show "Invalid Configuration" - that's NORMAL. We fix it in Step 2.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+STEP 2: GODADDY DNS CONFIGURATION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Go to: https://dcc.godaddy.com/control/portfolio/jesseonfire.com/settings?subtab=dns
+   OR: GoDaddy Dashboard → My Products → jesseonfire.com → DNS
+
+2. Click "Manage DNS" or "DNS Management"
+
+3. REMOVE EXISTING RECORDS (if any):
+   - Delete any A records pointing to old servers
+   - Delete any CNAME records for @ or www (keep the "www" one if you want)
+
+4. ADD NEW A RECORD (for root domain):
+   - Click "ADD" button
+   - Type: A
+   - Name: @
+   - Value: 76.76.19.61
+   - TTL: 600 (or Default/Automatic)
+   - Click "Save"
+
+5. ADD NEW CNAME RECORD (for www):
+   - Click "ADD" button
+   - Type: CNAME
+   - Name: www
+   - Value: cname.vercel-dns.com
+   - TTL: 600 (or Default)
+   - Click "Save"
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+STEP 3: VERIFY IN VERCEL
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Go back to Vercel → Settings → Domains
+2. You should see jesseonfire.com and www.jesseonfire.com
+3. Wait 5-10 minutes for DNS propagation
+4. Vercel will automatically provision SSL certificates
+5. Status will change from "Invalid Configuration" to "Valid Configuration"
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+STEP 4: FORCE HTTPS (Recommended)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+In Vercel:
+1. Settings → Domains
+2. Toggle "Force HTTPS" to ON for both domains
+3. This ensures all traffic uses https:// automatically
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+VERIFICATION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+After 5-10 minutes, test these URLs:
+- http://jesseonfire.com (should redirect to https)
+- https://jesseonfire.com (should load your site)
+- https://www.jesseonfire.com (should load your site)
+
+Check DNS propagation: https://whatsmydns.net
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+QUICK REFERENCE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Domain: jesseonfire.com
+Registrar: GoDaddy
+Records to add:
+  - A record: @ → 76.76.19.61
+  - CNAME: www → cname.vercel-dns.com
+
+Propagation: 5-30 minutes (usually 5-10)
+SSL: Auto-provisioned by Vercel
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+IF SOMETHING BREAKS:
+- DNS not propagating? Wait 10-15 minutes
+- SSL errors? Vercel auto-fixes within 5 minutes
+- Still broken? Text me the error message
+
+Let's get jesseonfire.com LIVE.
+
+- BUILDAI
