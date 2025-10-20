@@ -13,65 +13,7 @@ import SubscribeCTA from '@/components/SubscribeCTA'
 import InlineCTA from '@/components/InlineCTA'
 import UrgentCTA from '@/components/UrgentCTA'
 import WarriorPoll from '@/components/WarriorPoll'
-import { fetchLatestVideosFromRSS } from '@/lib/youtube-public-fetch'
-
-// Error Boundary Component
-class ErrorBoundary extends React.Component<
-  { children: React.ReactNode; fallback?: React.ReactNode },
-  { hasError: boolean; error?: Error }
-> {
-  constructor(props: any) {
-    super(props)
-    this.state = { hasError: false }
-  }
-
-  static getDerivedStateFromError(error: Error) {
-    return { hasError: true, error }
-  }
-
-  componentDidCatch(error: Error, errorInfo: any) {
-    console.error('Error caught by boundary:', error, errorInfo)
-  }
-
-  render() {
-    if (this.state.hasError) {
-      return this.props.fallback || (
-        <div className="p-8 text-center">
-          <h2 className="text-xl font-bold text-red-500 mb-4">Something went wrong</h2>
-          <button
-            onClick={() => this.setState({ hasError: false })}
-            className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
-          >
-            Try Again
-          </button>
-        </div>
-      )
-    }
-
-    return this.props.children
-  }
-}
-
-// Loading Component
-function VideoLoadingSkeleton() {
-  return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
-      {[...Array(6)].map((_, i) => (
-        <div key={i} className="animate-pulse">
-          <div className="bg-gray-800 rounded-lg h-48 mb-4"></div>
-          <div className="h-4 bg-gray-800 rounded mb-2"></div>
-          <div className="h-3 bg-gray-800 rounded w-3/4"></div>
-        </div>
-      ))}
-    </div>
-  )
-}
-
-// Import getFallbackVideos directly
-async function getFallbackVideos() {
-  const module = await import('@/lib/youtube-public-fetch')
-  return (module as any).getFallbackVideos()
-}
+import { fetchLatestVideosFromRSS, getFallbackVideos } from '@/lib/youtube-public-fetch'
 
 // Fetch latest videos with error handling
 async function getLatestVideos() {
@@ -81,7 +23,7 @@ async function getLatestVideos() {
   } catch (error) {
     console.error('Failed to fetch videos:', error)
     // Return fallback videos instead of throwing
-    return await getFallbackVideos()
+    return getFallbackVideos()
   }
 }
 
@@ -97,16 +39,12 @@ export default async function Home() {
       {/* Warriors Sound Off Poll - Prime Engagement Zone */}
       <section id="warrior-poll" className="relative py-16 bg-gradient-to-b from-black to-charcoal">
         <div className="container-custom max-w-4xl">
-          <ErrorBoundary>
-            <WarriorPoll />
-          </ErrorBoundary>
+          <WarriorPoll />
         </div>
       </section>
 
       {/* Video Carousel Section - Latest Fire Content */}
-      <ErrorBoundary fallback={<VideoLoadingSkeleton />}>
-        <VideoCarousel videos={videos} />
-      </ErrorBoundary>
+      <VideoCarousel videos={videos} />
 
       {/* Subscribe CTA - After Videos */}
       <section className="bg-dark-surface">
@@ -125,16 +63,12 @@ export default async function Home() {
 
       {/* Live Streams Section */}
       <section id="live" className="bg-dark-surface">
-        <ErrorBoundary>
-          <LiveStreams />
-        </ErrorBoundary>
+        <LiveStreams />
       </section>
 
       {/* Most Viral Videos Section */}
       <section id="viral" className="bg-dark-surface">
-        <ErrorBoundary>
-          <MostViral />
-        </ErrorBoundary>
+        <MostViral />
       </section>
 
       {/* Sponsors Section - Dark Surface Background */}
