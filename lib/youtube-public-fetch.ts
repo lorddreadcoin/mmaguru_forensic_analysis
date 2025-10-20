@@ -40,29 +40,37 @@ export async function fetchLatestVideosFromRSS(limit = 6): Promise<VideoData[]> 
   const rssUrl = `https://www.youtube.com/feeds/videos.xml?channel_id=${channelId}`;
 
   try {
+    console.log('Fetching RSS feed from:', rssUrl);
     const response = await fetch(rssUrl, {
-      next: { revalidate: 43200 } // Cache for 12 hours (43200 seconds)
+      next: { revalidate: 0 } // No cache - fetch fresh every time
     });
 
+    console.log('RSS Response status:', response.status);
+
     if (!response.ok) {
-      throw new Error(`RSS fetch failed: ${response.status}`);
+      throw new Error(`RSS fetch failed: ${response.status} ${response.statusText}`);
     }
 
     const xmlText = await response.text();
-    
+    console.log('RSS XML length:', xmlText.length);
+
     // Parse RSS feed (XML)
     const videos: VideoData[] = [];
     const entryRegex = /<entry>[\s\S]*?<\/entry>/g;
     const entries = xmlText.match(entryRegex) || [];
 
+    console.log('Found RSS entries:', entries.length);
+
     for (let i = 0; i < Math.min(entries.length, limit); i++) {
       const entry = entries[i];
-      
+
       // Extract video data from XML
       const videoId = entry.match(/<yt:videoId>(.*?)<\/yt:videoId>/)?.[1];
       const title = entry.match(/<title>(.*?)<\/title>/)?.[1];
       const publishedAt = entry.match(/<published>(.*?)<\/published>/)?.[1];
-      
+
+      console.log(`Video ${i + 1}:`, { videoId, title: title?.substring(0, 50) });
+
       if (!videoId || !title) continue;
 
       videos.push({
@@ -78,10 +86,12 @@ export async function fetchLatestVideosFromRSS(limit = 6): Promise<VideoData[]> 
       });
     }
 
+    console.log('Successfully parsed videos:', videos.length);
     return videos;
 
   } catch (error) {
-    console.error('Error fetching RSS feed:', error);
+    console.error('RSS feed fetch failed:', error);
+    console.error('Falling back to hardcoded videos');
     return getFallbackVideos(); // Return fallback if RSS fails
   }
 }
