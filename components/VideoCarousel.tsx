@@ -131,8 +131,8 @@ export default function VideoCarousel({ videos }: VideoCarouselProps) {
             </div>
           </motion.div>
 
-          {/* Grid of Other Videos - 4 Videos Centered */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-6xl mx-auto">
+          {/* Grid of Other Videos - 5 Videos Centered */}
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-6 max-w-7xl mx-auto">
             {gridVideos.map((video, index) => (
               <motion.div
                 key={video.id}
