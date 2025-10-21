@@ -109,7 +109,7 @@ export default function Hero() {
               textTransform: 'uppercase',
               // Exact YouTube thumbnail style - medieval/blackletter aesthetic
               color: '#FFEB00',
-              WebkitTextStroke: '14px #000000',
+              WebkitTextStroke: '18px #000000',
               paintOrder: 'stroke fill',
               textShadow: '6px 6px 0px rgba(0,0,0,0.8)',
               WebkitFontSmoothing: 'antialiased',
