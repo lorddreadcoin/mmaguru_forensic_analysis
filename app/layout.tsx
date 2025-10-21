@@ -56,7 +56,7 @@ export const metadata: Metadata = {
     siteName: 'Jesse ON FIRE',
     images: [
       {
-        url: '/og-image.jpg',
+        url: 'https://jesseonfire.com/og-image.jpg',
         width: 1200,
         height: 630,
         alt: 'Jesse ON FIRE',
@@ -68,7 +68,7 @@ export const metadata: Metadata = {
     title: 'Jesse ON FIRE | Uncensored Truth & Commentary',
     description: 'Political analyst. MMA lifer. Black Belt on the mat & the mic.',
     creator: '@realjesseonfire',
-    images: ['/og-image.jpg'],
+    images: ['https://jesseonfire.com/og-image.jpg'],
   },
   robots: {
     index: true,
