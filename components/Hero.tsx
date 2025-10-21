@@ -77,7 +77,7 @@ export default function Hero() {
       <div className="relative z-10 container-custom text-center px-4">
         {/* Jesse ON FIRE Logo */}
         <motion.div
-          className="flex justify-center mb-8"
+          className="flex justify-center mb-4"
           initial={{ opacity: 0, y: -50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, type: "spring" }}
@@ -85,7 +85,7 @@ export default function Hero() {
           <img 
             src="/jof-logo.png" 
             alt="Jesse ON FIRE Logo"
-            className="w-48 h-48 md:w-64 md:h-64 lg:w-80 lg:h-80 object-contain"
+            className="w-40 h-40 md:w-52 md:h-52 lg:w-64 lg:h-64 object-contain"
             style={{
               filter: 'drop-shadow(0 0 30px rgba(255,69,0,0.6))'
             }}
@@ -94,7 +94,7 @@ export default function Hero() {
 
         {/* Main Title with fire animation */}
         <motion.h1 
-          className="text-[clamp(4rem,12vw,10rem)] font-council leading-none mb-6 relative"
+          className="text-[clamp(4rem,12vw,10rem)] font-council leading-none mb-3 relative"
           initial={{ opacity: 0, scale: 0.5 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5, type: "spring" }}
@@ -141,7 +141,7 @@ export default function Hero() {
 
         {/* Hero tagline - The GOAT */}
         <motion.p
-          className="text-[clamp(1.2rem,4vw,2rem)] font-council font-bold mb-4 text-gray-300"
+          className="text-[clamp(1.2rem,4vw,2rem)] font-council font-bold mb-2 text-gray-300"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.4 }}
@@ -151,7 +151,7 @@ export default function Hero() {
 
         {/* Tagline with pulsing effect */}
         <motion.div
-          className="relative text-[clamp(1.5rem,5vw,3rem)] font-council font-bold mb-8"
+          className="relative text-[clamp(1.5rem,5vw,3rem)] font-council font-bold mb-6"
           initial={{ opacity: 0 }}
           animate={{ 
             opacity: 1,
@@ -175,7 +175,7 @@ export default function Hero() {
 
         {/* Description */}
         <motion.p
-          className="text-[clamp(1rem,3vw,1.5rem)] text-gray-300 mb-12 max-w-3xl mx-auto"
+          className="text-[clamp(1rem,3vw,1.5rem)] text-gray-300 mb-8 max-w-3xl mx-auto"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
