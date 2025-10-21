@@ -86,11 +86,11 @@ export default function Hero() {
           <span 
             className="relative inline-block text-[clamp(4rem,15vw,12rem)]"
             style={{
-              fontFamily: "'Council', 'OT Council', 'Luckiest Guy', 'Alfa Slab One', sans-serif",
-              fontWeight: 400,
-              letterSpacing: '-0.01em',
+              fontFamily: "'Council', 'OT Council', 'Carnivalee Freakshow', 'Old English Text MT', serif",
+              fontWeight: 700,
+              letterSpacing: '-0.02em',
               textTransform: 'uppercase',
-              // Exact YouTube thumbnail style with OT Council
+              // Exact YouTube thumbnail style - medieval/blackletter aesthetic
               color: '#FFEB00',
               WebkitTextStroke: '7px #000000',
               paintOrder: 'stroke fill',
@@ -98,7 +98,7 @@ export default function Hero() {
               WebkitFontSmoothing: 'antialiased',
               MozOsxFontSmoothing: 'grayscale',
               backfaceVisibility: 'hidden',
-              transform: 'translateZ(0)',
+              transform: 'translateZ(0) scaleY(1.2)',
               willChange: 'transform'
             }}
           >
@@ -110,12 +110,12 @@ export default function Hero() {
             className="absolute inset-0 blur-xl opacity-60 pointer-events-none"
             aria-hidden="true"
             style={{
-              fontFamily: "'Council', 'OT Council', 'Luckiest Guy', 'Alfa Slab One', sans-serif",
-              fontWeight: 400,
-              letterSpacing: '-0.01em',
+              fontFamily: "'Council', 'OT Council', 'Carnivalee Freakshow', 'Old English Text MT', serif",
+              fontWeight: 700,
+              letterSpacing: '-0.02em',
               textTransform: 'uppercase',
               color: '#FFEB00',
-              transform: 'translateZ(0)'
+              transform: 'translateZ(0) scaleY(1.2)'
             }}
           >
             JESSE ON FIRE
