@@ -36,13 +36,11 @@ export function extractVideoId(url: string): string | null {
  * Channel ID: UCy30JRSgfhYXA6i6xX1erWg
  */
 export async function fetchLatestVideosFromRSS(limit = 6): Promise<VideoData[]> {
-  const channelId = 'UCy30JRSgfhYXA6i6xX1erWg';
+  // Jesse ON FIRE's actual channel ID from youtube.com/@RealJesseONFIRE
+  const channelId = 'UCL1ULuUKdktFDpe66_A3H2A';
   
-  // Use serverless function in production (Netlify), direct RSS in development
-  const isProduction = typeof window !== 'undefined' && window.location.hostname !== 'localhost';
-  const rssUrl = isProduction 
-    ? '/.netlify/functions/youtube-rss'
-    : `https://www.youtube.com/feeds/videos.xml?channel_id=${channelId}`;
+  // Always use serverless function to bypass CORS and blocking
+  const rssUrl = '/.netlify/functions/youtube-rss';
 
   try {
     console.log('Fetching RSS feed from:', rssUrl);
@@ -175,67 +173,69 @@ function decodeHTMLEntities(text: string): string {
  * Fallback videos if RSS fails - UPDATED WITH FRESH DATA
  */
 export function getFallbackVideos(): VideoData[] {
+  // TEMPORARY: Static fallback until RSS feed is working
+  // These are example videos matching Jesse's style but with placeholder data
   return [
     {
       id: 1,
-      title: "DO YOU KNOW WHAT THIS WOMAN JUST EXPOSED?? SEE ATTACHED VIDEO!! EVERYONE NEEDS TO SEE THIS!",
-      thumbnail: "https://i.ytimg.com/vi/LATEST_VIDEO_ID/maxresdefault.jpg",
-      views: "15K views",
+      title: "BREAKING: New Evidence EXPOSES Government Cover-Up - THIS CHANGES EVERYTHING!",
+      thumbnail: "https://i.ytimg.com/vi/DiiXCi--ryI/maxresdefault.jpg",
+      views: "127K views",
       duration: "28:35",
-      uploadDate: "2 hours ago",
-      url: "https://youtu.be/LATEST_VIDEO_ID",
+      uploadDate: "Just updated",
+      url: "https://www.youtube.com/@RealJesseONFIRE/videos",
       category: "BREAKING",
       isNew: true
     },
     {
       id: 2,
-      title: "BREAKING: New Evidence in Tyler Robinson Case CHANGES EVERYTHING!",
-      thumbnail: "https://i.ytimg.com/vi/NEW_VIDEO_2/maxresdefault.jpg",
-      views: "45K views",
-      duration: "31:22",
-      uploadDate: "8 hours ago",
-      url: "https://youtu.be/NEW_VIDEO_2",
-      category: "TRUE CRIME",
+      title: "Celebrity CAUGHT in Scandal - The Truth They Don't Want You to Know!",
+      thumbnail: "https://i.ytimg.com/vi/sFj-v4qu6xg/maxresdefault.jpg",
+      views: "89K views",
+      duration: "26:47",
+      uploadDate: "Recently",
+      url: "https://www.youtube.com/@RealJesseONFIRE/videos",
+      category: "EXPOSED",
       isNew: true
     },
     {
       id: 3,
-      title: "Trump's REVENGE Plan EXPOSED - They're PANICKING NOW!",
-      thumbnail: "https://i.ytimg.com/vi/NEW_VIDEO_3/maxresdefault.jpg",
-      views: "127K views",
-      duration: "25:18",
-      uploadDate: "1 day ago",
-      url: "https://youtu.be/NEW_VIDEO_3",
-      category: "POLITICS"
-    },
-    {
-      id: 4,
-      title: "FBI Whistleblower DROPS BOMBSHELL About January 6th!",
-      thumbnail: "https://i.ytimg.com/vi/NEW_VIDEO_4/maxresdefault.jpg",
-      views: "89K views",
-      duration: "29:44",
-      uploadDate: "2 days ago",
-      url: "https://youtu.be/NEW_VIDEO_4",
+      title: "FBI Insider Reveals SHOCKING Truth About Recent Events!",
+      thumbnail: "https://i.ytimg.com/vi/F5LI3PKL_Rk/maxresdefault.jpg",
+      views: "245K views",
+      duration: "31:22",
+      uploadDate: "This week",
+      url: "https://www.youtube.com/@RealJesseONFIRE/videos",
       category: "INVESTIGATION"
     },
     {
+      id: 4,
+      title: "Politicians PANICKING After This Video Leaked - MUST WATCH!",
+      thumbnail: "https://i.ytimg.com/vi/AloqDcz7hU4/maxresdefault.jpg",
+      views: "156K views",
+      duration: "29:44",
+      uploadDate: "This week",
+      url: "https://www.youtube.com/@RealJesseONFIRE/videos",
+      category: "POLITICS"
+    },
+    {
       id: 5,
-      title: "Hollywood Elite EXPOSED in NEW Diddy Tapes - THIS IS SICK!",
-      thumbnail: "https://i.ytimg.com/vi/NEW_VIDEO_5/maxresdefault.jpg",
-      views: "215K views",
+      title: "Hollywood Elite's Dark Secret EXPOSED - Viewer Discretion Advised!",
+      thumbnail: "https://i.ytimg.com/vi/vjZzvEh4VJY/maxresdefault.jpg",
+      views: "312K views",
       duration: "33:17",
-      uploadDate: "3 days ago",
-      url: "https://youtu.be/NEW_VIDEO_5",
-      category: "EXPOSED"
+      uploadDate: "This week",
+      url: "https://www.youtube.com/@RealJesseONFIRE/videos",
+      category: "HOLLYWOOD"
     },
     {
       id: 6,
-      title: "China's SECRET Plan for America LEAKED - Prepare NOW!",
-      thumbnail: "https://i.ytimg.com/vi/NEW_VIDEO_6/maxresdefault.jpg",
-      views: "156K views",
+      title: "Global Elite's Plan LEAKED - What Happens Next Will Shock You!",
+      thumbnail: "https://i.ytimg.com/vi/6q2CYqUPZ5c/maxresdefault.jpg",
+      views: "198K views",
       duration: "27:55",
-      uploadDate: "4 days ago",
-      url: "https://youtu.be/NEW_VIDEO_6",
+      uploadDate: "This week",
+      url: "https://www.youtube.com/@RealJesseONFIRE/videos",
       category: "WARNING"
     }
   ];
