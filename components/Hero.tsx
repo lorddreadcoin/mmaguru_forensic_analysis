@@ -75,6 +75,23 @@ export default function Hero() {
       
       {/* Main content */}
       <div className="relative z-10 container-custom text-center px-4">
+        {/* Jesse ON FIRE Logo */}
+        <motion.div
+          className="flex justify-center mb-8"
+          initial={{ opacity: 0, y: -50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, type: "spring" }}
+        >
+          <img 
+            src="/jof-logo.png" 
+            alt="Jesse ON FIRE Logo"
+            className="w-48 h-48 md:w-64 md:h-64 lg:w-80 lg:h-80 object-contain"
+            style={{
+              filter: 'drop-shadow(0 0 30px rgba(255,69,0,0.6))'
+            }}
+          />
+        </motion.div>
+
         {/* Main Title with fire animation */}
         <motion.h1 
           className="text-[clamp(4rem,12vw,10rem)] font-council leading-none mb-6 relative"
