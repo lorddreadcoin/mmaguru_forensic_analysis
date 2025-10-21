@@ -86,13 +86,13 @@ export default function Hero() {
           <span 
             className="relative inline-block text-[clamp(4rem,15vw,12rem)]"
             style={{
-              fontFamily: "'Impact', 'Anton', 'Bebas Neue', 'Arial Black', sans-serif",
-              fontWeight: 900,
-              letterSpacing: '-0.03em',
+              fontFamily: "'Council', 'OT Council', 'Luckiest Guy', 'Alfa Slab One', sans-serif",
+              fontWeight: 400,
+              letterSpacing: '-0.01em',
               textTransform: 'uppercase',
-              // Exact YouTube thumbnail style
+              // Exact YouTube thumbnail style with OT Council
               color: '#FFEB00',
-              WebkitTextStroke: '8px #000000',
+              WebkitTextStroke: '7px #000000',
               paintOrder: 'stroke fill',
               textShadow: '6px 6px 0px rgba(0,0,0,0.8)',
               WebkitFontSmoothing: 'antialiased',
@@ -110,9 +110,9 @@ export default function Hero() {
             className="absolute inset-0 blur-xl opacity-60 pointer-events-none"
             aria-hidden="true"
             style={{
-              fontFamily: "'Impact', 'Anton', 'Bebas Neue', 'Arial Black', sans-serif",
-              fontWeight: 900,
-              letterSpacing: '-0.03em',
+              fontFamily: "'Council', 'OT Council', 'Luckiest Guy', 'Alfa Slab One', sans-serif",
+              fontWeight: 400,
+              letterSpacing: '-0.01em',
               textTransform: 'uppercase',
               color: '#FFEB00',
               transform: 'translateZ(0)'
