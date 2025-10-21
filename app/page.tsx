@@ -13,13 +13,20 @@ import SubscribeCTA from '@/components/SubscribeCTA'
 import InlineCTA from '@/components/InlineCTA'
 import UrgentCTA from '@/components/UrgentCTA'
 import WarriorPoll from '@/components/WarriorPoll'
-import { fetchVideosFromJSON } from '@/lib/youtube-manual-fetch'
+import { fetchLatestVideosFromRSS, getFallbackVideos } from '@/lib/youtube-public-fetch'
 
-// Fetch latest videos from JSON file - NEVER GETS BLOCKED!
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+
+// Fetch latest videos live from YouTube RSS with server-side fallback
 async function getLatestVideos() {
-  // Simple, reliable, no API key needed
-  const videos = await fetchVideosFromJSON()
-  return videos
+  try {
+    const videos = await fetchLatestVideosFromRSS(6)
+    return videos
+  } catch (err) {
+    console.error('RSS fetch failed, using fallback:', err)
+    return getFallbackVideos()
+  }
 }
 
 export default async function Home() {

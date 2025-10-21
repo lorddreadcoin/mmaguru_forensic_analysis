@@ -38,14 +38,27 @@ export function extractVideoId(url: string): string | null {
 export async function fetchLatestVideosFromRSS(limit = 6): Promise<VideoData[]> {
   // Jesse ON FIRE's actual channel ID from youtube.com/@RealJesseONFIRE
   const channelId = 'UCL1ULuUKdktFDpe66_A3H2A';
-  
-  // Always use serverless function to bypass CORS and blocking
-  const rssUrl = '/.netlify/functions/youtube-rss';
+
+  // Prefer absolute Netlify Function URL if available (works at runtime)
+  const baseUrl = process.env.URL || process.env.DEPLOY_URL || process.env.NEXT_PUBLIC_SITE_URL;
+  const functionUrl = baseUrl ? `${baseUrl}/.netlify/functions/youtube-rss` : '';
+
+  // If we have a function URL use it, else hit YouTube RSS directly with headers
+  const rssUrl = functionUrl || `https://www.youtube.com/feeds/videos.xml?channel_id=${channelId}`;
 
   try {
     console.log('Fetching RSS feed from:', rssUrl);
     const response = await fetch(rssUrl, {
-      next: { revalidate: 0 } // No cache - fetch fresh every time
+      // When calling YouTube directly, set a browser-like UA to avoid 404/blocks
+      headers: functionUrl
+        ? undefined
+        : {
+            'User-Agent':
+              'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+            Accept: 'application/xml, text/xml, */*',
+            'Accept-Language': 'en-US,en;q=0.9'
+          },
+      next: { revalidate: 0 }
     });
 
     console.log('RSS Response status:', response.status);

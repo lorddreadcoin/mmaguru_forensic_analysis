@@ -90,11 +90,12 @@ export default function Hero() {
               fontWeight: 900,
               letterSpacing: '0.08em',
               textTransform: 'uppercase',
-              background: 'linear-gradient(to bottom, #FFFFFF 0%, #FF6B35 45%, #FF4500 60%, #CC0000 100%)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              filter: 'drop-shadow(0 2px 3px rgba(0,0,0,0.9)) drop-shadow(0 0 20px rgba(255,69,0,0.8)) drop-shadow(0 0 40px rgba(255,69,0,0.4))',
-              WebkitTextStroke: '0.5px rgba(139,0,0,0.3)',
+              // Thumbnail-style yellow fill with black lining
+              background: 'none',
+              WebkitBackgroundClip: 'initial',
+              WebkitTextFillColor: '#FFD400',
+              filter: 'drop-shadow(0 2px 2px rgba(0,0,0,0.9))',
+              WebkitTextStroke: '2px #000000',
               WebkitFontSmoothing: 'antialiased',
               MozOsxFontSmoothing: 'grayscale',
               textRendering: 'optimizeLegibility',
@@ -117,9 +118,9 @@ export default function Hero() {
               fontWeight: 900,
               letterSpacing: '0.08em',
               textTransform: 'uppercase',
-              background: 'linear-gradient(to bottom, #FF6B35, #CC0000)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
+              background: 'none',
+              WebkitBackgroundClip: 'initial',
+              WebkitTextFillColor: '#FFD400',
               transform: 'translateZ(0)'
             }}
           >
