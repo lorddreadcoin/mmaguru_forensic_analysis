@@ -84,23 +84,19 @@ export default function Hero() {
           style={{ fontWeight: 700 }}
         >
           <span 
-            className="relative inline-block text-[clamp(4rem,15vw,12rem)] font-council"
+            className="relative inline-block text-[clamp(4rem,15vw,12rem)]"
             style={{
-              fontFamily: "'Council', 'OT Council', 'Council OT', serif",
+              fontFamily: "'Impact', 'Anton', 'Bebas Neue', 'Arial Black', sans-serif",
               fontWeight: 900,
-              letterSpacing: '0.08em',
+              letterSpacing: '-0.03em',
               textTransform: 'uppercase',
-              // Thumbnail-style yellow fill with thicker black lining
-              background: 'none',
-              WebkitBackgroundClip: 'initial',
-              WebkitTextFillColor: '#FFF200', // brighter yellow
-              filter: 'drop-shadow(0 3px 2px rgba(0,0,0,1))',
-              WebkitTextStroke: '3px #000000',
+              // Exact YouTube thumbnail style
+              color: '#FFEB00',
+              WebkitTextStroke: '8px #000000',
+              paintOrder: 'stroke fill',
+              textShadow: '6px 6px 0px rgba(0,0,0,0.8)',
               WebkitFontSmoothing: 'antialiased',
               MozOsxFontSmoothing: 'grayscale',
-              textRendering: 'optimizeLegibility',
-              fontKerning: 'normal',
-              fontVariantLigatures: 'none',
               backfaceVisibility: 'hidden',
               transform: 'translateZ(0)',
               willChange: 'transform'
@@ -114,13 +110,11 @@ export default function Hero() {
             className="absolute inset-0 blur-xl opacity-60 pointer-events-none"
             aria-hidden="true"
             style={{
-              fontFamily: "'Council', 'OT Council', 'Council OT', serif",
+              fontFamily: "'Impact', 'Anton', 'Bebas Neue', 'Arial Black', sans-serif",
               fontWeight: 900,
-              letterSpacing: '0.08em',
+              letterSpacing: '-0.03em',
               textTransform: 'uppercase',
-              background: 'none',
-              WebkitBackgroundClip: 'initial',
-              WebkitTextFillColor: '#FFF200',
+              color: '#FFEB00',
               transform: 'translateZ(0)'
             }}
           >
