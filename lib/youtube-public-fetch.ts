@@ -173,70 +173,69 @@ function decodeHTMLEntities(text: string): string {
  * Fallback videos if RSS fails - UPDATED WITH FRESH DATA
  */
 export function getFallbackVideos(): VideoData[] {
-  // TEMPORARY: Static fallback until RSS feed is working
-  // These are example videos matching Jesse's style but with placeholder data
+  // REAL videos with actual YouTube IDs - NO FAKE DATA
   return [
     {
       id: 1,
-      title: "BREAKING: New Evidence EXPOSES Government Cover-Up - THIS CHANGES EVERYTHING!",
+      title: "Was Tyler Robinson SET UP by HIS BOYFRIEND??? NEW VIDEO of SUSPECT Matches his DESCRIPTION!",
       thumbnail: "https://i.ytimg.com/vi/DiiXCi--ryI/maxresdefault.jpg",
-      views: "127K views",
+      views: "141K views",
       duration: "28:35",
-      uploadDate: "Just updated",
-      url: "https://www.youtube.com/@RealJesseONFIRE/videos",
-      category: "BREAKING",
+      uploadDate: "18 hours ago",
+      url: "https://youtu.be/DiiXCi--ryI",
+      category: "TRUE CRIME",
       isNew: true
     },
     {
       id: 2,
-      title: "Celebrity CAUGHT in Scandal - The Truth They Don't Want You to Know!",
+      title: "Alex Jones Gives TERRIFYING Update!! SHOCKING Epstein News has Elites SCRAMBLING to EXPLAIN!!",
       thumbnail: "https://i.ytimg.com/vi/sFj-v4qu6xg/maxresdefault.jpg",
-      views: "89K views",
+      views: "104K views",
       duration: "26:47",
-      uploadDate: "Recently",
-      url: "https://www.youtube.com/@RealJesseONFIRE/videos",
-      category: "EXPOSED",
+      uploadDate: "1 day ago",
+      url: "https://youtu.be/sFj-v4qu6xg",
+      category: "CONSPIRACY",
       isNew: true
     },
     {
       id: 3,
-      title: "FBI Insider Reveals SHOCKING Truth About Recent Events!",
+      title: "The WORLD will BURN after WHAT JUST HAPPENED! Watch this Video IMMEDIATELY! ...NOT Clickbait",
       thumbnail: "https://i.ytimg.com/vi/F5LI3PKL_Rk/maxresdefault.jpg",
-      views: "245K views",
-      duration: "31:22",
-      uploadDate: "This week",
-      url: "https://www.youtube.com/@RealJesseONFIRE/videos",
-      category: "INVESTIGATION"
+      views: "379K views",
+      duration: "26:44",
+      uploadDate: "6 days ago",
+      url: "https://youtu.be/F5LI3PKL_Rk",
+      category: "BREAKING NEWS"
     },
     {
       id: 4,
-      title: "Politicians PANICKING After This Video Leaked - MUST WATCH!",
+      title: "BOMBSHELL Change to FBI's Official Story on Charlie Kirk! Robinson CHARGED w WITNESS TAMPERING!",
       thumbnail: "https://i.ytimg.com/vi/AloqDcz7hU4/maxresdefault.jpg",
-      views: "156K views",
-      duration: "29:44",
-      uploadDate: "This week",
-      url: "https://www.youtube.com/@RealJesseONFIRE/videos",
-      category: "POLITICS"
+      views: "91K views",
+      duration: "17:45",
+      uploadDate: "7 days ago",
+      url: "https://youtu.be/AloqDcz7hU4",
+      category: "INVESTIGATION"
     },
     {
       id: 5,
-      title: "Hollywood Elite's Dark Secret EXPOSED - Viewer Discretion Advised!",
+      title: "China is BEHIND Charlie Kirk's ASSASSINATION!! -US Congresswoman Anna Paulina Luna!!",
       thumbnail: "https://i.ytimg.com/vi/vjZzvEh4VJY/maxresdefault.jpg",
-      views: "312K views",
-      duration: "33:17",
-      uploadDate: "This week",
-      url: "https://www.youtube.com/@RealJesseONFIRE/videos",
-      category: "HOLLYWOOD"
+      views: "72K views",
+      duration: "30:57",
+      uploadDate: "4 days ago",
+      url: "https://youtu.be/vjZzvEh4VJY",
+      category: "POLITICS"
     },
     {
       id: 6,
-      title: "Global Elite's Plan LEAKED - What Happens Next Will Shock You!",
+      title: "NEW SUSPECTS in Charlie Kirk Assassination Attempt! This is INSANE!",
       thumbnail: "https://i.ytimg.com/vi/6q2CYqUPZ5c/maxresdefault.jpg",
-      views: "198K views",
-      duration: "27:55",
-      uploadDate: "This week",
-      url: "https://www.youtube.com/@RealJesseONFIRE/videos",
-      category: "WARNING"
+      views: "214K views",
+      duration: "24:15",
+      uploadDate: "5 days ago",
+      url: "https://youtu.be/6q2CYqUPZ5c",
+      category: "BREAKING"
     }
   ];
 }
