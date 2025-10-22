@@ -11,7 +11,7 @@ const channels = [
   {
     name: "Jesse ON FIRE",
     description: "Main Channel - Black Belt Mic Skills 🥋",
-    stats: "517K+ Subscribers • 111M+ Views",
+    stats: "Loading stats...",
     url: LINKS.youtube,
     color: "from-fire-orange to-lava-red",
     icon: FaYoutube,
@@ -76,6 +76,10 @@ const ChannelNetwork = () => {
     if (num >= 1000) return (num / 1000).toFixed(0) + 'K';
     return num.toString();
   };
+
+  const liveStatsText = stats.isLive 
+    ? `${formatNumber(stats.subscriberCount)}+ Subscribers • ${formatNumber(stats.viewCount)}+ Views`
+    : "Loading stats...";
   return (
     <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-charcoal to-obsidian">
       <div className="max-w-7xl mx-auto">
@@ -156,12 +160,9 @@ const ChannelNetwork = () => {
                     </p>
                     
                     <p className="text-sm text-ash-grey/70">
-                      {channel.stats}
+                      {channel.isPrimary ? liveStatsText : channel.stats}
                     </p>
                   </div>
-                  <p className="text-sm text-ash-grey/70">
-                    {channel.stats}
-                  </p>
                 </div>
               </div>
             </motion.a>
