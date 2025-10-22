@@ -3,8 +3,10 @@
 import { motion } from "framer-motion";
 import { FaYoutube, FaBell } from "react-icons/fa";
 import { LINKS } from "@/lib/constants";
+import { useYouTubeStats } from "@/lib/use-youtube-stats";
 
 export default function SubscribeCTA() {
+  const stats = useYouTubeStats();
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -38,7 +40,7 @@ export default function SubscribeCTA() {
             </h3>
             
             <p className="text-xl text-ash-grey mb-8 max-w-2xl mx-auto">
-              517K+ warriors get unfiltered truth daily. Join the movement breaking through mainstream lies.
+              {stats.formattedSubs}+ warriors get unfiltered truth daily. Join the movement breaking through mainstream lies.
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">

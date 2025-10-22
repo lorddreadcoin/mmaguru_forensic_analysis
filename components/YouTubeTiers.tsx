@@ -1,10 +1,14 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useState } from 'react';
+import { motion } from 'framer-motion';
 import { FaYoutube, FaCheckCircle, FaCrown } from "react-icons/fa";
 import { YOUTUBE_TIERS } from "@/lib/youtube-tiers";
+import { useYouTubeStats } from '@/lib/use-youtube-stats';
 
 const YouTubeTiers = () => {
+  const stats = useYouTubeStats();
+
   return (
     <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-obsidian to-charcoal">
       <div className="max-w-7xl mx-auto">
@@ -136,7 +140,7 @@ const YouTubeTiers = () => {
           {/* Stats */}
           <div className="mt-8 flex justify-center gap-8">
             <div className="text-center">
-              <div className="text-2xl font-display text-fire-orange">517K+</div>
+              <div className="text-2xl font-display text-fire-orange">{stats.formattedSubs}+</div>
               <div className="text-xs text-ash-grey uppercase">Subscribers</div>
             </div>
             <div className="text-center">

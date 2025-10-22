@@ -1,13 +1,15 @@
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion";
-import { FaYoutube, FaTimes } from "react-icons/fa";
-import { LINKS } from "@/lib/constants";
-import { useEffect, useState } from "react";
+import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { FaYoutube, FaTimes, FaBell } from 'react-icons/fa';
+import { LINKS } from '@/lib/constants';
+import { useYouTubeStats } from '@/lib/use-youtube-stats';
 
 export default function StickySubscribeBar() {
   const [isVisible, setIsVisible] = useState(false);
   const [isDismissed, setIsDismissed] = useState(false);
+  const stats = useYouTubeStats();
 
   useEffect(() => {
     // Show after 10 seconds of being on site
@@ -63,7 +65,7 @@ export default function StickySubscribeBar() {
                     
                     <div className="flex-1">
                       <p className="text-white font-bold text-sm md:text-base">
-                        🔥 Join 517K+ Warriors Getting Daily Truth Bombs
+                        🔥 Join {stats.formattedSubs}+ Warriors Getting Daily Truth Bombs
                       </p>
                       <p className="text-white/80 text-xs hidden sm:block">
                         Subscribe & turn on notifications • Never miss breaking news

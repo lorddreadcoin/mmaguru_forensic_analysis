@@ -1,15 +1,17 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { FaFire, FaDiscord, FaYoutube } from "react-icons/fa";
+import { FaFire, FaDiscord, FaYoutube, FaPatreon, FaUsers } from "react-icons/fa";
 import { LINKS } from "@/lib/constants";
+import { useYouTubeStats } from "@/lib/use-youtube-stats";
 
 interface InlineCTAProps {
   variant?: 'patreon' | 'discord' | 'youtube' | 'member';
   className?: string;
 }
 
-export default function InlineCTA({ variant = 'patreon', className = '' }: InlineCTAProps) {
+export default function InlineCTA({ variant = 'youtube', className = '' }: InlineCTAProps) {
+  const stats = useYouTubeStats();
   const configs = {
     patreon: {
       icon: FaFire,
@@ -31,7 +33,7 @@ export default function InlineCTA({ variant = 'patreon', className = '' }: Inlin
     },
     youtube: {
       icon: FaYoutube,
-      title: "517K+ Warriors Can't Be Wrong",
+      title: `${stats.formattedSubs}+ Warriors Can't Be Wrong`,
       description: "Subscribe for daily truth bombs and live coverage of breaking news.",
       buttonText: "Subscribe Now",
       buttonIcon: "📺",

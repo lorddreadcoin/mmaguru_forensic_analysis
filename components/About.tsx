@@ -4,8 +4,11 @@ import Image from 'next/image'
 import { BIO } from '@/lib/constants'
 import Card from './ui/Card'
 import ElectricalBackground from './ElectricalBackground'
+import { useYouTubeStats } from '@/lib/use-youtube-stats'
 
 export default function About() {
+  const stats = useYouTubeStats()
+  
   return (
     <section id="about" className="relative py-20 overflow-hidden bg-black">
       {/* NEW: Electrical background with lightning */}
@@ -60,7 +63,7 @@ export default function About() {
                   viewport={{ once: true }}
                   transition={{ type: "spring", delay: 0.2 }}
                 >
-                  517K+
+                  {stats.isLoading ? 'Loading...' : `${stats.formattedSubs}+`}
                 </motion.div>
                 <div className="text-sm text-gray-400 uppercase tracking-wide">Warriors</div>
               </Card>
@@ -73,7 +76,7 @@ export default function About() {
                   viewport={{ once: true }}
                   transition={{ type: "spring", delay: 0.3 }}
                 >
-                  111M+
+                  {stats.isLoading ? 'Loading...' : `${stats.formattedViews}+`}
                 </motion.div>
                 <div className="text-sm text-gray-400 uppercase tracking-wide">Views</div>
               </Card>
@@ -82,13 +85,13 @@ export default function About() {
             {/* Bio Text */}
             <div className="space-y-4 text-lg text-gray-300 leading-relaxed">
               <p>
-                Jesse ON FIRE is the <span className="text-fire-orange font-bold">YOUTUBE GOAT on the mic</span>. With 517,000+ subscribers and 111 million views, this political analyst has been exposing truth with black belt precision.
+                Jesse ON FIRE is the <span className="text-fire-orange font-bold">YOUTUBE GOAT on the mic</span>. With {stats.subscriberCount.toLocaleString()}+ subscribers and {stats.viewCount.toLocaleString()} views, this political analyst has been exposing truth with black belt precision.
               </p>
               <p>
                 Unfiltered. Uncensored. Undefeated.
               </p>
               <p className="text-base text-gray-400">
-                With 2,863 videos and counting, Jesse drops content daily on everything from political conspiracies to MMA breakdowns. Running multiple channels including PLAY W MATCHES with wife Gabi and Jesse On FIRE After Hours for the real ones.
+                With {stats.videoCount.toLocaleString()} videos and counting, Jesse drops content daily on everything from political conspiracies to MMA breakdowns. Running multiple channels including PLAY W MATCHES with wife Gabi and Jesse On FIRE After Hours for the real ones.
               </p>
               <p className="text-base text-gray-400">
                 Whether he's exposing government corruption, breaking down UFC politics, or going OFF THE RAILS on his latest investigation, Jesse delivers what his army demands: pure, unfiltered truth that makes the establishment panic.

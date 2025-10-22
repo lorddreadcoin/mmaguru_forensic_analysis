@@ -13,21 +13,36 @@ import SubscribeCTA from '@/components/SubscribeCTA'
 import InlineCTA from '@/components/InlineCTA'
 import UrgentCTA from '@/components/UrgentCTA'
 import WarriorPoll from '@/components/WarriorPoll'
+import { fetchLatestVideosFromRSS, getFallbackVideos } from '@/lib/youtube-public-fetch'
 import { fetchVideosFromJSON } from '@/lib/youtube-manual-fetch'
 
 export const dynamic = 'force-dynamic'
 export const revalidate = 0
 
-// Fetch latest videos from manual JSON (most reliable method)
+// Fetch latest videos from YouTube RSS feed with fallbacks
 async function getLatestVideos() {
   try {
-    const videos = await fetchVideosFromJSON()
-    return videos
+    // Try RSS feed first (live data)
+    const videos = await fetchLatestVideosFromRSS(6)
+    if (videos && videos.length > 0) {
+      return videos
+    }
   } catch (err) {
-    console.error('Video fetch failed:', err)
-    // Return empty array as last resort
-    return []
+    console.error('RSS fetch failed:', err)
   }
+  
+  // Fallback to manual JSON if RSS fails
+  try {
+    const manualVideos = await fetchVideosFromJSON()
+    if (manualVideos && manualVideos.length > 0) {
+      return manualVideos
+    }
+  } catch (err) {
+    console.error('Manual fetch failed:', err)
+  }
+  
+  // Last resort: hardcoded fallback
+  return getFallbackVideos()
 }
 
 export default async function Home() {
