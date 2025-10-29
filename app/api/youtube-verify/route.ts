@@ -13,7 +13,7 @@ async function sendEmail(data: { to: string; subject: string; body: string }) {
       const resend = new Resend(process.env.RESEND_API_KEY);
       
       await resend.emails.send({
-        from: 'Jesse ON FIRE <noreply@jesseonfire.com>',
+        from: 'Jesse ON FIRE <onboarding@resend.dev>',
         to: data.to,
         subject: data.subject,
         html: data.body
