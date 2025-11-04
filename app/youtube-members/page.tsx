@@ -65,11 +65,35 @@ export default function YouTubeMembersPage() {
               href="https://discord.gg/9WpPC5GS" 
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-block mb-8 px-8 py-4 bg-gradient-to-r from-fire-orange to-red-600 text-white font-bold rounded-lg hover:scale-105 transition-transform text-lg shadow-fire-glow"
+              className="inline-block mb-6 px-8 py-4 bg-gradient-to-r from-fire-orange to-red-600 text-white font-bold rounded-lg hover:scale-105 transition-transform text-lg shadow-fire-glow"
             >
               <FaDiscord className="inline mr-2 text-2xl" />
               JOIN DISCORD NOW
             </a>
+            
+            {/* Video Tutorial */}
+            <div className="mb-8 bg-black/50 rounded-xl p-4 border border-fire-orange/20">
+              <p className="text-sm text-fire-orange font-bold mb-3">📺 Watch How to Connect YouTube:</p>
+              <div className="relative aspect-video bg-charcoal rounded-lg overflow-hidden">
+                {/* Replace this with your actual video/GIF URL */}
+                <video 
+                  className="w-full h-full object-contain"
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  poster="/tutorial-thumbnail.jpg"
+                >
+                  <source src="/youtube-discord-tutorial.mp4" type="video/mp4" />
+                  {/* Fallback GIF */}
+                  <img 
+                    src="/youtube-discord-tutorial.gif" 
+                    alt="Tutorial: How to connect YouTube in Discord"
+                    className="w-full h-full object-contain"
+                  />
+                </video>
+              </div>
+            </div>
             
             <div className="bg-black/50 rounded-xl p-6 text-left space-y-4 border border-fire-orange/20">
               <div className="flex items-center gap-3">
