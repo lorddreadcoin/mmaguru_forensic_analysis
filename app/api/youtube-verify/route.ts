@@ -57,21 +57,27 @@ export async function POST(req: Request) {
     
     // IMMEDIATE webhook notification to confirm function is running
     console.log('📡 Sending immediate webhook notification...');
+    console.log('Webhook URL exists:', !!DISCORD_WEBHOOK);
+    console.log('Webhook URL preview:', DISCORD_WEBHOOK ? DISCORD_WEBHOOK.substring(0, 40) + '...' : 'NOT SET');
+    
     if (DISCORD_WEBHOOK) {
-      try {
-        const webhookResponse = await fetch(DISCORD_WEBHOOK, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            content: `🚨 **FUNCTION CALLED** - Processing verification for ${youtubeUsername}`
-          })
-        });
-        console.log('✅ Immediate webhook sent, status:', webhookResponse.status);
-      } catch (webhookError) {
-        console.error('❌ Immediate webhook failed:', webhookError);
-      }
+      // Non-blocking webhook call
+      fetch(DISCORD_WEBHOOK, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          content: `🚨 **FUNCTION CALLED** - Processing verification for ${youtubeUsername} at ${new Date().toISOString()}`
+        })
+      })
+      .then(res => {
+        console.log('✅ Immediate webhook sent, status:', res.status);
+        if (!res.ok) {
+          res.text().then(text => console.error('Webhook error response:', text));
+        }
+      })
+      .catch(err => console.error('❌ Immediate webhook failed:', err));
     } else {
-      console.log('⚠️ No webhook URL configured!');
+      console.log('⚠️ CRITICAL: No webhook URL configured in environment variables!');
     }
     
     // Create email HTML
@@ -155,7 +161,8 @@ export async function POST(req: Request) {
     // Log to Discord webhook for tracking
     console.log('📡 Sending detailed webhook notification...');
     if (DISCORD_WEBHOOK) {
-      await fetch(DISCORD_WEBHOOK, {
+      // Non-blocking webhook call
+      fetch(DISCORD_WEBHOOK, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -195,10 +202,16 @@ export async function POST(req: Request) {
             timestamp: new Date().toISOString()
           }]
         })
-      });
-      console.log('✅ Detailed webhook notification sent');
+      })
+      .then(res => {
+        console.log('✅ Detailed webhook notification sent, status:', res.status);
+        if (!res.ok) {
+          res.text().then(text => console.error('Webhook error:', text));
+        }
+      })
+      .catch(err => console.error('❌ Detailed webhook failed:', err));
     } else {
-      console.log('⚠️ No webhook configured for detailed notification');
+      console.log('⚠️ CRITICAL: No webhook configured for detailed notification');
     }
     
     console.log('🎉 Verification complete, returning success');
