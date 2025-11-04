@@ -20,7 +20,8 @@ export const YOUTUBE_TIERS: YouTubeTier[] = [
       '🏆 Loyalty badges in comments & live chat',
       '😈 Custom emoji access',
       '🎥 5 additional MMA videos per week',
-      '🔥 TWICE the content'
+      '🔥 TWICE the content',
+      '💬 Private Discord Community'
     ],
     color: 'from-orange-600 to-red-600',
     discordRole: 'Inner Circle',
@@ -35,7 +36,8 @@ export const YOUTUBE_TIERS: YouTubeTier[] = [
       '✅ Everything from Inner Circle',
       '🔴 Members-only live streams (weekly)',
       '🎬 Exclusive green screen GIFs',
-      '💬 Direct community access'
+      '💬 Direct community access',
+      '🎮 Private Discord Community'
     ],
     color: 'from-purple-600 to-pink-600',
     discordRole: 'Best Friend'
@@ -49,7 +51,8 @@ export const YOUTUBE_TIERS: YouTubeTier[] = [
       '✅ Everything from previous tiers',
       '📢 Monthly shout-outs on channel',
       '🌟 Your name called out publicly',
-      '👑 Ultimate supporter status'
+      '👑 Ultimate supporter status',
+      '👑 Private Discord Community'
     ],
     color: 'from-gold-500 to-yellow-600',
     discordRole: 'Elite Supporter'

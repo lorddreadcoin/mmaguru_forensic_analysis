@@ -23,42 +23,75 @@ export default function WarriorPoll() {
   const [selectedOption, setSelectedOption] = useState<number | null>(null)
   const [votes, setVotes] = useState<number[]>([0, 0, 0])
   const [showResults, setShowResults] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
-  // Load existing vote and vote counts from localStorage
+  // Load poll data from API on mount
   useEffect(() => {
-    const storedVote = localStorage.getItem('warrior-poll-vote')
-    const storedVotes = localStorage.getItem('warrior-poll-votes')
+    loadPollData()
     
+    // Check if user has voted (from localStorage as backup)
+    const storedVote = localStorage.getItem('warrior-poll-vote-v2')
     if (storedVote) {
       setHasVoted(true)
       setSelectedOption(parseInt(storedVote))
       setShowResults(true)
     }
-    
-    if (storedVotes) {
-      setVotes(JSON.parse(storedVotes))
-    } else {
-      // Initialize with some seed votes for demo
-      setVotes([547, 89, 213])
-    }
   }, [])
 
-  const handleVote = (optionIndex: number) => {
-    // Update votes
-    const newVotes = [...votes]
-    newVotes[optionIndex]++
-    setVotes(newVotes)
+  const loadPollData = async () => {
+    try {
+      const response = await fetch('/api/poll')
+      const data = await response.json()
+      setVotes(data.votes)
+    } catch (err) {
+      console.error('Failed to load poll data:', err)
+      setError('Failed to load poll')
+    }
+  }
+
+  const handleVote = async (optionIndex: number) => {
+    setIsLoading(true)
+    setError(null)
     
-    // Save to localStorage
-    localStorage.setItem('warrior-poll-vote', optionIndex.toString())
-    localStorage.setItem('warrior-poll-votes', JSON.stringify(newVotes))
-    
-    // Update state
-    setSelectedOption(optionIndex)
-    setHasVoted(true)
-    
-    // Animate to results
-    setTimeout(() => setShowResults(true), 300)
+    try {
+      const response = await fetch('/api/poll', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ optionIndex })
+      })
+      
+      const data = await response.json()
+      
+      if (!response.ok) {
+        if (data.alreadyVoted) {
+          // User already voted from this IP
+          setError('You have already voted!')
+          setHasVoted(true)
+          setShowResults(true)
+          setVotes(data.votes)
+          return
+        }
+        throw new Error(data.error || 'Failed to vote')
+      }
+      
+      // Vote successful
+      setVotes(data.votes)
+      setSelectedOption(optionIndex)
+      setHasVoted(true)
+      
+      // Save to localStorage as backup identifier
+      localStorage.setItem('warrior-poll-vote-v2', optionIndex.toString())
+      
+      // Animate to results
+      setTimeout(() => setShowResults(true), 300)
+      
+    } catch (err) {
+      console.error('Vote failed:', err)
+      setError('Failed to submit vote. Please try again.')
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   const totalVotes = votes.reduce((sum, v) => sum + v, 0)
@@ -108,6 +141,13 @@ export default function WarriorPoll() {
             {CURRENT_POLL.question}
           </h3>
 
+          {/* Error Message */}
+          {error && (
+            <div className="mb-6 p-4 bg-red-900/20 border border-red-500/50 rounded-lg text-red-400 text-center">
+              {error}
+            </div>
+          )}
+
           {!showResults ? (
             /* Voting Interface */
             <div className="space-y-4">
@@ -115,15 +155,17 @@ export default function WarriorPoll() {
                 <motion.button
                   key={index}
                   onClick={() => handleVote(index)}
-                  className="w-full p-6 text-left text-lg font-semibold rounded-xl border-2 border-fire-orange/20 hover:border-fire-orange hover:bg-fire-orange/10 transition-all group text-white"
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
+                  disabled={isLoading}
+                  className="w-full p-6 text-left text-lg font-semibold rounded-xl border-2 border-fire-orange/20 hover:border-fire-orange hover:bg-fire-orange/10 transition-all group text-white disabled:opacity-50 disabled:cursor-not-allowed"
+                  whileHover={{ scale: isLoading ? 1 : 1.02 }}
+                  whileTap={{ scale: isLoading ? 1 : 0.98 }}
                 >
                   <div className="flex items-center gap-4">
                     <div className="w-6 h-6 rounded-full border-2 border-gray-600 group-hover:border-fire-orange flex items-center justify-center">
                       <div className="w-3 h-3 rounded-full bg-fire-orange opacity-0 group-hover:opacity-100 transition-opacity" />
                     </div>
                     <span className="flex-1">{option}</span>
+                    {isLoading && <span className="text-sm text-gray-400">Voting...</span>}
                   </div>
                 </motion.button>
               ))}
