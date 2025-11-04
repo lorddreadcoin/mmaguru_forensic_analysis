@@ -71,28 +71,19 @@ export default function YouTubeMembersPage() {
               JOIN DISCORD NOW
             </a>
             
-            {/* Video Tutorial */}
+            {/* Animated Tutorial */}
             <div className="mb-8 bg-black/50 rounded-xl p-4 border border-fire-orange/20">
-              <p className="text-sm text-fire-orange font-bold mb-3">📺 Watch How to Connect YouTube:</p>
+              <p className="text-sm text-fire-orange font-bold mb-3">📺 Watch How to Connect YouTube (Auto-Playing Tutorial):</p>
               <div className="relative aspect-video bg-charcoal rounded-lg overflow-hidden">
-                {/* Replace this with your actual video/GIF URL */}
-                <video 
-                  className="w-full h-full object-contain"
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                  poster="/tutorial-thumbnail.jpg"
-                >
-                  <source src="/youtube-discord-tutorial.mp4" type="video/mp4" />
-                  {/* Fallback GIF */}
-                  <img 
-                    src="/youtube-discord-tutorial.gif" 
-                    alt="Tutorial: How to connect YouTube in Discord"
-                    className="w-full h-full object-contain"
-                  />
-                </video>
+                <iframe 
+                  src="/tutorial.html" 
+                  className="w-full h-full border-0"
+                  title="Discord YouTube Connection Tutorial"
+                />
               </div>
+              <p className="text-xs text-ash-grey mt-2 text-center">
+                ✨ Tutorial loops automatically - shows all 5 steps
+              </p>
             </div>
             
             <div className="bg-black/50 rounded-xl p-6 text-left space-y-4 border border-fire-orange/20">
