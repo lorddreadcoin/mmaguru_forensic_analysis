@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 
 // Discord webhook for logging
 const DISCORD_WEBHOOK = process.env.DISCORD_WEBHOOK_URL || '';
-const DISCORD_INVITE = process.env.DISCORD_INVITE_URL || 'https://discord.gg/KpUF6GjH8V';
+const DISCORD_INVITE = process.env.DISCORD_INVITE_URL || 'https://discord.gg/9WpPC5GS';
 
 // Email configuration with proper error handling
 async function sendEmail(data: { to: string; subject: string; body: string }) {

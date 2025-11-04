@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 // Enhanced YouTube verification that actually checks membership status
 const YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY;
 const DISCORD_WEBHOOK = process.env.DISCORD_WEBHOOK_URL || '';
-const DISCORD_INVITE = process.env.DISCORD_INVITE_URL || 'https://discord.gg/KpUF6GjH8V';
+const DISCORD_INVITE = process.env.DISCORD_INVITE_URL || 'https://discord.gg/9WpPC5GS';
 
 /**
  * Enhanced YouTube membership verification

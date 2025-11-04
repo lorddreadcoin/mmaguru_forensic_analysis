@@ -29,7 +29,7 @@ export interface Links {
 
 export const LINKS: Links = {
   patreon: "https://www.patreon.com/c/jesseonfire",
-  discord: "https://discord.gg/KpUF6GjH8V",
+  discord: "https://discord.gg/9WpPC5GS",
   youtube: "https://www.youtube.com/@RealJesseONFIRE",
   twitter: "https://twitter.com/realjesseonfire",
   instagram: "https://instagram.com/realjesseonfire",
