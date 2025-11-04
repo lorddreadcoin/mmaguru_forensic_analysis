@@ -54,49 +54,55 @@ export default function YouTubeMembersPage() {
               <FaCheckCircle className="mx-auto" />
             </motion.div>
             <h2 className="text-3xl font-display text-fire-orange mb-4 uppercase">
-              Check Your Email!
+              You're Almost In! 🔥
             </h2>
-            <p className="text-xl text-ash-grey mb-8">
-              Instructions sent to {formData.email}
+            <p className="text-xl text-ash-grey mb-4">
+              Thanks {formData.youtubeUsername}! Follow these 3 steps:
             </p>
+            
+            {/* Discord Invite Button */}
+            <a 
+              href="https://discord.gg/9WpPC5GS" 
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block mb-8 px-8 py-4 bg-gradient-to-r from-fire-orange to-red-600 text-white font-bold rounded-lg hover:scale-105 transition-transform text-lg shadow-fire-glow"
+            >
+              <FaDiscord className="inline mr-2 text-2xl" />
+              JOIN DISCORD NOW
+            </a>
             
             <div className="bg-black/50 rounded-xl p-6 text-left space-y-4 border border-fire-orange/20">
               <div className="flex items-center gap-3">
-                <FaEnvelope className="text-fire-orange text-xl" />
+                <FaDiscord className="text-[#5865F2] text-xl flex-shrink-0" />
                 <div>
-                  <p className="text-white font-bold">Step 1: Open Email</p>
-                  <p className="text-sm text-ash-grey">Check inbox (and spam folder)</p>
+                  <p className="text-white font-bold">Step 1: Join Discord</p>
+                  <p className="text-sm text-ash-grey">Click the button above to join the server</p>
                 </div>
               </div>
               
               <div className="flex items-center gap-3">
-                <FaDiscord className="text-[#5865F2] text-xl" />
+                <FaYoutube className="text-red-600 text-xl flex-shrink-0" />
                 <div>
-                  <p className="text-white font-bold">Step 2: Join Discord</p>
-                  <p className="text-sm text-ash-grey">Use the invite link in email</p>
+                  <p className="text-white font-bold">Step 2: Connect Your YouTube</p>
+                  <p className="text-sm text-ash-grey">In Discord: User Settings → Connections → Click YouTube → Sign In</p>
                 </div>
               </div>
               
               <div className="flex items-center gap-3">
-                <FaYoutube className="text-red-600 text-xl" />
+                <span className="text-xl flex-shrink-0">✨</span>
                 <div>
-                  <p className="text-white font-bold">Step 3: Connect YouTube</p>
-                  <p className="text-sm text-ash-grey">Settings → Connections → YouTube</p>
-                </div>
-              </div>
-              
-              <div className="flex items-center gap-3">
-                <span className="text-xl">✨</span>
-                <div>
-                  <p className="text-white font-bold">Step 4: Auto Role!</p>
-                  <p className="text-sm text-ash-grey">Discord assigns role in 2-3 minutes</p>
+                  <p className="text-white font-bold">Step 3: Get Your Role!</p>
+                  <p className="text-sm text-ash-grey">Discord auto-verifies your membership & assigns your tier role (2-3 min)</p>
                 </div>
               </div>
             </div>
             
-            <div className="mt-8 p-4 bg-charcoal rounded-lg">
-              <p className="text-sm text-ash-grey">
-                <span className="text-fire-orange font-bold">Need help?</span> Reply to the email or message @mods in Discord
+            <div className="mt-8 p-4 bg-charcoal rounded-lg border border-fire-orange/30">
+              <p className="text-sm text-ash-grey mb-2">
+                <span className="text-fire-orange font-bold">⚡ Important:</span> You MUST connect your YouTube account in Discord Settings to get verified!
+              </p>
+              <p className="text-xs text-ash-grey">
+                Need help? Ask in Discord or message @mods
               </p>
             </div>
             
