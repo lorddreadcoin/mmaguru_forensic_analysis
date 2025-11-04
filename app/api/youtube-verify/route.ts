@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 
 // Discord webhook for logging
 const DISCORD_WEBHOOK = process.env.DISCORD_WEBHOOK_URL || '';
-const DISCORD_INVITE = process.env.DISCORD_INVITE_URL || 'https://discord.gg/X7ktHchyhh';
+const DISCORD_INVITE = process.env.DISCORD_INVITE_URL || 'https://discord.gg/KpUF6GjH8V';
 
 // Email configuration - using a simple approach for now
 async function sendEmail(data: { to: string; subject: string; body: string }) {
@@ -39,15 +39,39 @@ async function sendEmail(data: { to: string; subject: string; body: string }) {
 }
 
 export async function POST(req: Request) {
+  console.log('🔥 YouTube verification endpoint called');
+  
   try {
     const { youtubeUsername, discordUsername, email } = await req.json();
     
+    console.log('📝 Received data:', { youtubeUsername, discordUsername, email });
+    
     // Validate input
     if (!youtubeUsername || !discordUsername || !email) {
+      console.log('❌ Validation failed: Missing fields');
       return NextResponse.json(
         { error: 'All fields are required' },
         { status: 400 }
       );
+    }
+    
+    // IMMEDIATE webhook notification to confirm function is running
+    console.log('📡 Sending immediate webhook notification...');
+    if (DISCORD_WEBHOOK) {
+      try {
+        const webhookResponse = await fetch(DISCORD_WEBHOOK, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            content: `🚨 **FUNCTION CALLED** - Processing verification for ${youtubeUsername}`
+          })
+        });
+        console.log('✅ Immediate webhook sent, status:', webhookResponse.status);
+      } catch (webhookError) {
+        console.error('❌ Immediate webhook failed:', webhookError);
+      }
+    } else {
+      console.log('⚠️ No webhook URL configured!');
     }
     
     // Create email HTML
@@ -120,13 +144,16 @@ export async function POST(req: Request) {
     `;
     
     // Send verification email
+    console.log('📧 Attempting to send email to:', email);
     await sendEmail({
       to: email,
       subject: "🔥 Discord Access Ready - Jesse ON FIRE",
       body: emailBody
     });
+    console.log('✅ Email send function completed');
     
     // Log to Discord webhook for tracking
+    console.log('📡 Sending detailed webhook notification...');
     if (DISCORD_WEBHOOK) {
       await fetch(DISCORD_WEBHOOK, {
         method: 'POST',
@@ -169,14 +196,35 @@ export async function POST(req: Request) {
           }]
         })
       });
+      console.log('✅ Detailed webhook notification sent');
+    } else {
+      console.log('⚠️ No webhook configured for detailed notification');
     }
     
+    console.log('🎉 Verification complete, returning success');
     return NextResponse.json({ success: true });
     
   } catch (error) {
-    console.error('YouTube verification error:', error);
+    console.error('🚨 YouTube verification error:', error);
+    console.error('Error details:', JSON.stringify(error, null, 2));
+    
+    // Send error to Discord
+    if (DISCORD_WEBHOOK) {
+      try {
+        await fetch(DISCORD_WEBHOOK, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            content: `🚨 **ERROR IN VERIFICATION**\n\`\`\`${error}\`\`\``
+          })
+        });
+      } catch (webhookError) {
+        console.error('Failed to send error to Discord:', webhookError);
+      }
+    }
+    
     return NextResponse.json(
-      { error: 'Verification failed. Please try again.' },
+      { error: 'Verification failed. Please try again.', details: String(error) },
       { status: 500 }
     );
   }
