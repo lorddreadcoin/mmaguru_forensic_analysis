@@ -6,7 +6,7 @@ const DISCORD_INVITE = process.env.DISCORD_INVITE_URL || 'https://discord.gg/9Wp
 
 // Email configuration with proper error handling
 async function sendEmail(data: { to: string; subject: string; body: string }) {
-  const emailResult = { sent: false, method: '', error: null };
+  const emailResult: { sent: boolean; method: string; error: string | null } = { sent: false, method: '', error: null };
   
   // Try Resend API first
   if (process.env.RESEND_API_KEY) {
@@ -26,7 +26,7 @@ async function sendEmail(data: { to: string; subject: string; body: string }) {
       return emailResult;
     } catch (error) {
       console.error('Resend email failed:', error);
-      emailResult.error = error.message;
+      emailResult.error = error instanceof Error ? error.message : String(error);
     }
   }
   
@@ -45,7 +45,8 @@ async function sendEmail(data: { to: string; subject: string; body: string }) {
       return emailResult;
     } catch (error) {
       console.error('Discord webhook failed:', error);
-      emailResult.error = `Resend failed: ${emailResult.error}, Discord failed: ${error.message}`;
+      const errorMsg = error instanceof Error ? error.message : String(error);
+      emailResult.error = `Resend failed: ${emailResult.error}, Discord failed: ${errorMsg}`;
     }
   }
   
@@ -191,7 +192,7 @@ export async function POST(req: Request) {
       { 
         success: false,
         error: 'Verification failed. Please try again.',
-        details: error.message 
+        details: error instanceof Error ? error.message : String(error)
       },
       { status: 500 }
     );
