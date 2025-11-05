@@ -10,8 +10,11 @@ export default function YouTubeMembersPage() {
   const [formData, setFormData] = useState({
     youtubeUsername: '',
     discordUsername: '',
-    email: ''
+    email: '',
+    membershipTier: '',
+    screenshot: null as string | null
   });
+  const [isDragging, setIsDragging] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -97,7 +100,13 @@ export default function YouTubeMembersPage() {
             <button
               onClick={() => {
                 setStatus('idle');
-                setFormData({ youtubeUsername: '', discordUsername: '', email: '' });
+                setFormData({ 
+                  youtubeUsername: '', 
+                  discordUsername: '', 
+                  email: '',
+                  membershipTier: '',
+                  screenshot: null 
+                });
               }}
               className="text-fire-orange hover:text-white transition-colors underline"
             >
@@ -250,6 +259,26 @@ export default function YouTubeMembersPage() {
               </div>
               
               <div>
+                <label className="block text-sm font-bold text-white mb-2 uppercase tracking-wide">
+                  Membership Tier
+                </label>
+                <div className="relative">
+                  <FaYoutube className="absolute left-3 top-1/2 -translate-y-1/2 text-red-600" />
+                  <select
+                    required
+                    value={formData.membershipTier}
+                    onChange={(e) => setFormData({...formData, membershipTier: e.target.value})}
+                    className="w-full pl-10 pr-4 py-3 bg-black/50 border-2 border-fire-orange/30 rounded-lg text-white focus:border-fire-orange focus:outline-none transition-colors appearance-none cursor-pointer"
+                  >
+                    <option value="" className="bg-black">Select your tier...</option>
+                    <option value="inner-circle" className="bg-black">Jesse's Inner Circle ($4.99/month)</option>
+                    <option value="best-friends" className="bg-black">Jesse's Best Friends - BFF ($9.99/month)</option>
+                    <option value="elite" className="bg-black">Love Me Long Time ($24.99/month)</option>
+                  </select>
+                </div>
+              </div>
+              
+              <div>
                 <label className="block text-sm font-medium text-gray-300 mb-2">
                   Discord Username (Optional)
                 </label>
@@ -285,6 +314,96 @@ export default function YouTubeMembersPage() {
                     className="w-full pl-10 pr-4 py-3 bg-black/50 border-2 border-fire-orange/30 rounded-lg text-white placeholder-ash-grey/50 focus:border-fire-orange focus:outline-none transition-colors"
                   />
                 </div>
+              </div>
+              
+              <div>
+                <label className="block text-sm font-bold text-white mb-2 uppercase tracking-wide">
+                  Membership Screenshot (Optional but Recommended)
+                </label>
+                <div
+                  className={`relative border-2 border-dashed rounded-lg p-8 text-center transition-all ${
+                    isDragging ? 'border-fire-orange bg-fire-orange/10' : 'border-fire-orange/30 bg-black/50'
+                  } ${formData.screenshot ? 'border-green-500' : ''}`}
+                  onDragOver={(e) => {
+                    e.preventDefault();
+                    setIsDragging(true);
+                  }}
+                  onDragLeave={() => setIsDragging(false)}
+                  onDrop={(e) => {
+                    e.preventDefault();
+                    setIsDragging(false);
+                    const file = e.dataTransfer.files[0];
+                    if (file && file.type.startsWith('image/')) {
+                      const reader = new FileReader();
+                      reader.onload = (event) => {
+                        setFormData({...formData, screenshot: event.target?.result as string});
+                      };
+                      reader.readAsDataURL(file);
+                    }
+                  }}
+                  onPaste={(e) => {
+                    const items = e.clipboardData?.items;
+                    if (items) {
+                      for (let i = 0; i < items.length; i++) {
+                        if (items[i].type.indexOf('image') !== -1) {
+                          const blob = items[i].getAsFile();
+                          if (blob) {
+                            const reader = new FileReader();
+                            reader.onload = (event) => {
+                              setFormData({...formData, screenshot: event.target?.result as string});
+                            };
+                            reader.readAsDataURL(blob);
+                          }
+                        }
+                      }
+                    }
+                  }}
+                  tabIndex={0}
+                >
+                  {formData.screenshot ? (
+                    <div>
+                      <img src={formData.screenshot} alt="Screenshot" className="max-h-40 mx-auto mb-4 rounded" />
+                      <p className="text-green-500 font-bold">✓ Screenshot uploaded!</p>
+                      <button
+                        type="button"
+                        onClick={() => setFormData({...formData, screenshot: null})}
+                        className="text-sm text-fire-orange hover:text-white mt-2"
+                      >
+                        Remove screenshot
+                      </button>
+                    </div>
+                  ) : (
+                    <div>
+                      <p className="text-white mb-2">📸 Paste (Ctrl+V) or drag your screenshot here</p>
+                      <p className="text-gray-500 text-sm">Shows your YouTube membership status</p>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        id="screenshot-upload"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) {
+                            const reader = new FileReader();
+                            reader.onload = (event) => {
+                              setFormData({...formData, screenshot: event.target?.result as string});
+                            };
+                            reader.readAsDataURL(file);
+                          }
+                        }}
+                      />
+                      <label
+                        htmlFor="screenshot-upload"
+                        className="inline-block mt-4 px-4 py-2 bg-fire-orange/20 hover:bg-fire-orange/30 rounded cursor-pointer transition-colors"
+                      >
+                        Or click to browse
+                      </label>
+                    </div>
+                  )}
+                </div>
+                <p className="text-xs text-gray-500 mt-2">
+                  This helps us verify your membership faster. Your screenshot will be reviewed by admins.
+                </p>
               </div>
               
               {status === 'error' && (

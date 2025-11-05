@@ -172,9 +172,10 @@ client.on('guildMemberAdd', async member => {
   
   if (pending) {
     console.log(`✅ Found pending verification for ${member.user.username}`);
-    const role = member.guild.roles.cache.get(ROLES.member);
+    const role = member.guild.roles.cache.get(pending.role);
     
     if (role) {
+      console.log(`🎯 Assigning role: ${role.name} (${pending.tier})`);
       try {
         await member.roles.add(role);
         pendingUsernames.delete(member.user.username.toLowerCase());
@@ -289,7 +290,16 @@ client.on('messageCreate', async (message) => {
   const discordUsername = fields.find(f => f.name === 'Discord')?.value || null;
   const youtubeUsername = fields.find(f => f.name === 'YouTube')?.value || 'Unknown';
   const email = fields.find(f => f.name === 'Email')?.value || 'Unknown';
+  const membershipTier = fields.find(f => f.name === 'Membership Tier')?.value || null;
   const verificationCode = fields.find(f => f.name === 'Verification Code')?.value || null;
+  
+  // Determine role based on tier
+  let roleToAssign = ROLES.member; // Default
+  if (membershipTier) {
+    if (membershipTier.includes('$4.99')) roleToAssign = ROLES['inner-circle'];
+    else if (membershipTier.includes('$9.99')) roleToAssign = ROLES['best-friends'];
+    else if (membershipTier.includes('$24.99')) roleToAssign = ROLES['elite'];
+  }
   
   console.log(`👤 Discord: ${discordUsername || 'Not provided'}`);
   console.log(`📺 YouTube: ${youtubeUsername}`);
@@ -310,9 +320,11 @@ client.on('messageCreate', async (message) => {
   if (discordUsername && discordUsername !== 'Not provided (new user)') {
     pendingUsernames.set(discordUsername.toLowerCase(), {
       youtube: youtubeUsername,
-      role: 'member'
+      role: roleToAssign,
+      tier: membershipTier
     });
     console.log(`📝 Watching for username: ${discordUsername}`);
+    console.log(`🎯 Will assign role: ${roleToAssign} for tier: ${membershipTier}`);
   }
   
   // Verify YouTube membership

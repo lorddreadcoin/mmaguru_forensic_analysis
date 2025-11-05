@@ -50,11 +50,19 @@ export async function POST(request: Request) {
       email: data.email 
     });
     
-    const { youtubeUsername, discordUsername, email } = data;
+    const { youtubeUsername, discordUsername, email, membershipTier, screenshot } = data;
     
     // Generate verification code for users without Discord
     const verificationCode = `JESSE-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
     const hasDiscord = discordUsername && discordUsername.trim() !== '';
+    
+    // Map tier values to display names
+    const tierNames: { [key: string]: string } = {
+      'inner-circle': "Jesse's Inner Circle ($4.99)",
+      'best-friends': "Jesse's Best Friends - BFF ($9.99)",
+      'elite': "Love Me Long Time ($24.99)"
+    };
+    const tierDisplay = tierNames[membershipTier] || 'Unknown Tier';
     
     // Validate input
     if (!youtubeUsername || !email) {
@@ -227,29 +235,43 @@ export async function POST(request: Request) {
     console.log('📡 Sending detailed webhook notification...');
     if (DISCORD_WEBHOOK) {
       // Non-blocking webhook call
+      // Prepare webhook payload
+      const webhookPayload: any = {
+        embeds: [{
+          title: "🎮 YouTube Member Verification",
+          color: 0xFF5A1F, // Fire orange
+          fields: [
+            { name: "YouTube", value: youtubeUsername, inline: true },
+            { name: "Discord", value: hasDiscord ? discordUsername : "Not provided (new user)", inline: true },
+            { name: "Email", value: email, inline: false },
+            { name: "Membership Tier", value: tierDisplay, inline: true },
+            { name: "Verification Code", value: hasDiscord ? "N/A - Has Discord" : verificationCode, inline: true },
+            { name: "Status", value: "📧 Verification email sent", inline: false },
+            { name: "Next Steps", value: hasDiscord ? 
+              `Waiting for ${discordUsername} to join server` : 
+              `User will create Discord account and use code: ${verificationCode}`, inline: false }
+          ],
+          footer: {
+            text: "YouTube → Discord Bridge"
+          },
+          timestamp: new Date().toISOString()
+        }]
+      };
+      
+      // If screenshot provided, add as image to embed
+      if (screenshot && screenshot.startsWith('data:image')) {
+        webhookPayload.embeds[0].image = { url: screenshot };
+        webhookPayload.embeds[0].fields.push({
+          name: "Screenshot",
+          value: "✅ Membership screenshot provided (see below)",
+          inline: false
+        });
+      }
+      
       fetch(DISCORD_WEBHOOK, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          embeds: [{
-            title: " YouTube Member Verification",
-            color: 0xFF5A1F, // Fire orange
-            fields: [
-              { name: "YouTube", value: youtubeUsername, inline: true },
-              { name: "Discord", value: hasDiscord ? discordUsername : "Not provided (new user)", inline: true },
-              { name: "Email", value: email, inline: false },
-              { name: "Verification Code", value: hasDiscord ? "N/A - Has Discord" : verificationCode, inline: true },
-              { name: "Status", value: " Verification email sent", inline: false },
-              { name: "Next Steps", value: hasDiscord ? 
-                `Waiting for ${discordUsername} to join server` : 
-                `User will create Discord account and use code: ${verificationCode}`, inline: false }
-            ],
-            footer: {
-              text: "YouTube → Discord Bridge"
-            },
-            timestamp: new Date().toISOString()
-          }]
-        })
+        body: JSON.stringify(webhookPayload)
       })
       .then(res => {
         console.log('✅ Detailed webhook notification sent, status:', res.status);
