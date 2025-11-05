@@ -4,6 +4,7 @@ import './globals.css'
 import FlameCursor from '@/components/FlameCursor'
 import FireScroll from '@/components/FireScroll'
 import StickySubscribeBar from '@/components/StickySubscribeBar'
+import { SpeedInsights } from '@vercel/speed-insights/next'
 
 // Jesse ON FIRE - Cinematic Typography
 const inter = Inter({ 
@@ -113,6 +114,7 @@ export default function RootLayout({
         <FlameCursor />
         <StickySubscribeBar />
         {children}
+        <SpeedInsights />
       </body>
     </html>
   )
