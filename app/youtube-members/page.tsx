@@ -18,6 +18,13 @@ export default function YouTubeMembersPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validate screenshot is provided
+    if (!formData.screenshot) {
+      setErrorMessage('Please upload a screenshot of your YouTube membership');
+      return;
+    }
+    
     setStatus('loading');
     setErrorMessage('');
     
@@ -316,9 +323,22 @@ export default function YouTubeMembersPage() {
                 </div>
               </div>
               
+              {/* Screenshot Instructions */}
+              <div className="bg-fire-orange/10 border border-fire-orange/30 rounded-lg p-4 space-y-2">
+                <p className="text-sm font-bold text-fire-orange">📸 How to Screenshot Your Membership:</p>
+                <ul className="text-xs text-gray-300 space-y-1 ml-4">
+                  <li>• <strong>PC:</strong> Press Windows+Shift+S (or PrtScn)</li>
+                  <li>• <strong>Mac:</strong> Press Cmd+Shift+4</li>
+                  <li>• <strong>iPhone:</strong> Power + Volume Up</li>
+                  <li>• <strong>Android:</strong> Power + Volume Down</li>
+                  <li>• Go to YouTube → Your Memberships → Screenshot</li>
+                  <li>• Then just paste (Ctrl+V) below!</li>
+                </ul>
+              </div>
+              
               <div>
                 <label className="block text-sm font-bold text-white mb-2 uppercase tracking-wide">
-                  Membership Screenshot (Optional but Recommended)
+                  Membership Screenshot <span className="text-red-500">*Required</span>
                 </label>
                 <div
                   className={`relative border-2 border-dashed rounded-lg p-8 text-center transition-all ${
@@ -402,7 +422,7 @@ export default function YouTubeMembersPage() {
                   )}
                 </div>
                 <p className="text-xs text-gray-500 mt-2">
-                  This helps us verify your membership faster. Your screenshot will be reviewed by admins.
+                  ⚠️ <strong>Required for access.</strong> Screenshot must show your active YouTube membership.
                 </p>
               </div>
               
