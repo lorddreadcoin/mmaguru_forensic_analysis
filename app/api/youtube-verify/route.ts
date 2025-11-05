@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 
+// Deployment: Nov 5, 2025 10:10 AM - Fixed email template
 // Discord webhook for logging
 const DISCORD_WEBHOOK = process.env.DISCORD_WEBHOOK_URL || '';
 const DISCORD_INVITE = process.env.DISCORD_INVITE_URL || 'https://discord.gg/9WpPC5GS';
