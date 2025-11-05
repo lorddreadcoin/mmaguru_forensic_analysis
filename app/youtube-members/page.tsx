@@ -277,20 +277,24 @@ export default function YouTubeMembersPage() {
               </div>
               
               <div>
-                <label className="block text-sm font-bold text-white mb-2 uppercase tracking-wide">
-                  Discord Username
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  Discord Username (Optional)
                 </label>
                 <div className="relative">
                   <FaDiscord className="absolute left-3 top-1/2 -translate-y-1/2 text-[#5865F2]" />
                   <input
                     type="text"
-                    required
-                    placeholder="username#0000 or @username"
+                    id="discord"
+                    name="discord"
                     value={formData.discordUsername}
                     onChange={(e) => setFormData({...formData, discordUsername: e.target.value})}
                     className="w-full pl-10 pr-4 py-3 bg-black/50 border-2 border-fire-orange/30 rounded-lg text-white placeholder-ash-grey/50 focus:border-fire-orange focus:outline-none transition-colors"
+                    placeholder="Leave blank if you don't have Discord yet"
                   />
                 </div>
+                <p className="text-xs text-gray-500 mt-1">
+                  Don't have Discord? No problem! We'll help you create one.
+                </p>
               </div>
               
               <div>

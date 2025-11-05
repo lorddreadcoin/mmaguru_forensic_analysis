@@ -39,16 +39,25 @@ async function sendEmail(data: { to: string; subject: string; body: string }) {
   return true;
 }
 
-export async function POST(req: Request) {
-  console.log('🔥 YouTube verification endpoint called');
+export async function POST(request: Request) {
+  console.log('🚀 YouTube verification endpoint hit');
   
   try {
-    const { youtubeUsername, discordUsername, email } = await req.json();
+    const data = await request.json();
+    console.log('📝 Received data:', { 
+      youtube: data.youtubeUsername, 
+      discord: data.discordUsername || 'Not provided',
+      email: data.email 
+    });
     
-    console.log('📝 Received data:', { youtubeUsername, discordUsername, email });
+    const { youtubeUsername, discordUsername, email } = data;
+    
+    // Generate verification code for users without Discord
+    const verificationCode = `JESSE-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
+    const hasDiscord = discordUsername && discordUsername.trim() !== '';
     
     // Validate input
-    if (!youtubeUsername || !discordUsername || !email) {
+    if (!youtubeUsername || !email) {
       console.log('❌ Validation failed: Missing fields');
       return NextResponse.json(
         { error: 'All fields are required' },
@@ -107,7 +116,9 @@ export async function POST(req: Request) {
             </p>
             
             <p style="margin: 0 0 25px 0; font-size: 16px; line-height: 1.6;">
-              Thanks for being a YouTube member! Here's how to get your Discord access in under 2 minutes:
+              Thanks for being a YouTube member! ${hasDiscord ? 
+                "We found your Discord username. Here's how to get your access:" : 
+                "Let's get you set up with Discord access:"}
             </p>
             
             <!-- Step 1 -->
@@ -135,9 +146,11 @@ export async function POST(req: Request) {
             <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 20px;">
               <tr>
                 <td style="background-color: #f8f8f8; padding: 20px; border-radius: 8px;">
-                  <p style="margin: 0 0 10px 0; font-size: 20px;">2️⃣ <strong>Connect Your YouTube Account</strong></p>
+                  <p style="margin: 0 0 10px 0; font-size: 20px;">2️⃣ <strong>${hasDiscord ? 'We\'ll Find You' : 'Create Your Discord Account'}</strong></p>
                   <p style="margin: 0; font-size: 14px; color: #666666;">
-                    In Discord, go to: <strong>User Settings → Connections → YouTube</strong>
+                    ${hasDiscord ? 
+                      `We're looking for <strong>${discordUsername}</strong>. Once you join, we'll assign your role automatically!` :
+                      'If you don\'t have Discord yet, you\'ll be prompted to create a free account. It takes 30 seconds!'}
                   </p>
                 </td>
               </tr>
@@ -147,10 +160,17 @@ export async function POST(req: Request) {
             <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 25px;">
               <tr>
                 <td style="background-color: #f8f8f8; padding: 20px; border-radius: 8px;">
-                  <p style="margin: 0 0 10px 0; font-size: 20px;">3️⃣ <strong>Get Your Role Automatically</strong></p>
+                  <p style="margin: 0 0 10px 0; font-size: 20px;">3️⃣ <strong>${hasDiscord ? 'Automatic Role Assignment' : 'Verify Your Membership'}</strong></p>
                   <p style="margin: 0; font-size: 14px; color: #666666;">
-                    Discord will verify your membership and assign your role in 2-3 minutes!
+                    ${hasDiscord ? 
+                      'Your role will be assigned automatically within 2-3 minutes of joining!' :
+                      `After joining, type this in any channel: <strong>/verify ${verificationCode}</strong>`}
                   </p>
+                  ${!hasDiscord ? `
+                  <p style="margin: 10px 0 0 0; padding: 10px; background-color: #fff3cd; border-radius: 4px; font-size: 14px;">
+                    <strong>Your verification code: ${verificationCode}</strong><br>
+                    Save this code! You'll need it after joining Discord.
+                  </p>` : ''}
                 </td>
               </tr>
             </table>
@@ -160,9 +180,13 @@ export async function POST(req: Request) {
               Important Notes:
             </p>
             <ul style="margin: 0 0 25px 0; padding-left: 20px; color: #666666; font-size: 14px; line-height: 1.8;">
-              <li>Your Discord username was submitted as: <strong>${discordUsername}</strong></li>
-              <li>If your role isn't assigned after 5 minutes, disconnect and reconnect YouTube in Discord settings.</li>
-              <li>Your role will be removed automatically if your YouTube membership expires.</li>
+              ${hasDiscord ? 
+                `<li>Your Discord username: <strong>${discordUsername}</strong></li>
+                 <li>Make sure this matches your actual Discord username!</li>` :
+                `<li>Your verification code: <strong>${verificationCode}</strong></li>
+                 <li>You'll need this code after creating your Discord account</li>`}
+              <li>Your YouTube membership tier determines your Discord role</li>
+              <li>Roles are removed if YouTube membership expires</li>
             </ul>
             
             <p style="margin: 0; font-size: 14px; color: #666666;">
@@ -208,34 +232,17 @@ export async function POST(req: Request) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           embeds: [{
-            title: "🎮 New YouTube Member Verification",
+            title: " YouTube Member Verification",
             color: 0xFF5A1F, // Fire orange
             fields: [
-              { 
-                name: "YouTube", 
-                value: youtubeUsername, 
-                inline: true 
-              },
-              { 
-                name: "Discord", 
-                value: discordUsername, 
-                inline: true 
-              },
-              { 
-                name: "Email", 
-                value: email, 
-                inline: true 
-              },
-              { 
-                name: "Status", 
-                value: "✅ Email Sent - Awaiting YouTube Connection", 
-                inline: false 
-              },
-              {
-                name: "Instructions Sent",
-                value: "User should:\n1. Join Discord via invite link\n2. Connect YouTube in Settings\n3. Get auto role",
-                inline: false
-              }
+              { name: "YouTube", value: youtubeUsername, inline: true },
+              { name: "Discord", value: hasDiscord ? discordUsername : "Not provided (new user)", inline: true },
+              { name: "Email", value: email, inline: false },
+              { name: "Verification Code", value: hasDiscord ? "N/A - Has Discord" : verificationCode, inline: true },
+              { name: "Status", value: " Verification email sent", inline: false },
+              { name: "Next Steps", value: hasDiscord ? 
+                `Waiting for ${discordUsername} to join server` : 
+                `User will create Discord account and use code: ${verificationCode}`, inline: false }
             ],
             footer: {
               text: "YouTube → Discord Bridge"
