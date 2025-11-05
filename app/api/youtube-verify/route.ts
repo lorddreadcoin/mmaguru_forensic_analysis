@@ -80,71 +80,105 @@ export async function POST(req: Request) {
       console.log('⚠️ CRITICAL: No webhook URL configured in environment variables!');
     }
     
-    // Create email HTML
+    // Create email HTML - Gmail-compatible with inline styles
     const emailBody = `
     <!DOCTYPE html>
     <html>
-    <head>
-      <style>
-        body { font-family: Arial, sans-serif; background: #1a1a1a; color: #ffffff; padding: 20px; }
-        .container { max-width: 600px; margin: 0 auto; background: #2a2a2a; border-radius: 10px; padding: 30px; }
-        .header { text-align: center; margin-bottom: 30px; }
-        .fire { color: #FF5A1F; font-weight: bold; }
-        .steps { background: #1a1a1a; padding: 20px; border-radius: 8px; margin: 20px 0; }
-        .step { margin: 15px 0; padding-left: 30px; position: relative; }
-        .step-number { position: absolute; left: 0; font-size: 20px; }
-        .button { display: inline-block; background: #FF5A1F; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; margin: 20px 0; font-weight: bold; }
-        .footer { text-align: center; margin-top: 30px; color: #888; font-size: 14px; }
-      </style>
-    </head>
-    <body>
-      <div class="container">
-        <div class="header">
-          <h1>🔥 Welcome to the <span class="fire">Jesse ON FIRE</span> Discord!</h1>
-          <p>Your YouTube membership = Discord access. No double payment!</p>
-        </div>
+    <body style="margin: 0; padding: 20px; font-family: Arial, Helvetica, sans-serif; background-color: #f5f5f5;">
+      <table width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 8px; overflow: hidden;">
+        <!-- Header -->
+        <tr>
+          <td style="background-color: #1a1a1a; padding: 30px; text-align: center;">
+            <h1 style="margin: 0; color: #ffffff; font-size: 28px;">
+              🔥 Welcome to <span style="color: #FF5A1F;">Jesse ON FIRE</span> Discord!
+            </h1>
+            <p style="margin: 10px 0 0 0; color: #cccccc; font-size: 14px;">
+              Your YouTube membership = Discord access. No double payment!
+            </p>
+          </td>
+        </tr>
         
-        <p>Hey ${youtubeUsername}!</p>
+        <!-- Body -->
+        <tr>
+          <td style="padding: 30px; color: #333333;">
+            <p style="margin: 0 0 15px 0; font-size: 16px; line-height: 1.6;">
+              Hey <strong>${youtubeUsername}</strong>,
+            </p>
+            
+            <p style="margin: 0 0 25px 0; font-size: 16px; line-height: 1.6;">
+              Thanks for being a YouTube member! Here's how to get your Discord access in under 2 minutes:
+            </p>
+            
+            <!-- Step 1 -->
+            <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 20px;">
+              <tr>
+                <td style="background-color: #f8f8f8; padding: 20px; border-radius: 8px;">
+                  <p style="margin: 0 0 10px 0; font-size: 20px;">1️⃣ <strong>Join our Discord Server</strong></p>
+                  <p style="margin: 0 0 15px 0; font-size: 14px; color: #666666;">
+                    Click the button below to join the community.
+                  </p>
+                  <table width="100%" cellpadding="0" cellspacing="0">
+                    <tr>
+                      <td align="center">
+                        <a href="${DISCORD_INVITE}" style="display: inline-block; background-color: #FF5A1F; color: #ffffff; padding: 15px 40px; text-decoration: none; border-radius: 6px; font-weight: bold; font-size: 16px;">
+                          Join Discord Now →
+                        </a>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table>
+            
+            <!-- Step 2 -->
+            <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 20px;">
+              <tr>
+                <td style="background-color: #f8f8f8; padding: 20px; border-radius: 8px;">
+                  <p style="margin: 0 0 10px 0; font-size: 20px;">2️⃣ <strong>Connect Your YouTube Account</strong></p>
+                  <p style="margin: 0; font-size: 14px; color: #666666;">
+                    In Discord, go to: <strong>User Settings → Connections → YouTube</strong>
+                  </p>
+                </td>
+              </tr>
+            </table>
+            
+            <!-- Step 3 -->
+            <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 25px;">
+              <tr>
+                <td style="background-color: #f8f8f8; padding: 20px; border-radius: 8px;">
+                  <p style="margin: 0 0 10px 0; font-size: 20px;">3️⃣ <strong>Get Your Role Automatically</strong></p>
+                  <p style="margin: 0; font-size: 14px; color: #666666;">
+                    Discord will verify your membership and assign your role in 2-3 minutes!
+                  </p>
+                </td>
+              </tr>
+            </table>
+            
+            <!-- Important Notes -->
+            <p style="margin: 0 0 10px 0; font-size: 16px; font-weight: bold;">
+              Important Notes:
+            </p>
+            <ul style="margin: 0 0 25px 0; padding-left: 20px; color: #666666; font-size: 14px; line-height: 1.8;">
+              <li>Your Discord username was submitted as: <strong>${discordUsername}</strong></li>
+              <li>If your role isn't assigned after 5 minutes, disconnect and reconnect YouTube in Discord settings.</li>
+              <li>Your role will be removed automatically if your YouTube membership expires.</li>
+            </ul>
+            
+            <p style="margin: 0; font-size: 14px; color: #666666;">
+              Need help? Just reply to this email or message @mods in Discord!
+            </p>
+          </td>
+        </tr>
         
-        <p>Thanks for being a YouTube member! Here's how to get your Discord access in under 2 minutes:</p>
-        
-        <div class="steps">
-          <div class="step">
-            <span class="step-number">1️⃣</span>
-            <strong>Join our Discord server:</strong><br>
-            Click the button below to join
-          </div>
-          
-          <center>
-            <a href="${DISCORD_INVITE}" class="button">Join Discord Now →</a>
-          </center>
-          
-          <div class="step">
-            <span class="step-number">2️⃣</span>
-            <strong>Connect your YouTube account:</strong><br>
-            In Discord, go to User Settings → Connections → Add YouTube
-          </div>
-          
-          <div class="step">
-            <span class="step-number">3️⃣</span>
-            <strong>Automatic role assignment:</strong><br>
-            Discord will verify your membership and assign your role in 2-3 minutes!
-          </div>
-        </div>
-        
-        <p><strong>Important:</strong></p>
-        <ul>
-          <li>Your Discord username should be: <strong>${discordUsername}</strong></li>
-          <li>If Discord doesn't auto-assign your role, DM a mod with this email</li>
-          <li>Your role will be removed automatically if YouTube membership expires</li>
-        </ul>
-        
-        <p>Need help? Just reply to this email or message @mods in Discord!</p>
-        
-        <div class="footer">
-          <p>Jesse ON FIRE • 517K Warriors Strong • Uncensored. Unfiltered. Undefeated.</p>
-        </div>
-      </div>
+        <!-- Footer -->
+        <tr>
+          <td style="background-color: #1a1a1a; padding: 20px; text-align: center;">
+            <p style="margin: 0; color: #888888; font-size: 12px;">
+              Jesse ON FIRE • 517K Warriors Strong • Uncensored. Unfiltered. Undefeated.
+            </p>
+          </td>
+        </tr>
+      </table>
     </body>
     </html>
     `;
