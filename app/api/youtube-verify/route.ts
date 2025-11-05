@@ -126,7 +126,7 @@ export async function POST(request: Request) {
             <p style="margin: 0 0 25px 0; font-size: 16px; line-height: 1.6;">
               Thanks for being a YouTube member! ${hasDiscord ? 
                 "We found your Discord username. Here's how to get your access:" : 
-                "Let's get you set up with Discord access:"}
+                "Let's get you set up with Discord and access Jesse's server:"}
             </p>
             
             <!-- Step 1 -->
@@ -158,8 +158,21 @@ export async function POST(request: Request) {
                   <p style="margin: 0; font-size: 14px; color: #666666;">
                     ${hasDiscord ? 
                       `We're looking for <strong>${discordUsername}</strong>. Once you join, we'll assign your role automatically!` :
-                      'If you don\'t have Discord yet, you\'ll be prompted to create a free account. It takes 30 seconds!'}
+                      'First, create your free Discord account:'}
                   </p>
+                  ${!hasDiscord ? `
+                  <table cellpadding="0" cellspacing="0" style="margin: 15px 0;">
+                    <tr>
+                      <td style="background-color: #5865F2; border-radius: 6px; text-align: center;">
+                        <a href="https://discord.com/register" style="display: block; padding: 12px 30px; color: white; text-decoration: none; font-weight: bold;">
+                          Create Discord Account
+                        </a>
+                      </td>
+                    </tr>
+                  </table>
+                  <p style="margin: 10px 0 0 0; font-size: 12px; color: #999999;">
+                    Remember your username! You'll need it for verification.
+                  </p>` : ''}
                 </td>
               </tr>
             </table>

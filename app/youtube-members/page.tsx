@@ -15,6 +15,7 @@ export default function YouTubeMembersPage() {
     screenshot: null as string | null
   });
   const [isDragging, setIsDragging] = useState(false);
+  const [needsDiscordAccount, setNeedsDiscordAccount] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,6 +23,12 @@ export default function YouTubeMembersPage() {
     // Validate screenshot is provided
     if (!formData.screenshot) {
       setErrorMessage('Please upload a screenshot of your YouTube membership');
+      return;
+    }
+    
+    // Validate Discord username if they have Discord
+    if (!needsDiscordAccount && !formData.discordUsername.trim()) {
+      setErrorMessage('Please enter your Discord username or check "I don\'t have Discord yet"');
       return;
     }
     
@@ -286,24 +293,59 @@ export default function YouTubeMembersPage() {
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Discord Username (Optional)
+                <label className="block text-sm font-bold text-white mb-2 uppercase tracking-wide">
+                  Discord Username {!needsDiscordAccount && <span className="text-red-500">*Required</span>}
                 </label>
-                <div className="relative">
-                  <FaDiscord className="absolute left-3 top-1/2 -translate-y-1/2 text-[#5865F2]" />
-                  <input
-                    type="text"
-                    id="discord"
-                    name="discord"
-                    value={formData.discordUsername}
-                    onChange={(e) => setFormData({...formData, discordUsername: e.target.value})}
-                    className="w-full pl-10 pr-4 py-3 bg-black/50 border-2 border-fire-orange/30 rounded-lg text-white placeholder-ash-grey/50 focus:border-fire-orange focus:outline-none transition-colors"
-                    placeholder="realjesseonfire (no @ symbol)"
-                  />
-                </div>
-                <p className="text-xs text-gray-500 mt-1">
-                  Enter just your username (e.g., "realjesseonfire"). Don't have Discord? Leave blank!
-                </p>
+                
+                {!needsDiscordAccount ? (
+                  <>
+                    <div className="relative">
+                      <FaDiscord className="absolute left-3 top-1/2 -translate-y-1/2 text-[#5865F2]" />
+                      <input
+                        type="text"
+                        id="discord"
+                        name="discord"
+                        required
+                        value={formData.discordUsername}
+                        onChange={(e) => setFormData({...formData, discordUsername: e.target.value})}
+                        className="w-full pl-10 pr-4 py-3 bg-black/50 border-2 border-fire-orange/30 rounded-lg text-white placeholder-ash-grey/50 focus:border-fire-orange focus:outline-none transition-colors"
+                        placeholder="realjesseonfire (no @ symbol)"
+                      />
+                    </div>
+                    <label className="flex items-center mt-2 text-sm text-gray-400 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={needsDiscordAccount}
+                        onChange={(e) => {
+                          setNeedsDiscordAccount(e.target.checked);
+                          if (e.target.checked) {
+                            setFormData({...formData, discordUsername: ''});
+                          }
+                        }}
+                        className="mr-2"
+                      />
+                      I don't have a Discord account yet
+                    </label>
+                  </>
+                ) : (
+                  <div className="bg-[#5865F2]/10 border border-[#5865F2] rounded-lg p-4">
+                    <p className="text-white font-bold mb-2">📱 Create Your Discord Account:</p>
+                    <ol className="text-sm text-gray-300 space-y-1 ml-4">
+                      <li>1. We'll send you setup instructions via email</li>
+                      <li>2. Click "Create Account" in the email</li>
+                      <li>3. Choose a username (remember it!)</li>
+                      <li>4. Join Jesse's server with the invite link</li>
+                      <li>5. Use verification code from email</li>
+                    </ol>
+                    <button
+                      type="button"
+                      onClick={() => setNeedsDiscordAccount(false)}
+                      className="text-xs text-fire-orange hover:text-white mt-3"
+                    >
+                      Actually, I have Discord →
+                    </button>
+                  </div>
+                )}
               </div>
               
               <div>
