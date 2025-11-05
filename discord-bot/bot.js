@@ -2,7 +2,7 @@
 // Monitors #youtube-members channel and auto-assigns roles
 
 require('dotenv').config();
-const { Client, GatewayIntentBits, EmbedBuilder } = require('discord.js');
+const { Client, GatewayIntentBits, EmbedBuilder, SlashCommandBuilder, REST, Routes } = require('discord.js');
 
 // Configuration
 const BOT_TOKEN = process.env.DISCORD_BOT_TOKEN;
@@ -13,10 +13,17 @@ const DISCORD_INVITE_URL = 'https://discord.gg/9WpPC5GS';
 
 // Role IDs from Discord server
 const ROLES = {
+  'member': '1435138402474393812', // Default YouTube member role
   'inner-circle': '1435138402474393812', // $4.99 tier - Jesse's Inner Circle
   'best-friends': '1435139067984482315',  // $9.99 tier - Jesse's Best Friends (BFF)
   'elite': '1435139809214464051'          // $24.99 tier - Love Me Long Time
 };
+
+// Store pending verifications
+// Format: { 'JESSE-XXXX': { youtube: 'username', discord: 'username', email: 'email' } }
+const pendingVerifications = new Map();
+// Format: { 'discordUsername': { youtube: 'username', role: 'member' } }
+const pendingUsernames = new Map();
 
 // YouTube membership verification
 async function verifyYouTubeMembership(youtubeUsername) {
@@ -61,13 +68,152 @@ const client = new Client({
   ]
 });
 
-client.once('ready', () => {
+client.once('ready', async () => {
   console.log('✅ YouTube Bridge Bot is online!');
   console.log(`🤖 Logged in as ${client.user.tag}`);
   console.log(`📡 Monitoring channel: ${WEBHOOK_CHANNEL_ID}`);
   console.log(`🔗 Discord invite: ${DISCORD_INVITE_URL}`);
-  console.log('🔐 YouTube membership verification: ENABLED (via Discord integration)');
+  console.log('🔐 YouTube membership verification: ENABLED');
+  
+  // Register slash commands
+  const commands = [
+    new SlashCommandBuilder()
+      .setName('verify')
+      .setDescription('Verify your YouTube membership with a code')
+      .addStringOption(option =>
+        option.setName('code')
+          .setDescription('Your verification code (e.g., JESSE-XXXX)')
+          .setRequired(true))
+  ];
+  
+  const rest = new REST({ version: '10' }).setToken(BOT_TOKEN);
+  
+  try {
+    console.log('📝 Registering slash commands...');
+    await rest.put(
+      Routes.applicationCommands(client.user.id),
+      { body: commands }
+    );
+    console.log('✅ Slash commands registered!');
+  } catch (error) {
+    console.error('❌ Error registering commands:', error);
+  }
+  
   console.log('');
+});
+
+// Handle slash commands
+client.on('interactionCreate', async interaction => {
+  if (!interaction.isChatInputCommand()) return;
+  
+  if (interaction.commandName === 'verify') {
+    const code = interaction.options.getString('code').toUpperCase();
+    const verification = pendingVerifications.get(code);
+    
+    if (!verification) {
+      await interaction.reply({
+        content: '❌ Invalid verification code. Please check your email for the correct code.',
+        ephemeral: true
+      });
+      return;
+    }
+    
+    // Assign role
+    const member = interaction.member;
+    const role = interaction.guild.roles.cache.get(ROLES.member);
+    
+    if (!role) {
+      await interaction.reply({
+        content: '❌ Role not found. Please contact an admin.',
+        ephemeral: true
+      });
+      return;
+    }
+    
+    try {
+      await member.roles.add(role);
+      pendingVerifications.delete(code);
+      
+      await interaction.reply({
+        content: `✅ Welcome ${verification.youtube}! Your YouTube membership has been verified!`,
+        ephemeral: false
+      });
+      
+      // Post in webhook channel
+      const channel = client.channels.cache.get(WEBHOOK_CHANNEL_ID);
+      if (channel) {
+        const embed = new EmbedBuilder()
+          .setColor('#00FF00')
+          .setTitle('✅ Member Verified via Code')
+          .setDescription(`**${member.user.tag}** verified with code ${code}`)
+          .addFields(
+            { name: 'YouTube', value: verification.youtube, inline: true },
+            { name: 'Discord', value: member.user.tag, inline: true }
+          )
+          .setTimestamp();
+        await channel.send({ embeds: [embed] });
+      }
+    } catch (error) {
+      console.error('Error assigning role:', error);
+      await interaction.reply({
+        content: '❌ Failed to assign role. Please contact an admin.',
+        ephemeral: true
+      });
+    }
+  }
+});
+
+// Handle new members joining
+client.on('guildMemberAdd', async member => {
+  console.log(`👤 New member joined: ${member.user.tag}`);
+  
+  // Check if we're waiting for this username
+  const pending = pendingUsernames.get(member.user.username.toLowerCase());
+  
+  if (pending) {
+    console.log(`✅ Found pending verification for ${member.user.username}`);
+    const role = member.guild.roles.cache.get(ROLES.member);
+    
+    if (role) {
+      try {
+        await member.roles.add(role);
+        pendingUsernames.delete(member.user.username.toLowerCase());
+        
+        // Post success in webhook channel
+        const channel = client.channels.cache.get(WEBHOOK_CHANNEL_ID);
+        if (channel) {
+          const embed = new EmbedBuilder()
+            .setColor('#00FF00')
+            .setTitle('✅ Member Auto-Verified')
+            .setDescription(`**${member.user.tag}** was automatically verified!`)
+            .addFields(
+              { name: 'YouTube', value: pending.youtube, inline: true },
+              { name: 'Discord', value: member.user.tag, inline: true }
+            )
+            .setTimestamp();
+          await channel.send({ embeds: [embed] });
+        }
+        
+        // Send welcome DM
+        try {
+          await member.send({
+            embeds: [new EmbedBuilder()
+              .setColor('#FF5A1F')
+              .setTitle('🔥 Welcome to Jesse ON FIRE!')
+              .setDescription('Your YouTube membership has been verified!')
+              .addFields(
+                { name: '✅ Access Granted', value: 'You now have member access!' }
+              )
+            ]
+          });
+        } catch (error) {
+          console.log(`Could not DM ${member.user.tag}`);
+        }
+      } catch (error) {
+        console.error('Error assigning role:', error);
+      }
+    }
+  }
 });
 
 // Monitor when members get roles (YouTube verification complete)
@@ -140,13 +286,34 @@ client.on('messageCreate', async (message) => {
   
   // Extract info from embed
   const fields = embed.fields;
-  const discordUsername = fields.find(f => f.name === 'Discord')?.value || 'Unknown';
+  const discordUsername = fields.find(f => f.name === 'Discord')?.value || null;
   const youtubeUsername = fields.find(f => f.name === 'YouTube')?.value || 'Unknown';
   const email = fields.find(f => f.name === 'Email')?.value || 'Unknown';
+  const verificationCode = fields.find(f => f.name === 'Verification Code')?.value || null;
   
-  console.log(`👤 Discord: ${discordUsername}`);
+  console.log(`👤 Discord: ${discordUsername || 'Not provided'}`);
   console.log(`📺 YouTube: ${youtubeUsername}`);
   console.log(`📧 Email: ${email}`);
+  console.log(`🔑 Code: ${verificationCode || 'N/A'}`);
+  
+  // Store pending verification
+  if (verificationCode && verificationCode !== 'N/A - Has Discord') {
+    pendingVerifications.set(verificationCode, {
+      youtube: youtubeUsername,
+      discord: discordUsername,
+      email: email
+    });
+    console.log(`📝 Stored verification code: ${verificationCode}`);
+  }
+  
+  // Store pending username if provided
+  if (discordUsername && discordUsername !== 'Not provided (new user)') {
+    pendingUsernames.set(discordUsername.toLowerCase(), {
+      youtube: youtubeUsername,
+      role: 'member'
+    });
+    console.log(`📝 Watching for username: ${discordUsername}`);
+  }
   
   // Verify YouTube membership
   const verification = await verifyYouTubeMembership(youtubeUsername);
@@ -157,22 +324,27 @@ client.on('messageCreate', async (message) => {
     .setTitle('📋 Verification Status')
     .setDescription(`Submission from **${youtubeUsername}**`)
     .addFields(
-      { name: 'Discord Username', value: discordUsername, inline: true },
+      { name: 'Discord', value: discordUsername || 'Not provided (new user)', inline: true },
       { name: 'Email', value: email, inline: true },
-      { name: '📊 Status', value: '⏳ Pending YouTube Connection', inline: false },
-      { 
-        name: '✅ Required Actions', 
-        value: 
-          '1️⃣ User joins Discord via invite\n' +
-          '2️⃣ User goes to Settings → Connections → YouTube\n' +
-          '3️⃣ Discord auto-verifies membership (2-3 min)\n' +
-          '4️⃣ Role auto-assigned based on tier',
-        inline: false 
-      },
-      { name: '🔗 Invite Link', value: DISCORD_INVITE_URL, inline: false }
-    )
-    .setFooter({ text: 'YouTube membership verified by Discord integration' })
-    .setTimestamp();
+      { name: '📊 Status', value: discordUsername ? '⏳ Waiting for user to join' : '⏳ Waiting for /verify command', inline: false }
+    );
+  
+  if (discordUsername) {
+    responseEmbed.addFields({
+      name: '✅ Auto-Assignment Ready',
+      value: `When **${discordUsername}** joins, they'll get the member role automatically!`,
+      inline: false
+    });
+  } else {
+    responseEmbed.addFields({
+      name: '🔑 Verification Code',
+      value: `User must use: \`/verify ${verificationCode}\``,
+      inline: false
+    });
+  }
+  
+  responseEmbed.setFooter({ text: 'YouTube Member Bridge Bot' });
+  responseEmbed.setTimestamp();
   
   await message.channel.send({ embeds: [responseEmbed] });
   
