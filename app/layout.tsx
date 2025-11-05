@@ -5,6 +5,10 @@ import FlameCursor from '@/components/FlameCursor'
 import FireScroll from '@/components/FireScroll'
 import StickySubscribeBar from '@/components/StickySubscribeBar'
 import { SpeedInsights } from '@vercel/speed-insights/next'
+import { AnalyticsProvider } from '@/components/AnalyticsProvider'
+import { ClarityScript } from '@/components/ClarityScript'
+import { HotjarScript } from '@/components/HotjarScript'
+import { WebVitalsReporter } from '@/components/WebVitalsReporter'
 
 // Jesse ON FIRE - Cinematic Typography
 const inter = Inter({ 
@@ -110,11 +114,16 @@ export default function RootLayout({
         <meta name="theme-color" content="#FF5A1F" />
       </head>
       <body className="min-h-screen font-sans bg-obsidian text-ash-grey">
-        <FireScroll />
-        <FlameCursor />
-        <StickySubscribeBar />
-        {children}
-        <SpeedInsights />
+        <AnalyticsProvider>
+          <FireScroll />
+          <FlameCursor />
+          <StickySubscribeBar />
+          {children}
+          <SpeedInsights />
+          <WebVitalsReporter />
+        </AnalyticsProvider>
+        <ClarityScript />
+        <HotjarScript />
       </body>
     </html>
   )
