@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect } from 'react'
-import { Analytics } from '@vercel/analytics/react'
+import { Analytics } from '@vercel/analytics/next'
 import { GoogleAnalytics } from '@next/third-parties/google'
 import LogRocket from 'logrocket'
 import posthog from 'posthog-js'
