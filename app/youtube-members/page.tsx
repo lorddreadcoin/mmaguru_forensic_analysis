@@ -43,90 +43,63 @@ export default function YouTubeMembersPage() {
           className="max-w-2xl w-full"
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5 }}
         >
-          <div className="card-cinematic p-8 text-center shadow-fire-glow-lg">
-            <motion.div 
-              className="text-6xl mb-6 text-green-500"
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ type: "spring", stiffness: 200 }}
-            >
-              <FaCheckCircle className="mx-auto" />
-            </motion.div>
-            <h2 className="text-3xl font-display text-fire-orange mb-4 uppercase">
-              You're Almost In! 🔥
-            </h2>
-            <p className="text-xl text-ash-grey mb-4">
-              Thanks {formData.youtubeUsername}! Follow these 3 steps:
+          <div className="text-center mb-8">
+            <h1 className="text-5xl font-bold mb-4">
+              🔥 <span className="text-fire-orange">Success!</span>
+            </h1>
+            <p className="text-2xl text-gray-300 mb-2">
+              Check your email right now!
             </p>
-            
-            {/* Discord Invite Button */}
-            <a 
-              href="https://discord.gg/9WpPC5GS" 
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-block mb-6 px-8 py-4 bg-gradient-to-r from-fire-orange to-red-600 text-white font-bold rounded-lg hover:scale-105 transition-transform text-lg shadow-fire-glow"
-            >
-              <FaDiscord className="inline mr-2 text-2xl" />
-              JOIN DISCORD NOW
-            </a>
-            
-            {/* Animated Tutorial */}
-            <div className="mb-8 bg-black/50 rounded-xl p-4 border border-fire-orange/20">
-              <p className="text-sm text-fire-orange font-bold mb-3">📺 Watch How to Connect YouTube (Auto-Playing Tutorial):</p>
-              <div className="relative aspect-video bg-charcoal rounded-lg overflow-hidden">
-                <iframe 
-                  src="/tutorial.html" 
-                  className="w-full h-full border-0"
-                  title="Discord YouTube Connection Tutorial"
-                />
-              </div>
-              <p className="text-xs text-ash-grey mt-2 text-center">
-                ✨ Tutorial loops automatically - shows all 5 steps
-              </p>
-            </div>
-            
-            <div className="bg-black/50 rounded-xl p-6 text-left space-y-4 border border-fire-orange/20">
-              <div className="flex items-center gap-3">
-                <FaDiscord className="text-[#5865F2] text-xl flex-shrink-0" />
-                <div>
-                  <p className="text-white font-bold">Step 1: Join Discord</p>
-                  <p className="text-sm text-ash-grey">Click the button above to join the server</p>
-                </div>
-              </div>
-              
-              <div className="flex items-center gap-3">
-                <FaYoutube className="text-red-600 text-xl flex-shrink-0" />
-                <div>
-                  <p className="text-white font-bold">Step 2: Connect Your YouTube</p>
-                  <p className="text-sm text-ash-grey">In Discord: User Settings → Connections → Click YouTube → Sign In</p>
-                </div>
-              </div>
-              
-              <div className="flex items-center gap-3">
-                <span className="text-xl flex-shrink-0">✨</span>
-                <div>
-                  <p className="text-white font-bold">Step 3: Get Your Role!</p>
-                  <p className="text-sm text-ash-grey">Discord auto-verifies your membership & assigns your tier role (2-3 min)</p>
-                </div>
-              </div>
-            </div>
-            
-            <div className="mt-8 p-4 bg-charcoal rounded-lg border border-fire-orange/30">
-              <p className="text-sm text-ash-grey mb-2">
-                <span className="text-fire-orange font-bold">⚡ Important:</span> You MUST connect your YouTube account in Discord Settings to get verified!
-              </p>
-              <p className="text-xs text-ash-grey">
-                Need help? Ask in Discord or message @mods
-              </p>
-            </div>
-            
+            <p className="text-lg text-gray-400">
+              We sent instructions to: <span className="text-fire-orange font-bold">{formData.email}</span>
+            </p>
+          </div>
+
+          <div className="bg-gradient-to-r from-fire-orange to-red-600 rounded-xl p-8 mb-8 text-center">
+            <div className="text-6xl mb-4">📧</div>
+            <h2 className="text-3xl font-bold mb-4">Check Your Email NOW!</h2>
+            <p className="text-xl mb-4">
+              Your Discord invite and instructions are waiting in your inbox
+            </p>
+            <p className="text-lg opacity-90">
+              {formData.discordUsername ? 
+                `We'll be looking for "${formData.discordUsername}" when you join!` :
+                `Your verification code is in the email - save it!`}
+            </p>
+          </div>
+
+          <div className="bg-gray-900 rounded-xl p-6 mb-8">
+            <h3 className="text-xl font-bold mb-4">📨 What's in your email:</h3>
+            <ul className="space-y-3 text-gray-300">
+              <li className="flex items-start">
+                <span className="text-green-500 mr-2">✓</span>
+                <span>Discord server invite link</span>
+              </li>
+              <li className="flex items-start">
+                <span className="text-green-500 mr-2">✓</span>
+                <span>{formData.discordUsername ? 
+                  'Automatic role assignment instructions' : 
+                  'Your verification code to use after joining'}</span>
+              </li>
+              <li className="flex items-start">
+                <span className="text-green-500 mr-2">✓</span>
+                <span>Step-by-step instructions</span>
+              </li>
+            </ul>
+          </div>
+
+          <div className="bg-gray-800 rounded-xl p-6 text-center">
+            <p className="text-gray-400 mb-4">
+              Didn't receive the email? Check your spam folder!
+            </p>
             <button
               onClick={() => {
                 setStatus('idle');
                 setFormData({ youtubeUsername: '', discordUsername: '', email: '' });
               }}
-              className="mt-6 text-fire-orange hover:text-white transition-colors underline"
+              className="text-fire-orange hover:text-white transition-colors underline"
             >
               Verify another account
             </button>
