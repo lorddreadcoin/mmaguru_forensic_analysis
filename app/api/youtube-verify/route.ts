@@ -184,11 +184,17 @@ export async function POST(req: Request) {
     </html>
     `;
     
-    // Send verification email
+    // Send verification email with unique timestamp to prevent Gmail threading
+    const timestamp = new Date().toLocaleTimeString('en-US', { 
+      hour: '2-digit', 
+      minute: '2-digit',
+      hour12: true 
+    });
+    
     console.log('📧 Attempting to send email to:', email);
     await sendEmail({
       to: email,
-      subject: "🔥 Discord Access Ready - Jesse ON FIRE",
+      subject: `🔥 Discord Access Ready - Jesse ON FIRE [${timestamp}]`,
       body: emailBody
     });
     console.log('✅ Email send function completed');
