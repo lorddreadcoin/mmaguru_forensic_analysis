@@ -262,11 +262,11 @@ export default function YouTubeMembersPage() {
                     value={formData.discordUsername}
                     onChange={(e) => setFormData({...formData, discordUsername: e.target.value})}
                     className="w-full pl-10 pr-4 py-3 bg-black/50 border-2 border-fire-orange/30 rounded-lg text-white placeholder-ash-grey/50 focus:border-fire-orange focus:outline-none transition-colors"
-                    placeholder="Leave blank if you don't have Discord yet"
+                    placeholder="cryptodanks (no @ symbol)"
                   />
                 </div>
                 <p className="text-xs text-gray-500 mt-1">
-                  Don't have Discord? No problem! We'll help you create one.
+                  Enter just your username (e.g., "cryptodanks"). Don't have Discord? Leave blank!
                 </p>
               </div>
               
