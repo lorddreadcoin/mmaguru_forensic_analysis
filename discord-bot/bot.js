@@ -75,6 +75,14 @@ client.once('ready', async () => {
   console.log(`🔗 Discord invite: ${DISCORD_INVITE_URL}`);
   console.log('🔐 YouTube membership verification: ENABLED');
   
+  // Debug: List all channels to find the right one
+  console.log('\n🔍 Available channels:');
+  client.guilds.cache.forEach(guild => {
+    guild.channels.cache.forEach(channel => {
+      console.log(`   ${channel.name} (${channel.id}) - Type: ${channel.type}`);
+    });
+  });
+  
   // Register slash commands
   const commands = [
     new SlashCommandBuilder()
@@ -87,7 +95,23 @@ client.once('ready', async () => {
       ),
     new SlashCommandBuilder()
       .setName('check-pending')
-      .setDescription('Check if you have a pending verification')
+      .setDescription('Check if you have a pending verification'),
+    new SlashCommandBuilder()
+      .setName('assign-role')
+      .setDescription('[ADMIN] Manually assign YouTube member role')
+      .addUserOption(option =>
+        option.setName('user')
+          .setDescription('User to assign role to')
+          .setRequired(true))
+      .addStringOption(option =>
+        option.setName('tier')
+          .setDescription('Membership tier')
+          .setRequired(true)
+          .addChoices(
+            { name: "Inner Circle ($4.99)", value: 'inner-circle' },
+            { name: "Best Friends ($9.99)", value: 'best-friends' },
+            { name: "Elite ($24.99)", value: 'elite' }
+          ))
   ];
   
   const rest = new REST({ version: '10' }).setToken(BOT_TOKEN);
@@ -114,8 +138,15 @@ client.on('interactionCreate', async interaction => {
   
   if (commandName === 'check-pending') {
     // Check if user has a pending verification
-    const username = interaction.user.username.toLowerCase();
-    const pending = pendingUsernames.get(username);
+    const username = interaction.user.username.toLowerCase().trim();
+    const globalName = interaction.user.globalName?.toLowerCase().trim();
+    
+    // Check multiple formats
+    const pending = pendingUsernames.get(username) || 
+                   pendingUsernames.get(globalName);
+    
+    console.log(`🔍 Checking pending for: ${username} / ${globalName}`);
+    console.log(`📋 Available pending: ${Array.from(pendingUsernames.keys()).join(', ')}`);
     
     if (pending) {
       // Try to assign role now
@@ -151,6 +182,57 @@ client.on('interactionCreate', async interaction => {
     } else {
       await interaction.reply({
         content: '❌ No pending verification found for your username. Please submit the form at https://jesseonfire.com/youtube-members',
+        ephemeral: true
+      });
+    }
+  }
+  
+  if (commandName === 'assign-role') {
+    // Check if user is admin
+    if (!interaction.member.permissions.has('Administrator')) {
+      await interaction.reply({
+        content: '❌ You need Administrator permission to use this command.',
+        ephemeral: true
+      });
+      return;
+    }
+
+    const targetUser = interaction.options.getUser('user');
+    const tier = interaction.options.getString('tier');
+    const roleId = ROLES[tier];
+    
+    if (!roleId) {
+      await interaction.reply({
+        content: '❌ Invalid tier selected.',
+        ephemeral: true
+      });
+      return;
+    }
+
+    try {
+      const member = await interaction.guild.members.fetch(targetUser.id);
+      const role = interaction.guild.roles.cache.get(roleId);
+      
+      if (!role) {
+        await interaction.reply({
+          content: `❌ Could not find role for tier: ${tier}`,
+          ephemeral: true
+        });
+        return;
+      }
+
+      await member.roles.add(role);
+      
+      await interaction.reply({
+        content: `✅ Successfully assigned **${role.name}** to ${targetUser}!`,
+        ephemeral: false
+      });
+
+      console.log(`✅ Admin manually assigned ${role.name} to ${targetUser.tag}`);
+    } catch (error) {
+      console.error('Error assigning role:', error);
+      await interaction.reply({
+        content: '❌ Failed to assign role. Check bot permissions.',
         ephemeral: true
       });
     }
@@ -217,10 +299,16 @@ client.on('interactionCreate', async interaction => {
 client.on('guildMemberAdd', async member => {
   console.log(`👤 New member joined: ${member.user.tag}`);
   console.log(`   Username: ${member.user.username}`);
+  console.log(`   Global name: ${member.user.globalName}`);
   console.log(`   Currently watching for: ${Array.from(pendingUsernames.keys()).join(', ')}`);
   
-  // Check if we're waiting for this username (case-insensitive)
-  const pending = pendingUsernames.get(member.user.username.toLowerCase()) || 
+  // Check multiple username formats
+  const usernameLower = member.user.username.toLowerCase().trim();
+  const globalNameLower = member.user.globalName?.toLowerCase().trim();
+  
+  // Try to find pending verification with multiple formats
+  const pending = pendingUsernames.get(usernameLower) || 
+                  pendingUsernames.get(globalNameLower) ||
                   pendingUsernames.get(member.user.tag.toLowerCase());
   
   if (pending) {
@@ -325,14 +413,36 @@ client.on('guildMemberUpdate', async (oldMember, newMember) => {
 
 // Monitor webhook channel// Monitor webhook messages
 client.on('messageCreate', async message => {
+  // Debug: Log EVERY message to find webhook posts
+  if (message.author.bot || message.webhookId) {
+    console.log(`\n📬 BOT/WEBHOOK MESSAGE DETECTED:`);
+    console.log(`   Channel: ${message.channel.name} (${message.channel.id})`);
+    console.log(`   From: ${message.author.username}`);
+    console.log(`   Webhook ID: ${message.webhookId || 'none'}`);
+    console.log(`   Has embed: ${message.embeds?.length > 0}`);
+    if (message.embeds?.length > 0) {
+      console.log(`   Embed title: ${message.embeds[0].title}`);
+    }
+  }
+  
   // Debug: Log ALL messages in webhook channel
   if (message.channel.id === WEBHOOK_CHANNEL_ID) {
     console.log(`📨 Message in webhook channel from: ${message.author.username}`);
+    console.log(`   Author ID: ${message.author.id}`);
     console.log(`   Is webhook: ${!!message.webhookId}`);
+    console.log(`   Webhook ID: ${message.webhookId || 'none'}`);
     console.log(`   Has embeds: ${message.embeds?.length > 0}`);
+    console.log(`   Message type: ${message.type}`);
+    console.log(`   Is bot: ${message.author.bot}`);
     
     if (message.embeds?.length > 0) {
       console.log(`   Embed title: ${message.embeds[0].title}`);
+      console.log(`   Embed fields: ${message.embeds[0].fields?.length || 0}`);
+    }
+    
+    // Try to process ANY embed with YouTube verification
+    if (message.embeds?.length > 0 && message.embeds[0].title?.includes('YouTube')) {
+      console.log('🎯 FOUND YOUTUBE EMBED - Processing even if not webhook!');
     }
   }
   
@@ -342,13 +452,22 @@ client.on('messageCreate', async message => {
   // Only process webhook messages
   if (!message.webhookId) return;
   
+  console.log('🎯 Processing webhook message...');
+  
   // Check for embeds
-  if (!message.embeds || message.embeds.length === 0) return;
+  if (!message.embeds || message.embeds.length === 0) {
+    console.log('⚠️ No embed found - Discord might have stripped it. Skipping this message.');
+    return;
+  }
   
   const embed = message.embeds[0];
+  console.log(`📋 Embed title: ${embed.title}`);
   
   // Check if this is a YouTube verification message
-  if (!embed.title || !embed.title.includes('YouTube Member Verification')) return;
+  if (!embed.title || !embed.title.includes('YouTube Member Verification')) {
+    console.log('⚠️ Not a YouTube verification message');
+    return;
+  }
   
   console.log('📝 New YouTube member verification detected!');
   
@@ -359,6 +478,12 @@ client.on('messageCreate', async message => {
   const email = fields.find(f => f.name === 'Email')?.value || 'Unknown';
   const membershipTier = fields.find(f => f.name === 'Membership Tier')?.value || null;
   const verificationCode = fields.find(f => f.name === 'Verification Code')?.value || null;
+  
+  console.log('🔍 EXTRACTED FROM WEBHOOK:');
+  console.log(`   YouTube Username: ${youtubeUsername}`);
+  console.log(`   Discord Username: ${discordUsername}`);
+  console.log(`   Email: ${email}`);
+  console.log(`   Tier: ${membershipTier}`);
   
   // Determine role based on tier
   let roleToAssign = ROLES.member; // Default
@@ -385,13 +510,17 @@ client.on('messageCreate', async message => {
   
   // Store pending username if provided
   if (discordUsername && discordUsername !== 'Not provided (new user)') {
-    pendingUsernames.set(discordUsername.toLowerCase(), {
+    // Clean the username - remove @ symbol if present
+    const cleanUsername = discordUsername.replace('@', '').toLowerCase().trim();
+    
+    pendingUsernames.set(cleanUsername, {
       youtube: youtubeUsername,
       role: roleToAssign,
       tier: membershipTier
     });
-    console.log(`📝 Watching for username: ${discordUsername}`);
+    console.log(`📝 Watching for username: ${cleanUsername} (original: ${discordUsername})`);
     console.log(`🎯 Will assign role: ${roleToAssign} for tier: ${membershipTier}`);
+    console.log(`📋 Currently tracking: ${Array.from(pendingUsernames.keys()).join(', ')}`);
   }
   
   // Verify YouTube membership

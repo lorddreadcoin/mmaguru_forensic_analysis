@@ -271,12 +271,11 @@ export async function POST(request: Request) {
         }]
       };
       
-      // If screenshot provided, add as image to embed
+      // Note screenshot status (but don't include the actual image - too large for webhook)
       if (screenshot && screenshot.startsWith('data:image')) {
-        webhookPayload.embeds[0].image = { url: screenshot };
         webhookPayload.embeds[0].fields.push({
           name: "Screenshot",
-          value: "✅ Membership screenshot provided (see below)",
+          value: "✅ Membership screenshot provided",
           inline: false
         });
       }
