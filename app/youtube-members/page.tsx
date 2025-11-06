@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from 'react';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { FaYoutube, FaDiscord, FaEnvelope, FaCheckCircle } from 'react-icons/fa';
 
@@ -366,16 +367,40 @@ export default function YouTubeMembersPage() {
               </div>
               
               {/* Screenshot Instructions */}
-              <div className="bg-fire-orange/10 border border-fire-orange/30 rounded-lg p-4 space-y-2">
-                <p className="text-sm font-bold text-fire-orange">📸 How to Screenshot Your Membership:</p>
-                <ul className="text-xs text-gray-300 space-y-1 ml-4">
-                  <li>• <strong>PC:</strong> Press Windows+Shift+S (or PrtScn)</li>
-                  <li>• <strong>Mac:</strong> Press Cmd+Shift+4</li>
-                  <li>• <strong>iPhone:</strong> Power + Volume Up</li>
-                  <li>• <strong>Android:</strong> Power + Volume Down</li>
-                  <li>• Go to YouTube → Your Memberships → Screenshot</li>
-                  <li>• Then just paste (Ctrl+V) below!</li>
-                </ul>
+              <div className="bg-fire-orange/10 border border-fire-orange/30 rounded-lg p-4 space-y-3">
+                <p className="text-sm font-bold text-fire-orange">📸 How to Get Your Membership Screenshot:</p>
+                
+                <div className="bg-black/50 rounded-lg p-3">
+                  <p className="text-xs font-bold text-white mb-2">Step 1: Go to Jesse's YouTube Channel</p>
+                  <ol className="text-xs text-gray-300 space-y-1 ml-4">
+                    <li>1. Open YouTube and go to Jesse ON FIRE's channel</li>
+                    <li>2. Click the <strong>"Membership"</strong> tab (between "Posts" and search icon)</li>
+                    <li>3. You'll see your membership status like this:</li>
+                  </ol>
+                  
+                  <img 
+                    src="/membership-example.png" 
+                    alt="Membership Example" 
+                    className="mt-3 rounded border border-gray-700 w-full"
+                  />
+                </div>
+                
+                <div className="bg-black/50 rounded-lg p-3">
+                  <p className="text-xs font-bold text-white mb-2">Step 2: Take Screenshot</p>
+                  <ul className="text-xs text-gray-300 space-y-1 ml-4">
+                    <li>• <strong>Windows:</strong> Press Windows+Shift+S</li>
+                    <li>• <strong>Mac:</strong> Press Cmd+Shift+4</li>
+                    <li>• <strong>iPhone:</strong> Power + Volume Up</li>
+                    <li>• <strong>Android:</strong> Power + Volume Down</li>
+                  </ul>
+                </div>
+                
+                <div className="bg-black/50 rounded-lg p-3">
+                  <p className="text-xs font-bold text-white mb-2">Step 3: Paste Below</p>
+                  <p className="text-xs text-gray-300 ml-4">
+                    Just click in the box below and paste (Ctrl+V or Cmd+V)
+                  </p>
+                </div>
               </div>
               
               <div>
