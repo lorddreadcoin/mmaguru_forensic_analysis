@@ -82,8 +82,12 @@ client.once('ready', async () => {
       .setDescription('Verify your YouTube membership with a code')
       .addStringOption(option =>
         option.setName('code')
-          .setDescription('Your verification code (e.g., JESSE-XXXX)')
-          .setRequired(true))
+          .setDescription('Your verification code from the email')
+          .setRequired(true)
+      ),
+    new SlashCommandBuilder()
+      .setName('check-pending')
+      .setDescription('Check if you have a pending verification')
   ];
   
   const rest = new REST({ version: '10' }).setToken(BOT_TOKEN);
@@ -106,7 +110,53 @@ client.once('ready', async () => {
 client.on('interactionCreate', async interaction => {
   if (!interaction.isChatInputCommand()) return;
   
-  if (interaction.commandName === 'verify') {
+  const commandName = interaction.commandName;
+  
+  if (commandName === 'check-pending') {
+    // Check if user has a pending verification
+    const username = interaction.user.username.toLowerCase();
+    const pending = pendingUsernames.get(username);
+    
+    if (pending) {
+      // Try to assign role now
+      const role = interaction.guild.roles.cache.get(pending.role);
+      if (role) {
+        try {
+          await interaction.member.roles.add(role);
+          pendingUsernames.delete(username);
+          
+          await interaction.reply({
+            content: `✅ Found your pending verification! Role assigned: **${role.name}**`,
+            ephemeral: false
+          });
+          
+          // Post success in webhook channel
+          const channel = client.channels.cache.get(WEBHOOK_CHANNEL_ID);
+          if (channel) {
+            const embed = new EmbedBuilder()
+              .setColor('#00FF00')
+              .setTitle('✅ Member Verified via Check')
+              .setDescription(`${interaction.user} has been assigned the **${role.name}** role`)
+              .setTimestamp();
+            await channel.send({ embeds: [embed] });
+          }
+        } catch (error) {
+          console.error('Error assigning role:', error);
+          await interaction.reply({
+            content: '❌ Failed to assign role. Please contact an admin.',
+            ephemeral: true
+          });
+        }
+      }
+    } else {
+      await interaction.reply({
+        content: '❌ No pending verification found for your username. Please submit the form at https://jesseonfire.com/youtube-members',
+        ephemeral: true
+      });
+    }
+  }
+  
+  if (commandName === 'verify') {
     const code = interaction.options.getString('code').toUpperCase();
     const verification = pendingVerifications.get(code);
     
@@ -166,9 +216,12 @@ client.on('interactionCreate', async interaction => {
 // Handle new members joining
 client.on('guildMemberAdd', async member => {
   console.log(`👤 New member joined: ${member.user.tag}`);
+  console.log(`   Username: ${member.user.username}`);
+  console.log(`   Currently watching for: ${Array.from(pendingUsernames.keys()).join(', ')}`);
   
-  // Check if we're waiting for this username
-  const pending = pendingUsernames.get(member.user.username.toLowerCase());
+  // Check if we're waiting for this username (case-insensitive)
+  const pending = pendingUsernames.get(member.user.username.toLowerCase()) || 
+                  pendingUsernames.get(member.user.tag.toLowerCase());
   
   if (pending) {
     console.log(`✅ Found pending verification for ${member.user.username}`);
@@ -270,12 +323,26 @@ client.on('guildMemberUpdate', async (oldMember, newMember) => {
   }
 });
 
-// Monitor webhook channel for new submissions
-client.on('messageCreate', async (message) => {
-  // Only watch the webhook channel
+// Monitor webhook channel// Monitor webhook messages
+client.on('messageCreate', async message => {
+  // Debug: Log ALL messages in webhook channel
+  if (message.channel.id === WEBHOOK_CHANNEL_ID) {
+    console.log(`📨 Message in webhook channel from: ${message.author.username}`);
+    console.log(`   Is webhook: ${!!message.webhookId}`);
+    console.log(`   Has embeds: ${message.embeds?.length > 0}`);
+    
+    if (message.embeds?.length > 0) {
+      console.log(`   Embed title: ${message.embeds[0].title}`);
+    }
+  }
+  
+  // Only process messages in the webhook channel
   if (message.channel.id !== WEBHOOK_CHANNEL_ID) return;
   
-  // Only process webhook messages with embeds
+  // Only process webhook messages
+  if (!message.webhookId) return;
+  
+  // Check for embeds
   if (!message.embeds || message.embeds.length === 0) return;
   
   const embed = message.embeds[0];
