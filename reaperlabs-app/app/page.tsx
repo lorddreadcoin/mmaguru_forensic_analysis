@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import UploadSection from '../components/UploadSection';
 import ChatInterface from '../components/ChatInterface';
 import InsightsDisplay from '../components/InsightsDisplay';
+import Image from 'next/image';
 import './globals.css';
 
 export default function HomePage() {
@@ -13,13 +14,20 @@ export default function HomePage() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    // Add scanner line
+    const scanner = document.createElement('div');
+    scanner.className = 'scanner-line';
+    document.body.appendChild(scanner);
+    
     console.log(`
-⚔️ REAPERLABS ANALYTICS ⚔️
+⚔️ REAPERLABS.AI ⚔️
 ========================
 Elite Platform Activated
 Protecting Creators Since 2024
 ========================
     `);
+    
+    return () => scanner.remove();
   }, []);
 
   const handleUploadComplete = (data: any) => {
@@ -29,11 +37,21 @@ Protecting Creators Since 2024
   };
 
   return (
-    <div className="app-container">
+    <div className="container">
       <header className="header">
-        <h1 className="logo">REAPERLABS</h1>
-        <p className="tagline">Elite YouTube Analytics Platform</p>
-        <p className="subtitle">Protecting Creators From Platform Death</p>
+        <div className="logo-container">
+          <Image 
+            src="/logo.png" 
+            alt="ReaperLabs" 
+            width={80} 
+            height={80} 
+            className="logo-image"
+          />
+          <div>
+            <h1 className="logo-text">REAPERLABS.AI</h1>
+            <p className="tagline">Elite YouTube Analytics Platform</p>
+          </div>
+        </div>
       </header>
 
       <main className="main">
@@ -59,14 +77,15 @@ Protecting Creators Since 2024
 
       {analysisId && (
         <button 
-          className="new-analysis-btn"
+          className="btn"
           onClick={() => {
             setAnalysisId(null);
             setInsights(null);
             setMetrics(null);
           }}
+          style={{ marginTop: '2rem' }}
         >
-          NEW MISSION
+          NEW ANALYSIS
         </button>
       )}
     </div>
