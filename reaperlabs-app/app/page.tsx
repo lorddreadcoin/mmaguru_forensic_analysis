@@ -36,6 +36,11 @@ export default function HomePage() {
     floatingLogo.innerHTML = '<img src="/logo-large.png" alt="ReaperLabs" />';
     document.body.appendChild(floatingLogo);
     
+    // Add floating reaper figure (right side)
+    const floatingReaper = document.createElement('div');
+    floatingReaper.className = 'floating-reaper reaper-css'; // Using CSS placeholder for now
+    document.body.appendChild(floatingReaper);
+    
     console.log(`
 ⚔️ REAPERLABS.AI - CYBERPUNK MODE ⚔️
 ========================
@@ -51,6 +56,7 @@ Logo: FLOATING
       document.querySelector('#matrix-canvas')?.remove();
       layers?.remove();
       floatingLogo?.remove();
+      floatingReaper?.remove();
     };
   }, []);
 

@@ -168,6 +168,93 @@ body::after {
   }
 }
 
+/* FLOATING REAPER FIGURE (NO BACKGROUND) */
+.floating-reaper {
+  position: fixed;
+  right: 3%;
+  top: 15%;
+  width: 200px;
+  height: 300px;
+  z-index: 99;
+  pointer-events: none;
+  
+  /* Glow effect */
+  filter: drop-shadow(0 0 30px rgba(255, 0, 0, 0.6))
+          drop-shadow(0 0 60px rgba(220, 20, 60, 0.3))
+          drop-shadow(0 0 10px rgba(139, 0, 0, 0.8));
+  
+  /* Floating animation */
+  animation: floatReaper 8s ease-in-out infinite;
+  transform-origin: center;
+  opacity: 0.85;
+}
+
+@keyframes floatReaper {
+  0%, 100% { 
+    transform: translateY(0) translateX(0) rotate(0deg) scale(1);
+  }
+  25% { 
+    transform: translateY(-20px) translateX(-10px) rotate(-2deg) scale(1.02);
+  }
+  50% { 
+    transform: translateY(10px) translateX(5px) rotate(1deg) scale(0.98);
+  }
+  75% { 
+    transform: translateY(-10px) translateX(-5px) rotate(-1deg) scale(1.01);
+  }
+}
+
+/* For transparent PNG version */
+.reaper-png {
+  background: url('/reaper-only.png') no-repeat center;
+  background-size: contain;
+}
+
+/* For SVG version with gradient mask */
+.reaper-svg {
+  background: linear-gradient(135deg, #8b0000, #dc143c, #000000);
+  mask-image: url('/reaper-silhouette.svg');
+  mask-size: contain;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  -webkit-mask-image: url('/reaper-silhouette.svg');
+  -webkit-mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+}
+
+/* Temporary placeholder with CSS art */
+.reaper-css {
+  position: relative;
+}
+
+.reaper-css::before {
+  content: '💀';
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 4rem;
+  filter: grayscale(100%) brightness(0.3) sepia(100%) hue-rotate(-50deg) saturate(1000%) brightness(0.8);
+  text-shadow: 
+    0 0 20px #ff0000,
+    0 0 40px #8b0000,
+    0 0 60px #dc143c;
+}
+
+.reaper-css::after {
+  content: '⚔️';
+  position: absolute;
+  top: 80px;
+  left: 50%;
+  transform: translateX(-50%) rotate(45deg);
+  font-size: 5rem;
+  filter: brightness(0.5) sepia(100%) hue-rotate(-10deg) saturate(1000%);
+  text-shadow: 
+    0 0 20px #ff0000,
+    0 0 40px #dc143c;
+}
+
 .container {
   position: relative;
   z-index: 10;
