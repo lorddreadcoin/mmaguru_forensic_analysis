@@ -12,7 +12,6 @@ interface UploadSectionProps {
 export default function UploadSection({ onUploadComplete, loading, setLoading }: UploadSectionProps) {
   const [dragActive, setDragActive] = useState(false);
   const [files, setFiles] = useState<File[]>([]);
-  const [email, setEmail] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleDrag = (e: React.DragEvent) => {
@@ -47,15 +46,17 @@ export default function UploadSection({ onUploadComplete, loading, setLoading }:
   };
 
   const handleSubmit = async () => {
-    if (files.length === 0 || !email) {
-      alert('Please upload CSV files and enter your email');
+    if (files.length === 0) {
+      alert('Please upload at least one CSV file');
       return;
     }
 
     setLoading(true);
     const formData = new FormData();
-    files.forEach(file => formData.append('files', file));
-    formData.append('email', email);
+    files.forEach((file, index) => {
+      formData.append(`file${index}`, file);
+    });
+    formData.append('fileCount', files.length.toString());
 
     try {
       const response = await fetch('/api/analyze', {
@@ -81,7 +82,7 @@ export default function UploadSection({ onUploadComplete, loading, setLoading }:
     <div className={styles.container}>
       <div className={styles.uploadBox}>
         <h2>DEPLOY ANALYTICS</h2>
-        <p>Upload YouTube CSV • Get AI Intel • Dominate Platform</p>
+        <p>Upload All 3 YouTube CSV Files • Get Complete Analysis</p>
 
         <div
           className={`${styles.dropZone} ${dragActive ? styles.active : ''}`}
@@ -102,13 +103,14 @@ export default function UploadSection({ onUploadComplete, loading, setLoading }:
           
           <div className={styles.dropContent}>
             <span className={styles.icon}>⚔️</span>
-            <p>Drag & drop your CSV files here</p>
-            <p className={styles.or}>or</p>
+            <p>Drop all YouTube CSV files here</p>
+            <p className={styles.fileTypes}>Chart data • Table data • Totals</p>
             <button className={styles.browseBtn}>Browse Files</button>
           </div>
 
           {files.length > 0 && (
             <div className={styles.fileList}>
+              <p className={styles.fileCount}>{files.length} file{files.length > 1 ? 's' : ''} ready:</p>
               {files.map((file, idx) => (
                 <div key={idx} className={styles.file}>
                   ✅ {file.name}
@@ -118,20 +120,10 @@ export default function UploadSection({ onUploadComplete, loading, setLoading }:
           )}
         </div>
 
-        <div className={styles.emailSection}>
-          <input
-            type="email"
-            placeholder="Enter your email..."
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className={styles.emailInput}
-          />
-        </div>
-
         <button
           className={styles.analyzeBtn}
           onClick={handleSubmit}
-          disabled={loading || files.length === 0 || !email}
+          disabled={loading || files.length === 0}
         >
           {loading ? (
             <>Analyzing<span className="loading"></span></>

@@ -5,46 +5,156 @@ export interface YouTubeMetrics {
   totalViews: number;
   totalWatchTime: number;
   totalRevenue: number;
-  totalSubscribers: number;
   averageCTR: number;
   videoCount: number;
   topVideos: VideoPerformance[];
-  dailyStats?: DailyStat[];
+  dailyViews?: any[];
 }
 
 export interface VideoPerformance {
   title: string;
-  videoId: string;
   views: number;
-  watchTime: number;
   revenue: number;
   ctr: number;
-  publishDate: string;
+  watchTime?: number;
 }
 
-export interface DailyStat {
-  date: string;
-  views: number;
+export async function parseMultipleCSVs(files: File[]): Promise<YouTubeMetrics> {
+  let metrics: YouTubeMetrics = {
+    totalViews: 0,
+    totalWatchTime: 0,
+    totalRevenue: 0,
+    averageCTR: 0,
+    videoCount: 0,
+    topVideos: []
+  };
+  
+  // Parse each file and merge results
+  for (const file of files) {
+    const fileName = file.name.toLowerCase();
+    const content = await file.text();
+    
+    if (fileName.includes('table')) {
+      // Parse video-level data from Table_data.csv
+      const videoData = await parseTableData(content);
+      metrics = { ...metrics, ...videoData };
+    } else if (fileName.includes('total')) {
+      // Parse summary totals from Totals.csv
+      const totals = await parseTotals(content);
+      if (totals.views > 0) {
+        metrics.totalViews = totals.views;
+      }
+    } else if (fileName.includes('chart')) {
+      // Parse daily chart data from Chart_data.csv
+      const chartData = await parseChartData(content);
+      metrics.dailyViews = chartData;
+    } else {
+      // Try to parse as generic YouTube CSV
+      const genericData = await parseGenericCSV(content);
+      if (genericData.videoCount > 0) {
+        metrics = { ...metrics, ...genericData };
+      }
+    }
+  }
+  
+  return metrics;
 }
 
-/**
- * Parse YouTube Studio CSV export
- */
+// For backward compatibility - parse single file
 export async function parseYouTubeCSV(file: File): Promise<YouTubeMetrics> {
-  return new Promise((resolve, reject) => {
-    Papa.parse(file, {
+  return parseMultipleCSVs([file]);
+}
+
+async function parseTableData(content: string): Promise<Partial<YouTubeMetrics>> {
+  return new Promise((resolve) => {
+    Papa.parse(content, {
       header: true,
-      skipEmptyLines: true,
       complete: (results) => {
-        try {
-          const metrics = processCSVData(results.data);
-          resolve(metrics);
-        } catch (error) {
-          reject(error);
+        let totalViews = 0;
+        let totalRevenue = 0;
+        let totalWatchTime = 0;
+        let totalCTR = 0;
+        let ctrCount = 0;
+        const videos: VideoPerformance[] = [];
+        
+        for (const row of results.data as any[]) {
+          if (row['Content'] === 'Total') {
+            // This is the totals row
+            totalViews = parseNumber(row['Views']);
+            totalRevenue = parseNumber(row['Estimated revenue (USD)']);
+            totalWatchTime = parseNumber(row['Watch time (hours)']);
+          } else if (row['Video title'] || row['Content']) {
+            // Regular video row
+            const title = row['Video title'] || row['Content'] || '';
+            const views = parseNumber(row['Views']);
+            const revenue = parseNumber(row['Estimated revenue (USD)']);
+            const ctr = parseNumber(row['Impressions click-through rate (%)']);
+            const watchTime = parseNumber(row['Watch time (hours)']);
+            
+            if (views > 0) {
+              if (ctr > 0) {
+                totalCTR += ctr;
+                ctrCount++;
+              }
+              
+              videos.push({
+                title,
+                views,
+                revenue,
+                ctr,
+                watchTime
+              });
+            }
+          }
         }
-      },
-      error: (error) => {
-        reject(error);
+        
+        resolve({
+          totalViews: totalViews || videos.reduce((sum, v) => sum + v.views, 0),
+          totalRevenue: totalRevenue || videos.reduce((sum, v) => sum + v.revenue, 0),
+          totalWatchTime,
+          averageCTR: ctrCount > 0 ? totalCTR / ctrCount : 0,
+          videoCount: videos.length,
+          topVideos: videos.sort((a, b) => b.views - a.views).slice(0, 10)
+        });
+      }
+    });
+  });
+}
+
+async function parseTotals(content: string): Promise<any> {
+  return new Promise((resolve) => {
+    Papa.parse(content, {
+      header: true,
+      complete: (results) => {
+        let totalViews = 0;
+        for (const row of results.data as any[]) {
+          const views = parseNumber(row['Views']);
+          totalViews += views;
+        }
+        resolve({ views: totalViews });
+      }
+    });
+  });
+}
+
+async function parseChartData(content: string): Promise<any[]> {
+  return new Promise((resolve) => {
+    Papa.parse(content, {
+      header: true,
+      complete: (results) => {
+        resolve(results.data);
+      }
+    });
+  });
+}
+
+async function parseGenericCSV(content: string): Promise<Partial<YouTubeMetrics>> {
+  return new Promise((resolve) => {
+    Papa.parse(content, {
+      header: true,
+      complete: (results) => {
+        const metrics = processCSVData(results.data);
+        resolve(metrics);
       }
     });
   });
@@ -74,7 +184,6 @@ function parseVideoPerformanceData(data: any[]): YouTubeMetrics {
   let totalViews = 0;
   let totalWatchTime = 0;
   let totalRevenue = 0;
-  let totalSubscribers = 0;
   let totalCTR = 0;
   let ctrCount = 0;
 
@@ -84,14 +193,12 @@ function parseVideoPerformanceData(data: any[]): YouTubeMetrics {
       totalViews = parseNumber(row['Views']);
       totalWatchTime = parseNumber(row['Watch time (hours)']);
       totalRevenue = parseNumber(row['Estimated revenue (USD)']);
-      totalSubscribers = parseNumber(row['Subscribers']);
       continue;
     }
 
-    const title = row['Video title'];
-    const videoId = row['Content'];
+    const title = row['Video title'] || row['Content'] || '';
     
-    if (!title || !videoId) continue;
+    if (!title) continue;
 
     const views = parseNumber(row['Views']);
     const watchTime = parseNumber(row['Watch time (hours)']);
@@ -100,12 +207,10 @@ function parseVideoPerformanceData(data: any[]): YouTubeMetrics {
 
     videos.push({
       title,
-      videoId,
       views,
       watchTime,
       revenue,
-      ctr,
-      publishDate: row['Video publish time'] || ''
+      ctr
     });
 
     if (ctr > 0) {
@@ -118,7 +223,6 @@ function parseVideoPerformanceData(data: any[]): YouTubeMetrics {
     totalViews,
     totalWatchTime,
     totalRevenue,
-    totalSubscribers,
     averageCTR: ctrCount > 0 ? totalCTR / ctrCount : 0,
     videoCount: videos.length,
     topVideos: videos.sort((a, b) => b.views - a.views).slice(0, 20)
@@ -129,7 +233,7 @@ function parseVideoPerformanceData(data: any[]): YouTubeMetrics {
  * Parse daily statistics data (Totals.csv)
  */
 function parseDailyStatsData(data: any[]): YouTubeMetrics {
-  const dailyStats: DailyStat[] = [];
+  const dailyViews: any[] = [];
   let totalViews = 0;
 
   for (const row of data) {
@@ -137,7 +241,7 @@ function parseDailyStatsData(data: any[]): YouTubeMetrics {
     const views = parseNumber(row['Views']);
     
     if (date && views > 0) {
-      dailyStats.push({ date, views });
+      dailyViews.push({ date, views });
       totalViews += views;
     }
   }
@@ -146,11 +250,10 @@ function parseDailyStatsData(data: any[]): YouTubeMetrics {
     totalViews,
     totalWatchTime: 0,
     totalRevenue: 0,
-    totalSubscribers: 0,
     averageCTR: 0,
     videoCount: 0,
     topVideos: [],
-    dailyStats
+    dailyViews
   };
 }
 
@@ -175,11 +278,10 @@ export function mergeMetrics(metrics: YouTubeMetrics[]): YouTubeMetrics {
     totalViews: 0,
     totalWatchTime: 0,
     totalRevenue: 0,
-    totalSubscribers: 0,
     averageCTR: 0,
     videoCount: 0,
     topVideos: [],
-    dailyStats: []
+    dailyViews: []
   };
 
   let ctrSum = 0;
@@ -189,7 +291,6 @@ export function mergeMetrics(metrics: YouTubeMetrics[]): YouTubeMetrics {
     merged.totalViews += metric.totalViews;
     merged.totalWatchTime += metric.totalWatchTime;
     merged.totalRevenue += metric.totalRevenue;
-    merged.totalSubscribers = Math.max(merged.totalSubscribers, metric.totalSubscribers);
     
     if (metric.averageCTR > 0) {
       ctrSum += metric.averageCTR;
@@ -200,8 +301,8 @@ export function mergeMetrics(metrics: YouTubeMetrics[]): YouTubeMetrics {
       merged.topVideos.push(...metric.topVideos);
     }
     
-    if (metric.dailyStats) {
-      merged.dailyStats!.push(...metric.dailyStats);
+    if (metric.dailyViews) {
+      merged.dailyViews!.push(...metric.dailyViews);
     }
   }
 
