@@ -1,19 +1,34 @@
-# IMPORTANT: Copy Your Reaper Image Here
+# ⚠️ CRITICAL: REAPER IMAGE MISSING ⚠️
 
-Please copy your reaper image to this folder with the filename:
+To activate the living floating reaper, copy your reaper image here:
 reaper-ghost.png
 
-The image you uploaded (the dark reaper with the red scythe) needs to be saved as:
-C:\Users\user\Desktop\fire-hq\reaperlabs-app\public\reaper-ghost.png
+## QUICK FIX:
+Copy from Downloads:
+```
+copy "C:\Users\user\Downloads\reaperopacity50%.png" "C:\Users\user\Desktop\fire-hq\reaperlabs-app\public\reaper-ghost.png"
+```
 
-You can copy it from:
-C:\Users\user\Downloads\reaperopacity50%.png
+Then commit and push:
+```
+cd C:\Users\user\Desktop\fire-hq
+git add .
+git commit -m "Add reaper-ghost.png image"
+git push origin main
+```
 
-Or use the image you provided in the chat.
+## What You'll Get:
+✅ MetaMask-style head tracking
+✅ Watches you type in input fields
+✅ Follows your mouse when idle
+✅ Eyes glow bright red when typing
+✅ 3D perspective movement
+✅ Floating/breathing animation
 
-Once the image is in place, the floating reaper will appear with:
-- MetaMask-style head tracking
-- Watches you type in input fields
-- Follows your mouse when idle
-- Eyes glow when typing
-- 3D perspective movement
+## Current Status:
+✅ Logo images: READY (logo.png, logo-large.png)
+✅ Code: DEPLOYED
+✅ Error handling: ACTIVE
+❌ Reaper image: MISSING (add reaper-ghost.png)
+
+Once you add the image, the platform will be COMPLETE! 🔥

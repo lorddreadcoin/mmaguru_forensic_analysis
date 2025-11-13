@@ -5,6 +5,7 @@ import UploadSection from '../components/UploadSection';
 import InsightsDisplay from '../components/InsightsDisplay';
 import ChatInterface from '../components/ChatInterface';
 import FloatingReaper from '../components/FloatingReaper';
+import Image from 'next/image';
 import { initMatrix, initReaperCursor } from './matrix.js';
 import './globals.css';
 
@@ -13,15 +14,20 @@ export default function HomePage() {
   const [insights, setInsights] = useState<any>(null);
   const [metrics, setMetrics] = useState<any>(null);
   const [loading, setLoading] = useState(false);
+  const [logoError, setLogoError] = useState(false);
 
   useEffect(() => {
-    // Initialize Matrix rain
-    const cleanupMatrix = initMatrix();
+    console.log(`⚔️ REAPERLABS.AI - INITIALIZED ⚔️
+========================
+Platform: ACTIVE
+Reaper: WATCHING
+Analytics: READY
+========================`);
     
-    // Initialize custom cursor
+    const cleanupMatrix = initMatrix();
     const cleanupCursor = initReaperCursor();
     
-    // Add background layers
+    // Add layered backgrounds dynamically
     const layers = document.createElement('div');
     layers.className = 'background-layers';
     layers.innerHTML = `
@@ -31,27 +37,27 @@ export default function HomePage() {
     `;
     document.body.appendChild(layers);
     
-    // Add floating logo (large version)
-    const floatingLogo = document.createElement('div');
-    floatingLogo.className = 'floating-logo';
-    floatingLogo.innerHTML = '<img src="/logo-large.png" alt="ReaperLabs" />';
-    document.body.appendChild(floatingLogo);
-    
-    console.log(`
-⚔️ REAPERLABS.AI - CYBERPUNK MODE ⚔️
-========================
-Matrix: ACTIVE
-Cursor: SWORD MODE
-Logo: FLOATING
-========================
-    `);
+    // Check if images exist
+    if (typeof window !== 'undefined') {
+      const checkImages = async () => {
+        try {
+          // Preload critical images
+          const img = new window.Image();
+          img.src = '/logo.png';
+          img.onerror = () => setLogoError(true);
+        } catch (e) {
+          console.warn('Logo preload failed, using fallback');
+          setLogoError(true);
+        }
+      };
+      checkImages();
+    }
     
     return () => {
       cleanupMatrix?.();
       cleanupCursor?.();
       document.querySelector('#matrix-canvas')?.remove();
       layers?.remove();
-      floatingLogo?.remove();
     };
   }, []);
 
@@ -64,8 +70,38 @@ Logo: FLOATING
   return (
     <>
       <FloatingReaper />
+      
+      {/* Floating Logo - Left Side */}
+      <div className="floating-logo" style={{
+        position: 'fixed',
+        left: '3%',
+        top: '10%',
+        width: '120px',
+        height: '120px',
+        zIndex: 100,
+        filter: 'drop-shadow(0 20px 40px rgba(255, 0, 0, 0.6))'
+      }}>
+        {!logoError ? (
+          <Image 
+            src="/logo.png"
+            alt="ReaperLabs"
+            width={120}
+            height={120}
+            onError={() => setLogoError(true)}
+            style={{ width: '100%', height: 'auto' }}
+            priority
+          />
+        ) : (
+          <svg width="120" height="120" viewBox="0 0 120 120" fill="none">
+            <rect x="10" y="10" width="100" height="100" stroke="#ff0000" strokeWidth="2" fill="rgba(139,0,0,0.2)"/>
+            <text x="60" y="65" textAnchor="middle" fill="#ff0000" fontSize="16" fontFamily="Orbitron">REAPER</text>
+            <text x="60" y="85" textAnchor="middle" fill="#c0c0c0" fontSize="12" fontFamily="Orbitron">LABS.AI</text>
+          </svg>
+        )}
+      </div>
+      
       <div className="container">
-      <header className="header" style={{ marginBottom: '3rem' }}>
+        <header className="header" style={{ marginBottom: '3rem', paddingTop: '2rem' }}>
         <div style={{ textAlign: 'center' }}>
           <h1 className="logo-text" style={{
             fontSize: '4rem',

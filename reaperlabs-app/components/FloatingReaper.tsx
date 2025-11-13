@@ -154,6 +154,11 @@ export default function FloatingReaper() {
             height={600}
             className={styles.reaperImage}
             priority
+            onError={(e) => {
+              // Fallback to placeholder if reaper image fails
+              e.currentTarget.style.display = 'none';
+              console.warn('Reaper image not found, add reaper-ghost.png to public folder');
+            }}
           />
         </div>
         
