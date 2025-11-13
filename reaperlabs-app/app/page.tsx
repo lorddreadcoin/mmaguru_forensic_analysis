@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import UploadSection from '../components/UploadSection';
 import ChatInterface from '../components/ChatInterface';
 import InsightsDisplay from '../components/InsightsDisplay';
-import Image from 'next/image';
+import { initMatrix, initReaperCursor } from './matrix.js';
 import './globals.css';
 
 export default function HomePage() {
@@ -14,20 +14,44 @@ export default function HomePage() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    // Add scanner line
-    const scanner = document.createElement('div');
-    scanner.className = 'scanner-line';
-    document.body.appendChild(scanner);
+    // Initialize Matrix rain
+    const cleanupMatrix = initMatrix();
+    
+    // Initialize custom cursor
+    const cleanupCursor = initReaperCursor();
+    
+    // Add background layers
+    const layers = document.createElement('div');
+    layers.className = 'background-layers';
+    layers.innerHTML = `
+      <div class="layer-1"></div>
+      <div class="layer-2"></div>
+      <div class="layer-3"></div>
+    `;
+    document.body.appendChild(layers);
+    
+    // Add floating logo
+    const floatingLogo = document.createElement('div');
+    floatingLogo.className = 'floating-logo';
+    floatingLogo.innerHTML = '<img src="/logo.png" alt="ReaperLabs" />';
+    document.body.appendChild(floatingLogo);
     
     console.log(`
-⚔️ REAPERLABS.AI ⚔️
+⚔️ REAPERLABS.AI - CYBERPUNK MODE ⚔️
 ========================
-Elite Platform Activated
-Protecting Creators Since 2024
+Matrix: ACTIVE
+Cursor: SWORD MODE
+Logo: FLOATING
 ========================
     `);
     
-    return () => scanner.remove();
+    return () => {
+      cleanupMatrix?.();
+      cleanupCursor?.();
+      document.querySelector('#matrix-canvas')?.remove();
+      layers?.remove();
+      floatingLogo?.remove();
+    };
   }, []);
 
   const handleUploadComplete = (data: any) => {
@@ -38,19 +62,31 @@ Protecting Creators Since 2024
 
   return (
     <div className="container">
-      <header className="header">
-        <div className="logo-container">
-          <Image 
-            src="/logo.png" 
-            alt="ReaperLabs" 
-            width={80} 
-            height={80} 
-            className="logo-image"
-          />
-          <div>
-            <h1 className="logo-text">REAPERLABS.AI</h1>
-            <p className="tagline">Elite YouTube Analytics Platform</p>
-          </div>
+      <header className="header" style={{ marginBottom: '3rem' }}>
+        <div style={{ textAlign: 'center' }}>
+          <h1 className="logo-text" style={{
+            fontSize: '4rem',
+            fontWeight: 900,
+            background: 'linear-gradient(135deg, #ff0000, #dc143c, #c0c0c0)',
+            backgroundSize: '200% 200%',
+            animation: 'shimmer 3s ease-in-out infinite',
+            WebkitBackgroundClip: 'text',
+            backgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            textShadow: '0 0 40px rgba(255, 0, 0, 0.5)',
+            letterSpacing: '5px'
+          }}>
+            REAPERLABS.AI
+          </h1>
+          <p className="tagline" style={{
+            color: '#dc143c',
+            textTransform: 'uppercase',
+            letterSpacing: '4px',
+            fontSize: '0.9rem',
+            marginTop: '0.5rem'
+          }}>
+            Elite YouTube Analytics Platform
+          </p>
         </div>
       </header>
 
@@ -83,9 +119,16 @@ Protecting Creators Since 2024
             setInsights(null);
             setMetrics(null);
           }}
-          style={{ marginTop: '2rem' }}
+          style={{ 
+            marginTop: '2rem',
+            background: 'linear-gradient(135deg, #dc143c, #8b0000)',
+            border: '1px solid #ff0000',
+            padding: '1rem 2rem',
+            fontSize: '1rem',
+            letterSpacing: '2px'
+          }}
         >
-          NEW ANALYSIS
+          NEW ANALYSIS ⚔️
         </button>
       )}
     </div>
