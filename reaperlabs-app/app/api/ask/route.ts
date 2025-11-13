@@ -1,126 +1,158 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-const OPENROUTER_API_KEY = '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';
+const GROK_API_KEY = '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';
 
 export async function POST(req: NextRequest) {
-  let requestData: any = {};
-  
   try {
-    // Parse request data FIRST
-    requestData = await req.json();
-    const { question, channelData, conversationHistory = [] } = requestData;
+    const { question, channelData, conversationHistory = [] } = await req.json();
     
-    // CRITICAL: Check if we have channel data
-    if (!channelData || !channelData.totalViews) {
+    if (!channelData?.totalViews) {
       return NextResponse.json({ 
-        answer: "I need your channel data to analyze. Please upload your YouTube CSV files first." 
+        answer: "Upload your YouTube CSV files to begin analysis." 
       });
     }
     
-    // Calculate derived metrics
-    const avgViewsPerVideo = channelData?.videoCount > 0 
-      ? Math.round(channelData.totalViews / channelData.videoCount) 
-      : 0;
-    
-    const revenuePerVideo = channelData?.videoCount > 0
-      ? (channelData.totalRevenue / channelData.videoCount).toFixed(2)
-      : '0';
-    
-    const rpm = ((channelData.totalRevenue / channelData.totalViews) * 1000).toFixed(2);
-    
-    // Find videos that "almost" made it (between 100k-500k views)
-    const nearMissVideos = channelData.topVideos?.filter((v: any) => 
-      v.views > 100000 && v.views < 500000
-    ) || [];
-    
-    const systemPrompt = `You are the world's best YouTube analytics AI with FULL ACCESS to this channel's data.
-
-COMPLETE CHANNEL DATA:
-━━━━━━━━━━━━━━━━━━━━
-Total Views: ${channelData.totalViews?.toLocaleString()}
-Revenue: $${channelData.totalRevenue?.toFixed(2)}
-Videos: ${channelData.videoCount}
-Average CTR: ${channelData.averageCTR?.toFixed(1)}%
-Views/Video: ${avgViewsPerVideo.toLocaleString()}
-Revenue/Video: $${revenuePerVideo}
-RPM: $${rpm}
-
-ALL TOP VIDEOS (with full data):
-${channelData.topVideos?.slice(0, 20).map((v: any, i: number) => 
-  `${i+1}. "${v.title}"
-   Views: ${v.views?.toLocaleString()}
-   CTR: ${v.ctr}%
-   Revenue: $${v.revenue?.toFixed(2)}
-   Performance: ${v.views > 500000 ? '🔥 VIRAL' : v.views > 200000 ? '⭐ HIT' : v.views > 100000 ? '✓ SOLID' : '→ MODERATE'}`
-).join('\n') || 'No video data available'}
-
-VIDEOS THAT ALMOST WENT VIRAL (100K-500K views):
-${nearMissVideos.slice(0, 5).map((v: any, i: number) =>
-  `- "${v.title}" (${v.views.toLocaleString()} views, ${v.ctr}% CTR)` 
-).join('\n') || 'None in this range'}
-
-CONVERSATION SO FAR:
-${conversationHistory.slice(-3).map((m: any) => `${m.role}: ${m.content.substring(0, 100)}...`).join('\n')}
-
-User's Question: ${question}
-
-Instructions:
-- Use SPECIFIC numbers and video titles from the data above
-- When analyzing "near misses", explain what held them back
-- Compare videos to each other to find patterns
-- Be conversational and insightful
-- If they ask about undefined data, you HAVE all the data above - use it!`;
+    // Build comprehensive context
+    const context = buildContext(channelData, conversationHistory, question);
 
     const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
+        'Authorization': `Bearer ${GROK_API_KEY}`,
         'Content-Type': 'application/json',
-        'HTTP-Referer': 'https://reaperlabsai-analytics.netlify.app',
-        'X-Title': 'ReaperLabs'
+        'HTTP-Referer': 'https://reaperlabsai-analytics.netlify.app'
       },
       body: JSON.stringify({
-        model: 'nvidia/llama-3.3-nemotron-super-49b-v1.5',
+        model: 'x-ai/grok-beta',
         messages: [
-          { role: 'system', content: systemPrompt },
+          { role: 'system', content: context.system },
+          ...conversationHistory.slice(-4).map((m: any) => ({
+            role: m.role === 'user' ? 'user' : 'assistant',
+            content: m.content.substring(0, 500)
+          })),
           { role: 'user', content: question }
         ],
         temperature: 0.7,
-        max_tokens: 1200,
+        max_tokens: 1500,
         top_p: 0.9
       })
     });
 
     if (response.ok) {
       const data = await response.json();
-      const answer = data.choices?.[0]?.message?.content;
-      if (answer) {
-        return NextResponse.json({ answer });
-      }
+      return NextResponse.json({ 
+        answer: data.choices?.[0]?.message?.content || generateSmartResponse(question, channelData)
+      });
     }
     
-    throw new Error('No valid response from API');
-
-  } catch (error) {
-    console.error('API Error:', error);
+    throw new Error('API failed');
     
-    // FIXED FALLBACK - uses the requestData we saved
+  } catch (error) {
+    const { question, channelData } = await req.json();
     return NextResponse.json({ 
-      answer: generateSmartFallback(
-        requestData.question || 'analyze', 
-        requestData.channelData || {}
-      )
+      answer: generateSmartResponse(question, channelData)
     });
   }
 }
 
-function generateSmartFallback(question: string, data: any): string {
+function buildContext(data: any, history: any[], question: string) {
+  const avgViews = Math.round(data.totalViews / data.videoCount);
+  const rpm = ((data.totalRevenue / data.totalViews) * 1000).toFixed(2);
+  const topKeywords = extractKeywords(data.topVideos);
+  
+  return {
+    system: `You are the world's most advanced YouTube growth AI analyzing a real channel.
+
+COMPLETE CHANNEL DATA:
+• ${data.totalViews?.toLocaleString()} total views
+• $${data.totalRevenue?.toFixed(2)} revenue  
+• ${data.videoCount} videos
+• ${data.averageCTR?.toFixed(1)}% CTR
+• ${avgViews.toLocaleString()} avg views/video
+• $${rpm} RPM
+
+TOP 20 VIDEOS WITH FULL DATA:
+${data.topVideos?.slice(0, 20).map((v: any, i: number) => 
+  `${i+1}. "${v.title}"
+   📊 ${v.views?.toLocaleString()} views | ${v.ctr}% CTR | $${v.revenue?.toFixed(2)}`
+).join('\n\n')}
+
+WINNING PATTERNS:
+• Top keywords: ${topKeywords.join(', ')}
+• Viral threshold: 500K+ views
+• Near-viral: 200-500K views
+• ${data.viralRate}% viral rate
+
+CATEGORIES PERFORMANCE:
+${data.topCategories?.map((c: any) => `• ${c.category}: ${c.views.toLocaleString()} views`).join('\n')}
+
+Instructions: Provide specific, data-driven advice. Reference actual video titles. Calculate projections. Be conversational but authoritative.`
+  };
+}
+
+function extractKeywords(videos: any[]): string[] {
+  const keywords: { [key: string]: number } = {};
+  const important = ['leaked', 'exposed', 'breaking', 'shocking', 'diddy', 'kirk', 'conspiracy'];
+  
+  for (const video of videos?.slice(0, 20) || []) {
+    const words = video.title?.toLowerCase().split(/\s+/) || [];
+    for (const word of words) {
+      if (important.includes(word)) {
+        keywords[word] = (keywords[word] || 0) + 1;
+      }
+    }
+  }
+  
+  return Object.entries(keywords)
+    .sort(([,a], [,b]) => b - a)
+    .slice(0, 5)
+    .map(([word]) => word.toUpperCase());
+}
+
+function generateSmartResponse(question: string, data: any): string {
   // Never return "undefined" - always use actual data or defaults
   if (!data || !data.totalViews) {
     return "Please upload your YouTube analytics CSV files first so I can analyze your channel.";
   }
   
   const q = question.toLowerCase();
+  const topVideo = data?.topVideos?.[0];
+  
+  if (q.includes('viral') || q.includes('blow up')) {
+    return `To replicate your viral success (${topVideo?.title} - ${topVideo?.views?.toLocaleString()} views):
+
+1. **Title Formula**: TRIGGER WORD + Celebrity/Topic + Emotional Hook
+   Example: "LEAKED + Diddy + SHOCKING REVELATION"
+
+2. **Upload Timing**: Within 2 hours of breaking news
+   Your best: When scandal news breaks
+
+3. **CTR Optimization**: Your ${data?.averageCTR?.toFixed(1)}% is good, but viral videos need 12%+
+   
+4. **Length**: 10-18 minutes (maximize mid-rolls)
+
+5. **Series Strategy**: Create 3-part series from each viral hit
+
+With your ${data?.viralRate}% viral rate, doubling uploads = ${Math.round(data.videoCount * 0.01 * data.viralRate * 2)} more viral videos/year.`;
+  }
+  
+  if (q.includes('money') || q.includes('revenue')) {
+    const currentMonthly = data.totalRevenue / 12;
+    const potential = currentMonthly * 3;
+    return `Revenue Optimization Plan:
+
+Current: $${data.totalRevenue?.toFixed(2)}/year ($${currentMonthly.toFixed(2)}/month)
+Potential: $${(potential * 12).toFixed(2)}/year
+
+Strategy:
+1. Extend videos to 8:01+ (2x mid-roll revenue)
+2. Target high-CPM topics (finance/tech inserts)
+3. Add 3 affiliate links per video
+4. Launch $47 course to 1% of audience
+5. Increase uploads to 2x daily
+
+Math: ${data.totalViews.toLocaleString()} views × 2x uploads × $${((data.totalRevenue / data.totalViews) * 1000).toFixed(2)} RPM = $${(data.totalRevenue * 2).toFixed(0)}/year`;
+  }
   
   if (q.includes('miss') || q.includes('almost') || q.includes('close')) {
     const nearMisses = data.topVideos?.filter((v: any) => 
