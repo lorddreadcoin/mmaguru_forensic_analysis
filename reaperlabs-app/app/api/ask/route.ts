@@ -1,7 +1,7 @@
 // API Route: /api/ask
 import { NextRequest, NextResponse } from 'next/server';
-import { askQuestion } from '@/lib/openrouter';
-import { saveQuestion, getAnalysis } from '@/lib/db/mock';
+import { askQuestion } from '../../../lib/openrouter';
+import { saveQuestion, getAnalysis } from '../../../lib/db/mock';
 
 export async function POST(request: NextRequest) {
   try {

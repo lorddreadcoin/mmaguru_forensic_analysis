@@ -1,9 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import UploadSection from '@/components/UploadSection';
-import ChatInterface from '@/components/ChatInterface';
-import InsightsDisplay from '@/components/InsightsDisplay';
+import UploadSection from '../components/UploadSection';
+import ChatInterface from '../components/ChatInterface';
+import InsightsDisplay from '../components/InsightsDisplay';
 import './globals.css';
 
 export default function HomePage() {

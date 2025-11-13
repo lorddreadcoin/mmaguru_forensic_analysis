@@ -1,8 +1,8 @@
 // API Route: /api/analyze
 import { NextRequest, NextResponse } from 'next/server';
-import { parseYouTubeCSV, mergeMetrics } from '@/lib/csv-parser';
-import { analyzeChannel } from '@/lib/openrouter';
-import { saveAnalysis, saveVideos, getOrCreateUser, canAnalyze } from '@/lib/db/mock';
+import { parseYouTubeCSV, mergeMetrics } from '../../../lib/csv-parser';
+import { analyzeChannel } from '../../../lib/openrouter';
+import { saveAnalysis, saveVideos, getOrCreateUser, canAnalyze } from '../../../lib/db/mock';
 
 export async function POST(request: NextRequest) {
   try {
