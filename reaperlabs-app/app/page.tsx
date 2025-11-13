@@ -2,8 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import UploadSection from '../components/UploadSection';
-import ChatInterface from '../components/ChatInterface';
 import InsightsDisplay from '../components/InsightsDisplay';
+import ChatInterface from '../components/ChatInterface';
+import FloatingReaper from '../components/FloatingReaper';
 import { initMatrix, initReaperCursor } from './matrix.js';
 import './globals.css';
 
@@ -36,11 +37,6 @@ export default function HomePage() {
     floatingLogo.innerHTML = '<img src="/logo-large.png" alt="ReaperLabs" />';
     document.body.appendChild(floatingLogo);
     
-    // Add floating reaper figure (right side)
-    const floatingReaper = document.createElement('div');
-    floatingReaper.className = 'floating-reaper reaper-css'; // Using CSS placeholder for now
-    document.body.appendChild(floatingReaper);
-    
     console.log(`
 ⚔️ REAPERLABS.AI - CYBERPUNK MODE ⚔️
 ========================
@@ -56,7 +52,6 @@ Logo: FLOATING
       document.querySelector('#matrix-canvas')?.remove();
       layers?.remove();
       floatingLogo?.remove();
-      floatingReaper?.remove();
     };
   }, []);
 
@@ -67,7 +62,9 @@ Logo: FLOATING
   };
 
   return (
-    <div className="container">
+    <>
+      <FloatingReaper />
+      <div className="container">
       <header className="header" style={{ marginBottom: '3rem' }}>
         <div style={{ textAlign: 'center' }}>
           <h1 className="logo-text" style={{
@@ -137,6 +134,7 @@ Logo: FLOATING
           NEW ANALYSIS ⚔️
         </button>
       )}
-    </div>
+      </div>
+    </>
   );
 }

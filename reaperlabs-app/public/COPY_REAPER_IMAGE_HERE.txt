@@ -1,0 +1,19 @@
+# IMPORTANT: Copy Your Reaper Image Here
+
+Please copy your reaper image to this folder with the filename:
+reaper-ghost.png
+
+The image you uploaded (the dark reaper with the red scythe) needs to be saved as:
+C:\Users\user\Desktop\fire-hq\reaperlabs-app\public\reaper-ghost.png
+
+You can copy it from:
+C:\Users\user\Downloads\reaperopacity50%.png
+
+Or use the image you provided in the chat.
+
+Once the image is in place, the floating reaper will appear with:
+- MetaMask-style head tracking
+- Watches you type in input fields
+- Follows your mouse when idle
+- Eyes glow when typing
+- 3D perspective movement
