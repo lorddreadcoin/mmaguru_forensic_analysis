@@ -28,7 +28,8 @@ export async function POST(request: NextRequest) {
     const channelData = analysis.raw_data;
 
     // Ask AI the question
-    const answer = await askQuestion(channelData, question);
+    const response = await askQuestion(channelData, question);
+    const answer = response.answer;
 
     // Save question and answer
     if (userId) {

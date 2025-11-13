@@ -1,0 +1,72 @@
+{
+  "channel": "Jesse ON FIRE (@RealJesseONFIRE)",
+  "tracking_start_date": "2025-11-11",
+  "baseline_metrics": {
+    "subscribers": 517000,
+    "total_views": 111000000,
+    "daily_avg_views": 160000,
+    "ctr_target": 10.5,
+    "rpm_target": 7.0
+  },
+  "30_day_targets": {
+    "conservative": {
+      "daily_views": 175000,
+      "monthly_views": 5250000,
+      "new_subscribers": 25000,
+      "revenue": 40000
+    },
+    "stretch": {
+      "daily_views": 225000,
+      "monthly_views": 6750000,
+      "new_subscribers": 40000,
+      "revenue": 55000
+    }
+  },
+  "content_pillars": {
+    "political_conspiracies": {
+      "target_percentage": 40,
+      "topics": ["Charlie Kirk", "Government Cover-ups", "Election Fraud", "Deep State"]
+    },
+    "celebrity_scandals": {
+      "target_percentage": 30,
+      "topics": ["Diddy", "Epstein", "Hollywood", "Athlete Drama"]
+    },
+    "breaking_emergencies": {
+      "target_percentage": 20,
+      "topics": ["Disasters", "Terror", "Mass Shootings", "Accidents"]
+    },
+    "mma_combat_sports": {
+      "target_percentage": 10,
+      "topics": ["Fighter Drama", "Dana White", "Joe Rogan", "Scandals"]
+    }
+  },
+  "upload_schedule": {
+    "monday_to_friday": 2,
+    "saturday": 1,
+    "sunday": 1,
+    "weekly_total": 12
+  },
+  "title_formulas": [
+    "LEAKED [THING] will BLOW YOUR MIND!!",
+    "NEW FOOTAGE Shows EXACTLY What [EVENT] MEANS",
+    "BREAKING: [CELEBRITY] Just [ACTION]!!",
+    "[AUTHORITY] ACCIDENTALLY REVEALS [SECRET]!!",
+    "[TOPIC] BOMBSHELL!! You NEED to See This NOW!!"
+  ],
+  "daily_checks": [
+    "Views (24-hour)",
+    "CTR on new uploads",
+    "Subscriber net change",
+    "Revenue trends",
+    "Top traffic sources",
+    "Trending topics research"
+  ],
+  "weekly_analysis": [
+    "Top 5 performing videos",
+    "Content category breakdown",
+    "CTR optimization",
+    "Competitor analysis",
+    "Growth trajectory vs targets"
+  ],
+  "notes": "Track daily metrics and compare against baseline. Update this file weekly with performance data."
+}
