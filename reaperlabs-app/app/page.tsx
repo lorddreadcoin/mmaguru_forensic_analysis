@@ -51,6 +51,7 @@ Protecting Creators Since 2024
             />
             <ChatInterface 
               analysisId={analysisId}
+              channelData={metrics || {}}
             />
           </div>
         )}

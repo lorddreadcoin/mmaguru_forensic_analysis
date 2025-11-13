@@ -3,17 +3,23 @@
 import { useState } from 'react';
 import styles from './ChatInterface.module.css';
 
+interface ChatInterfaceProps {
+  analysisId: string | number;
+  channelData?: any;
+}
+
 interface Message {
   role: 'user' | 'assistant';
   content: string;
 }
 
-interface ChatInterfaceProps {
-  analysisId: number;
-}
-
-export default function ChatInterface({ analysisId }: ChatInterfaceProps) {
-  const [messages, setMessages] = useState<Message[]>([]);
+export default function ChatInterface({ analysisId, channelData }: ChatInterfaceProps) {
+  const [messages, setMessages] = useState<Message[]>([
+    {
+      role: 'assistant',
+      content: `I've analyzed your channel data. Ask me anything about growing your YouTube channel - I can help with strategy, content ideas, optimization tips, or any specific challenges you're facing.` 
+    }
+  ]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -21,7 +27,7 @@ export default function ChatInterface({ analysisId }: ChatInterfaceProps) {
     e.preventDefault();
     if (!input.trim() || loading) return;
 
-    const userMessage = input.trim();
+    const userMessage = input;
     setInput('');
     setMessages(prev => [...prev, { role: 'user', content: userMessage }]);
     setLoading(true);
@@ -31,29 +37,41 @@ export default function ChatInterface({ analysisId }: ChatInterfaceProps) {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          analysisId,
-          question: userMessage
-        }),
+          question: userMessage,
+          channelData: channelData || {},
+          conversationHistory: messages
+        })
       });
 
-      const data = await response.json();
-
-      if (data.success) {
-        setMessages(prev => [...prev, { role: 'assistant', content: data.answer }]);
+      let answer = "I'm having connection issues. Please try again.";
+      
+      if (response.ok) {
+        const data = await response.json();
+        answer = data.answer;
       } else {
-        setMessages(prev => [...prev, { 
-          role: 'assistant', 
-          content: 'Sorry, I couldn\'t process that question. Please try again.' 
-        }]);
+        // Fallback to intelligent responses if API fails
+        answer = getFallbackResponse(userMessage, channelData);
       }
+
+      setMessages(prev => [...prev, { role: 'assistant', content: answer }]);
     } catch (error) {
-      setMessages(prev => [...prev, { 
-        role: 'assistant', 
-        content: 'An error occurred. Please try again.' 
-      }]);
+      console.error('Chat error:', error);
+      const fallback = getFallbackResponse(userMessage, channelData);
+      setMessages(prev => [...prev, { role: 'assistant', content: fallback }]);
     } finally {
       setLoading(false);
     }
+  };
+
+  const getFallbackResponse = (question: string, data: any): string => {
+    // Intelligent fallback when API is down
+    const q = question.toLowerCase();
+    
+    if (q.includes('help') || q.includes('what') || q.includes('how')) {
+      return `I can help you with YouTube growth strategies, even though I'm currently operating with limited capabilities. Based on your ${data?.videoCount || 'channel'} videos and ${data?.totalViews || 'current'} views, try focusing on: consistent uploads, thumbnail optimization, and engaging with your audience. What specific area would you like to explore?`;
+    }
+    
+    return `I'm currently having trouble accessing my full analytical capabilities, but I can still offer YouTube growth advice based on best practices. Your question "${question}" is important - generally, successful channels focus on consistency, optimization, and audience engagement. Can you tell me more about your specific situation so I can provide better guidance even with my current limitations?`;
   };
 
   return (
