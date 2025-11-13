@@ -5,7 +5,7 @@ import styles from './ChatInterface.module.css';
 
 interface ChatInterfaceProps {
   analysisId: string | number;
-  channelData?: any;
+  channelData: any;
 }
 
 interface Message {
@@ -13,62 +13,58 @@ interface Message {
   content: string;
 }
 
-// YouTube-specific question suggestions based on actual data
-const getSmartSuggestions = (data: any) => {
-  const suggestions = [];
-  
-  // Dynamic suggestions based on their metrics
-  if (data?.averageCTR < 8) {
-    suggestions.push("How do I improve my CTR?");
-  }
-  if (data?.topVideos?.[0]) {
-    suggestions.push(`Why did "${data.topVideos[0].title.substring(0, 30)}..." perform so well?`);
-  }
-  suggestions.push("What content should I make next?");
-  suggestions.push("Analyze my revenue potential");
-  suggestions.push("What's my path to 1M subscribers?");
-  
-  return suggestions.slice(0, 4);
-};
-
 export default function ChatInterface({ analysisId, channelData }: ChatInterfaceProps) {
+  // Smart suggestions based on actual channel data
+  const getQuickPrompts = () => {
+    const prompts = [
+      "What content should I make next?",
+      "Why did my top video perform so well?",
+      "What videos almost went viral and why did they miss?",
+      "How do I reach 100M views?",
+      "Analyze my revenue potential",
+      "What's killing my channel growth?",
+      "Compare my CTR to industry standards",
+      "What patterns do you see in my top 10 videos?"
+    ];
+    
+    // Add dynamic prompts based on their data
+    if (channelData?.averageCTR < 8) {
+      prompts.push("How can I improve my CTR?");
+    }
+    if (channelData?.topVideos?.[0]) {
+      prompts.push(`Make a series based on "${channelData.topVideos[0].title.substring(0, 30)}..."`);
+    }
+    
+    return prompts;
+  };
+
   const [messages, setMessages] = useState<Message[]>([
     {
       role: 'assistant',
-      content: `🎯 Channel Analysis Complete!
+      content: `🎯 **Channel Analysis Complete!**
 
-📊 **Performance Overview:**
-• Total Views: ${channelData?.totalViews?.toLocaleString() || '0'}
-• Revenue: $${channelData?.totalRevenue?.toFixed(2) || '0'} 
-• Videos: ${channelData?.videoCount || '0'}
-• Average CTR: ${channelData?.averageCTR?.toFixed(1) || '0'}%
+📊 **Your Stats:**
+• ${channelData?.totalViews?.toLocaleString() || '0'} total views
+• $${channelData?.totalRevenue?.toFixed(2) || '0'} revenue
+• ${channelData?.videoCount || '0'} videos
+• ${channelData?.averageCTR?.toFixed(1) || '0'}% CTR
 
-🏆 **Top Performer:**
-"${channelData?.topVideos?.[0]?.title || 'No data'}"
-→ ${channelData?.topVideos?.[0]?.views?.toLocaleString() || '0'} views
+🏆 **Top Video:** "${channelData?.topVideos?.[0]?.title || 'No data'}"
 
-Ask me anything about growing your channel - I have full access to your data!`
+I have full access to your data. Ask me anything!`
     }
   ]);
   
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
-  const [suggestions] = useState(getSmartSuggestions(channelData));
+  const [showPrompts, setShowPrompts] = useState(true);
+  const [promptsExpanded, setPromptsExpanded] = useState(true);
   const messagesEndRef = useRef<null | HTMLDivElement>(null);
-  const [typingDots, setTypingDots] = useState('');
+  const prompts = getQuickPrompts();
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
-
-  useEffect(() => {
-    if (loading) {
-      const interval = setInterval(() => {
-        setTypingDots(prev => prev.length >= 3 ? '' : prev + '.');
-      }, 500);
-      return () => clearInterval(interval);
-    }
-  }, [loading]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -80,6 +76,11 @@ Ask me anything about growing your channel - I have full access to your data!`
     setInput('');
     setMessages(prev => [...prev, { role: 'user', content: question }]);
     setLoading(true);
+    
+    // Auto-collapse prompts after first question but keep them available
+    if (messages.length === 1) {
+      setPromptsExpanded(false);
+    }
 
     try {
       const response = await fetch('/api/ask', {
@@ -88,28 +89,34 @@ Ask me anything about growing your channel - I have full access to your data!`
         body: JSON.stringify({
           question,
           channelData,
-          conversationHistory: messages.slice(-6) // Keep conversation context
+          conversationHistory: messages.slice(-6)
         })
       });
 
       if (response.ok) {
         const data = await response.json();
-        setMessages(prev => [...prev, { 
-          role: 'assistant', 
-          content: data.answer 
-        }]);
+        setMessages(prev => [...prev, { role: 'assistant', content: data.answer }]);
       } else {
         throw new Error('Failed to get response');
       }
     } catch (error) {
-      // Always provide helpful response even on error
       setMessages(prev => [...prev, { 
         role: 'assistant', 
-        content: `I see you're asking about "${question}". Based on your ${channelData?.videoCount} videos with ${channelData?.averageCTR?.toFixed(1)}% CTR, here's my analysis: Focus on replicating the success of "${channelData?.topVideos?.[0]?.title}" which got ${channelData?.topVideos?.[0]?.views?.toLocaleString()} views. Would you like specific strategies for this?` 
+        content: `I'll analyze that based on your data: With ${channelData?.videoCount} videos and ${channelData?.totalViews?.toLocaleString()} views, you're averaging ${Math.round(channelData?.totalViews / channelData?.videoCount).toLocaleString()} views per video. Let me think about "${question}" specifically...` 
       }]);
     } finally {
       setLoading(false);
     }
+  };
+
+  const resetChat = () => {
+    setMessages([{
+      role: 'assistant',
+      content: `🎯 **Channel Analysis Reset**
+      
+I still have all your data loaded. What would you like to explore?`
+    }]);
+    setPromptsExpanded(true);
   };
 
   const getFallbackResponse = (question: string, data: any): string => {
@@ -137,9 +144,48 @@ Ask me anything about growing your channel - I have full access to your data!`
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <h3>🤖 YOUTUBE ANALYTICS AI</h3>
+        <div className={styles.headerTop}>
+          <h3>🤖 YOUTUBE ANALYTICS AI</h3>
+          <button 
+            onClick={resetChat} 
+            className={styles.resetButton}
+            title="Start new conversation"
+          >
+            ↻ New Chat
+          </button>
+        </div>
         <span className={styles.subtitle}>Your Personal Growth Strategist</span>
       </div>
+
+      {/* Persistent Quick Prompts Section */}
+      {showPrompts && (
+        <div className={styles.promptsSection}>
+          <div 
+            className={styles.promptsHeader}
+            onClick={() => setPromptsExpanded(!promptsExpanded)}
+          >
+            <span>💡 Quick Questions</span>
+            <span className={styles.expandIcon}>
+              {promptsExpanded ? '▼' : '▶'}
+            </span>
+          </div>
+          
+          {promptsExpanded && (
+            <div className={styles.promptsGrid}>
+              {prompts.slice(0, 8).map((prompt, i) => (
+                <button
+                  key={i}
+                  onClick={() => askQuestion(prompt)}
+                  className={styles.promptButton}
+                  disabled={loading}
+                >
+                  {prompt}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
       
       <div className={styles.messages}>
         {messages.map((msg, i) => (
@@ -154,40 +200,24 @@ Ask me anything about growing your channel - I have full access to your data!`
             </div>
           </div>
         ))}
-
         
         {loading && (
           <div className={`${styles.message} ${styles.assistant}`}>
             <span className={styles.role}>🤖</span>
             <div className={styles.content}>
-              <span className={styles.typing}>Analyzing{typingDots}</span>
+              <span className={styles.typing}>Analyzing...</span>
             </div>
           </div>
         )}
         <div ref={messagesEndRef} />
       </div>
-
-      {messages.length === 1 && suggestions.length > 0 && (
-        <div className={styles.suggestions}>
-          {suggestions.map((q, i) => (
-            <button
-              key={i}
-              onClick={() => askQuestion(q)}
-              className={styles.suggestionButton}
-              disabled={loading}
-            >
-              {q}
-            </button>
-          ))}
-        </div>
-      )}
-
+      
       <form onSubmit={handleSubmit} className={styles.inputContainer}>
         <input
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          placeholder="Ask about views, revenue, growth strategies, content ideas..."
+          placeholder="Ask anything about your YouTube channel..."
           className={styles.input}
           disabled={loading}
         />
