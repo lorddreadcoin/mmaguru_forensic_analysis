@@ -1,0 +1,102 @@
+.container {
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid rgba(255, 69, 0, 0.2);
+  border-radius: 20px;
+  padding: 30px;
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+.metricsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.metricCard {
+  background: linear-gradient(135deg, rgba(255, 69, 0, 0.1) 0%, rgba(255, 99, 71, 0.1) 100%);
+  border: 1px solid rgba(255, 69, 0, 0.3);
+  padding: 20px;
+  border-radius: 12px;
+  text-align: center;
+}
+
+.label {
+  color: #888;
+  font-size: 0.9em;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 10px;
+}
+
+.value {
+  color: #ff4500;
+  font-size: 2em;
+  font-weight: bold;
+}
+
+.section {
+  margin-bottom: 30px;
+}
+
+.section h3 {
+  color: #ff4500;
+  margin-bottom: 15px;
+  font-size: 1.2em;
+}
+
+.section ul {
+  list-style: none;
+  padding: 0;
+}
+
+.section li {
+  background: rgba(255, 255, 255, 0.02);
+  padding: 12px 15px;
+  margin-bottom: 8px;
+  border-radius: 8px;
+  border-left: 3px solid #ff4500;
+  color: #ddd;
+  line-height: 1.4;
+}
+
+.videoList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.video {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 15px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 10px;
+  transition: all 0.3s ease;
+}
+
+.video:hover {
+  background: rgba(255, 69, 0, 0.1);
+}
+
+.rank {
+  color: #ff4500;
+  font-weight: bold;
+  font-size: 1.2em;
+}
+
+.videoInfo {
+  flex: 1;
+}
+
+.videoTitle {
+  color: #fff;
+  margin-bottom: 5px;
+}
+
+.videoStats {
+  color: #888;
+  font-size: 0.9em;
+}

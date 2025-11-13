@@ -1,0 +1,168 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 60vh;
+}
+
+.uploadBox {
+  background: linear-gradient(135deg, rgba(10, 10, 10, 0.95), rgba(0, 0, 0, 0.98));
+  border: 1px solid rgba(192, 192, 192, 0.1);
+  /* NO border-radius - sharp tactical edges */
+  padding: 40px;
+  max-width: 600px;
+  width: 100%;
+  text-align: center;
+}
+
+.uploadBox h2 {
+  color: #C0C0C0;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-weight: 900;
+  margin-bottom: 10px;
+}
+
+.uploadBox > p {
+  color: #888;
+  margin-bottom: 30px;
+}
+
+.dropZone {
+  border: 2px dashed rgba(192, 192, 192, 0.2);
+  /* NO border-radius - tactical edges */
+  padding: 40px;
+  margin: 20px 0;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.dropZone:hover,
+.dropZone.active {
+  border-color: #A00000;
+  background: rgba(160, 0, 0, 0.02);
+  box-shadow: 0 0 30px rgba(160, 0, 0, 0.2);
+}
+
+.dropContent {
+  pointer-events: none;
+}
+
+.icon {
+  font-size: 3em;
+  margin-bottom: 20px;
+  display: block;
+}
+
+.or {
+  color: #666;
+  margin: 15px 0;
+}
+
+.browseBtn {
+  background: linear-gradient(135deg, #A00000, #700000);
+  color: white;
+  border: none;
+  padding: 12px 30px;
+  /* NO border-radius */
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-weight: 700;
+  font-size: 1em;
+  cursor: pointer;
+  pointer-events: none;
+}
+
+.fileList {
+  margin-top: 20px;
+  text-align: left;
+}
+
+.file {
+  background: rgba(160, 0, 0, 0.1);
+  padding: 8px 15px;
+  /* NO border-radius */
+  margin: 5px 0;
+  color: #C0C0C0;
+  border-left: 3px solid #A00000;
+}
+
+.emailSection {
+  margin: 20px 0;
+}
+
+.emailInput {
+  width: 100%;
+  padding: 15px;
+  border: 1px solid rgba(192, 192, 192, 0.2);
+  /* NO border-radius */
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  font-size: 1em;
+}
+
+.emailInput::placeholder {
+  color: #666;
+}
+
+.analyzeBtn {
+  width: 100%;
+  padding: 15px;
+  background: linear-gradient(135deg, #A00000, #700000);
+  color: white;
+  border: none;
+  /* NO border-radius */
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: 1.1em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.analyzeBtn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 30px rgba(160, 0, 0, 0.5);
+}
+
+.analyzeBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.examples {
+  margin-top: 30px;
+  padding-top: 30px;
+  border-top: 1px solid rgba(192, 192, 192, 0.1);
+  text-align: left;
+}
+
+.examples h3 {
+  color: #A00000;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 15px;
+}
+
+.examples ul {
+  list-style: none;
+  padding: 0;
+}
+
+.examples li {
+  color: #888;
+  padding: 8px 0;
+  padding-left: 20px;
+  position: relative;
+}
+
+.examples li:before {
+  content: "💬";
+  position: absolute;
+  left: 0;
+}

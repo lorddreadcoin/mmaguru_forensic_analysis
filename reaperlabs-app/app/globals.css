@@ -1,0 +1,185 @@
+/* REAPERLABS ELITE THEME - MILITARY GRADE */
+:root {
+  --reaper-black: #000000;
+  --reaper-dark: #0a0a0a;
+  --reaper-silver: #C0C0C0;
+  --reaper-crimson: #A00000;
+  --reaper-dark-crimson: #700000;
+  --reaper-blood: #8B0000;
+  --reaper-white: #FFFFFF;
+  --reaper-gray: #666666;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--reaper-black);
+  color: var(--reaper-white);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  overflow-x: hidden;
+  position: relative;
+  min-height: 100vh;
+}
+
+/* Subtle crimson glow background */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 20% 50%, rgba(160, 0, 0, 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(192, 192, 192, 0.02) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.app-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  position: relative;
+  z-index: 2;
+}
+
+/* REAPER HEADER - TACTICAL */
+.header {
+  text-align: center;
+  padding: 3rem 0;
+  border-bottom: 1px solid rgba(192, 192, 192, 0.1);
+  margin-bottom: 3rem;
+  position: relative;
+}
+
+.header::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--reaper-crimson), transparent);
+}
+
+.logo {
+  font-size: 2.5rem;
+  font-weight: 900;
+  letter-spacing: 3px;
+  background: linear-gradient(135deg, var(--reaper-silver), var(--reaper-white));
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 0.5rem;
+}
+
+.tagline {
+  color: var(--reaper-crimson);
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-weight: 500;
+}
+
+.subtitle {
+  color: var(--reaper-gray);
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.main {
+  min-height: 60vh;
+}
+
+.analysis-view {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+@media (max-width: 768px) {
+  .analysis-view {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* TACTICAL BUTTON - SHARP EDGES */
+.new-analysis-btn {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background: linear-gradient(135deg, var(--reaper-crimson), var(--reaper-dark-crimson));
+  color: white;
+  border: none;
+  padding: 15px 30px;
+  /* NO ROUNDED CORNERS - SHARP TACTICAL EDGES */
+  font-size: 1em;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  cursor: pointer;
+  box-shadow: 0 4px 20px rgba(160, 0, 0, 0.3);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.new-analysis-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.new-analysis-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 30px rgba(160, 0, 0, 0.5);
+}
+
+.new-analysis-btn:hover::before {
+  left: 100%;
+}
+
+/* SQUARE LOADING SPINNER */
+.loading {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(192, 192, 192, 0.1);
+  border-top: 3px solid var(--reaper-crimson);
+  /* NO BORDER-RADIUS - SQUARE SPINNER */
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* ELITE SCROLLBAR */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--reaper-black);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(192, 192, 192, 0.2);
+  /* NO BORDER-RADIUS */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(192, 192, 192, 0.3);
+}
