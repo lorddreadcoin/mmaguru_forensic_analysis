@@ -30,10 +30,10 @@ export default function HomePage() {
     `;
     document.body.appendChild(layers);
     
-    // Add floating logo
+    // Add floating logo (large version)
     const floatingLogo = document.createElement('div');
     floatingLogo.className = 'floating-logo';
-    floatingLogo.innerHTML = '<img src="/logo.png" alt="ReaperLabs" />';
+    floatingLogo.innerHTML = '<img src="/logo-large.png" alt="ReaperLabs" />';
     document.body.appendChild(floatingLogo);
     
     console.log(`

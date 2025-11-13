@@ -127,10 +127,10 @@ body::after {
 /* FLOATING LOGO WITH 3D EFFECT */
 .floating-logo {
   position: fixed;
-  left: 3%;
-  top: 10%;
-  width: 150px;
-  height: 150px;
+  left: 2%;
+  top: 8%;
+  width: 200px;
+  height: 200px;
   z-index: 100;
   filter: drop-shadow(0 20px 40px rgba(255, 0, 0, 0.6));
   animation: floatLogo 6s ease-in-out infinite;
