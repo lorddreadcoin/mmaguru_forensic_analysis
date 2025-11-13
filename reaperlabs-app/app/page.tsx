@@ -45,8 +45,13 @@ Protecting Creators Since 2024
           />
         ) : (
           <div className="analysis-view">
-            <InsightsDisplay insights={insights} metrics={metrics} />
-            <ChatInterface analysisId={analysisId} />
+            <InsightsDisplay 
+              insights={insights || {}} 
+              metrics={metrics || {}}
+            />
+            <ChatInterface 
+              analysisId={analysisId}
+            />
           </div>
         )}
       </main>

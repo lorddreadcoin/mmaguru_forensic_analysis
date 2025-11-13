@@ -3,92 +3,93 @@
 import styles from './InsightsDisplay.module.css';
 
 interface InsightsDisplayProps {
-  insights: any;
-  metrics: any;
+  insights: {
+    strengths: string[];
+    problems: string[];
+    actionItems: string[];
+  };
+  metrics?: {
+    totalViews?: number | string;
+    totalRevenue?: number | string;
+    averageCTR?: number | string;
+    videoCount?: number | string;
+  };
 }
 
 export default function InsightsDisplay({ insights, metrics }: InsightsDisplayProps) {
+  // Safely convert values to numbers
+  const safeNumber = (val: any): number => {
+    const num = parseFloat(val);
+    return isNaN(num) ? 0 : num;
+  };
+
+  // Format numbers safely
+  const formatNumber = (val: any): string => {
+    const num = safeNumber(val);
+    return num.toLocaleString();
+  };
+
+  const formatCurrency = (val: any): string => {
+    const num = safeNumber(val);
+    return `$${num.toFixed(2)}`;
+  };
+
+  const formatPercent = (val: any): string => {
+    const num = safeNumber(val);
+    return `${num.toFixed(1)}%`;
+  };
+
   return (
     <div className={styles.container}>
-      <div className={styles.metricsGrid}>
-        <div className={styles.metricCard}>
-          <div className={styles.label}>Total Views</div>
-          <div className={styles.value}>
-            {(metrics?.totalViews / 1000000).toFixed(1)}M
+      {metrics && (
+        <div className={styles.metricsGrid}>
+          <div className={styles.metricCard}>
+            <span className={styles.metricLabel}>TOTAL VIEWS</span>
+            <span className={styles.metricValue}>{formatNumber(metrics.totalViews)}</span>
+          </div>
+          <div className={styles.metricCard}>
+            <span className={styles.metricLabel}>REVENUE</span>
+            <span className={styles.metricValue}>{formatCurrency(metrics.totalRevenue)}</span>
+          </div>
+          <div className={styles.metricCard}>
+            <span className={styles.metricLabel}>AVG CTR</span>
+            <span className={styles.metricValue}>{formatPercent(metrics.averageCTR)}</span>
+          </div>
+          <div className={styles.metricCard}>
+            <span className={styles.metricLabel}>VIDEOS</span>
+            <span className={styles.metricValue}>{formatNumber(metrics.videoCount)}</span>
           </div>
         </div>
-        <div className={styles.metricCard}>
-          <div className={styles.label}>Revenue</div>
-          <div className={styles.value}>
-            ${(metrics?.totalRevenue || 0).toLocaleString()}
-          </div>
+      )}
+
+      <div className={styles.insightsGrid}>
+        <div className={styles.section}>
+          <h3 className={styles.sectionTitle}>⚔️ TACTICAL ADVANTAGES</h3>
+          <ul className={styles.list}>
+            {insights.strengths?.map((strength, i) => (
+              <li key={i} className={styles.listItem}>{strength}</li>
+            )) || <li>Loading strengths...</li>}
+          </ul>
         </div>
-        <div className={styles.metricCard}>
-          <div className={styles.label}>Avg CTR</div>
-          <div className={styles.value}>
-            {(metrics?.averageCTR || 0).toFixed(1)}%
-          </div>
+
+        <div className={styles.section}>
+          <h3 className={styles.sectionTitle}>⚠️ THREAT ANALYSIS</h3>
+          <ul className={styles.list}>
+            {insights.problems?.map((problem, i) => (
+              <li key={i} className={styles.listItem}>{problem}</li>
+            )) || <li>Loading problems...</li>}
+          </ul>
         </div>
-        <div className={styles.metricCard}>
-          <div className={styles.label}>Videos</div>
-          <div className={styles.value}>
-            {metrics?.videoCount || 0}
-          </div>
+
+        <div className={styles.section}>
+          <h3 className={styles.sectionTitle}>🎯 MISSION OBJECTIVES</h3>
+          <ul className={styles.list}>
+            {insights.actionItems?.map((item, i) => (
+              <li key={i} className={styles.listItem}>{item}</li>
+            )) || <li>Loading action items...</li>}
+          </ul>
         </div>
       </div>
-
-      {insights?.strengths && insights.strengths.length > 0 && (
-        <div className={styles.section}>
-          <h3>⚔️ TACTICAL ADVANTAGES</h3>
-          <ul>
-            {insights.strengths.map((item: string, idx: number) => (
-              <li key={idx}>{item}</li>
-            ))}
-          </ul>
-        </div>
-      )}
-
-      {insights?.problems && insights.problems.length > 0 && (
-        <div className={styles.section}>
-          <h3>⚠️ THREAT ANALYSIS</h3>
-          <ul>
-            {insights.problems.map((item: string, idx: number) => (
-              <li key={idx}>{item}</li>
-            ))}
-          </ul>
-        </div>
-      )}
-
-      {insights?.actionItems && insights.actionItems.length > 0 && (
-        <div className={styles.section}>
-          <h3>🎯 MISSION OBJECTIVES</h3>
-          <ul>
-            {insights.actionItems.map((item: string, idx: number) => (
-              <li key={idx}>{item}</li>
-            ))}
-          </ul>
-        </div>
-      )}
-
-      {metrics?.topVideos && metrics.topVideos.length > 0 && (
-        <div className={styles.section}>
-          <h3>🔥 HIGH-VALUE TARGETS</h3>
-          <div className={styles.videoList}>
-            {metrics.topVideos.slice(0, 5).map((video: any, idx: number) => (
-              <div key={idx} className={styles.video}>
-                <span className={styles.rank}>#{idx + 1}</span>
-                <div className={styles.videoInfo}>
-                  <div className={styles.videoTitle}>{video.title}</div>
-                  <div className={styles.videoStats}>
-                    {(video.views / 1000).toFixed(0)}K views • 
-                    ${video.revenue.toFixed(0)}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
     </div>
   );
 }
