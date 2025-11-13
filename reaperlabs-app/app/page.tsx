@@ -104,8 +104,8 @@ Logo: FLOATING
               metrics={metrics || {}}
             />
             <ChatInterface 
-              analysisId={analysisId}
-              channelData={metrics || {}}
+              analysisId={String(analysisId)}
+              channelData={metrics}
             />
           </div>
         )}
