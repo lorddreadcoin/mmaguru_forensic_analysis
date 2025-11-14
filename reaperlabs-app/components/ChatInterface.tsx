@@ -32,10 +32,12 @@ export default function ChatInterface({ analysisId, channelData }: ChatInterface
     if (channelData?.topVideos?.[0]) {
       prompts.push(`Analyze "${channelData.topVideos[0].title.substring(0, 40)}..."`);
     }
+    prompts.push("What's trending RIGHT NOW?");
     prompts.push("How do I reach 100M views?");
     prompts.push("What's my viral formula?");
     prompts.push("Show me revenue projections");
     prompts.push("What content should I make tomorrow?");
+    prompts.push("What news should I cover today?");
     
     return prompts.slice(0, 6);
   };

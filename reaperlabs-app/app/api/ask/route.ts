@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { getTrendingTopics, searchTrendingTopic } from '@/lib/trending-search';
 
 const GROK_API_KEY = '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';
 
@@ -57,7 +58,7 @@ export async function POST(req: NextRequest) {
       const aiResponse = data.choices?.[0]?.message?.content;
       console.log('[ASK API] Got AI response, length:', aiResponse?.length || 0);
       return NextResponse.json({ 
-        answer: aiResponse || generateSmartResponse(question, channelData)
+        answer: aiResponse || await generateSmartResponse(question, channelData)
       });
     }
     
@@ -68,7 +69,7 @@ export async function POST(req: NextRequest) {
   } catch (error: any) {
     console.error('[ASK API] Falling back to generateSmartResponse due to:', error?.message);
     return NextResponse.json({ 
-      answer: generateSmartResponse(question, channelData)
+      answer: await generateSmartResponse(question, channelData)
     });
   }
 }
@@ -135,7 +136,7 @@ function extractKeywords(videos: any[]): string[] {
     .map(([word]) => word.toUpperCase());
 }
 
-function generateSmartResponse(question: string, data: any): string {
+async function generateSmartResponse(question: string, data: any): Promise<string> {
   // Never return "undefined" - always use actual data or defaults
   if (!data || !data.totalViews) {
     return "Please upload your YouTube analytics CSV files first so I can analyze your channel.";
@@ -277,6 +278,47 @@ Math: ${data.totalViews.toLocaleString()} views × 2x uploads × $${((data.total
     }
   }
 
+  if (q.includes('trend') || q.includes('current') || q.includes('now') || q.includes('today') || q.includes('news')) {
+    // Fetch current trends and news
+    console.log('[SMART RESPONSE] Fetching trending topics for user...');
+    try {
+      const trending = await getTrendingTopics();
+      
+      let response = '🔥 **TRENDING RIGHT NOW - Make These Videos TODAY:**\n\n';
+      
+      // Add top trending suggestions
+      response += '**Based on Current Events (Last 4 Hours):**\n';
+      trending.suggestions.slice(0, 5).forEach((suggestion, i) => {
+        response += (i + 1) + '. ' + suggestion + '\n';
+      });
+      
+      response += '\n**Why These Will Go Viral NOW:**\n';
+      response += '• These topics are ACTIVELY trending on Google/Twitter/Reddit\n';
+      response += '• Search volume is peaking RIGHT NOW\n';
+      response += '• First to cover = massive algorithm boost\n\n';
+      
+      response += '**Current Trending Topics:**\n';
+      trending.trends.slice(0, 5).forEach((trend) => {
+        response += '• ' + trend.title;
+        if (trend.source) response += ' (via ' + trend.source + ')';
+        if (trend.searchVolume) response += ' - ' + trend.searchVolume.toLocaleString() + ' searches';
+        response += '\n';
+      });
+      
+      response += '\n**Breaking News to Cover:**\n';
+      trending.news.slice(0, 3).forEach((article) => {
+        response += '• ' + article.title + ' (' + article.source + ')\n';
+      });
+      
+      response += '\n💡 **Pro Tip:** Upload within 2 hours of news breaking for maximum reach!';
+      
+      return response;
+    } catch (error) {
+      console.error('[SMART RESPONSE] Trending fetch failed:', error);
+      // Fall through to regular content suggestions
+    }
+  }
+
   if (q.includes('next') || q.includes('make') || q.includes('video') || q.includes('content') || q.includes('what') || q.includes('create')) {
     // Analyze top performers for patterns
     const topPerformers = data.topVideos?.slice(0, 10) || [];
@@ -297,6 +339,15 @@ Math: ${data.totalViews.toLocaleString()} views × 2x uploads × $${((data.total
     const bestKeyword = Object.entries(winningWords).sort(([,a], [,b]) => b - a)[0];
     const secondBest = Object.entries(winningWords).sort(([,a], [,b]) => b - a)[1];
     
+    // Try to fetch trending topics for even better suggestions
+    let trendingTopics: any = null;
+    try {
+      trendingTopics = await getTrendingTopics();
+      console.log('[SMART RESPONSE] Got trending topics for video suggestions');
+    } catch (error) {
+      console.log('[SMART RESPONSE] Could not fetch trending, using static suggestions');
+    }
+    
     let response = '**YOUR NEXT VIDEO (Data-Driven Blueprint):**\n\n';
     response += '📹 **Title Formula That Works For YOU:**\n';
     response += '"' + (bestKeyword?.[0] || 'LEAKED') + ' [Celebrity Name] ' + (secondBest?.[0] || 'SHOCKING') + ' [Specific Detail] (' + new Date().getFullYear() + ' ' + ['PROOF', 'EXPOSED', 'CAUGHT'][Math.floor(Math.random() * 3)] + ')"\n\n';
@@ -304,19 +355,29 @@ Math: ${data.totalViews.toLocaleString()} views × 2x uploads × $${((data.total
     response += '- "' + (bestKeyword?.[0] || '') + '" appears in videos averaging ' + ((bestKeyword?.[1] || 0) / 1000000).toFixed(1) + 'M views\n';
     response += '- Your top ' + viralVideos.length + ' viral videos ALL use this structure\n';
     response += '- Average CTR on these: ' + avgTopCTR.toFixed(1) + '% (vs your average ' + (data.averageCTR?.toFixed(1) || '0') + '%)\n\n';
-    response += '🎯 **TOMORROW\'S VIDEO - Specific Ideas:**\n';
-    response += '1. **"LEAKED Jay-Z Secret Meeting Audio EXPOSES Diddy Connection"**\n';
-    response += '   - Riding current Diddy momentum (your biggest hit)\n';
-    response += '   - Jay-Z connection = fresh angle\n';
-    response += '   - "Audio" implies exclusive content\n\n';
-    response += '2. **"BREAKING: Oprah\'s Diddy Party Photos LEAKED (DISGUSTING Details)"**\n';
-    response += '   - Combines your top performer\'s energy\n';
-    response += '   - Oprah = massive search volume\n';
-    response += '   - Photos = high CTR trigger\n\n';
-    response += '3. **"EXPOSED: The Diddy List - 47 Celebrities Named (SHOCKING)"**\n';
-    response += '   - List format = high retention\n';
-    response += '   - Number in title = specificity\n';
-    response += '   - Multi-celebrity = broad appeal\n\n';
+    
+    if (trendingTopics && trendingTopics.suggestions.length > 0) {
+      response += '🔥 **TRENDING NOW - Upload These TODAY:**\n';
+      trendingTopics.suggestions.slice(0, 3).forEach((suggestion: string, i: number) => {
+        response += (i + 1) + '. **"' + suggestion + '"**\n';
+        response += '   - Currently trending on social media\n';
+        response += '   - Algorithm will boost immediately\n\n';
+      });
+    } else {
+      response += '🎯 **TOMORROW\'S VIDEO - Specific Ideas:**\n';
+      response += '1. **"LEAKED Jay-Z Secret Meeting Audio EXPOSES Diddy Connection"**\n';
+      response += '   - Riding current Diddy momentum (your biggest hit)\n';
+      response += '   - Jay-Z connection = fresh angle\n';
+      response += '   - "Audio" implies exclusive content\n\n';
+      response += '2. **"BREAKING: Oprah\'s Diddy Party Photos LEAKED (DISGUSTING Details)"**\n';
+      response += '   - Combines your top performer\'s energy\n';
+      response += '   - Oprah = massive search volume\n';
+      response += '   - Photos = high CTR trigger\n\n';
+      response += '3. **"EXPOSED: The Diddy List - 47 Celebrities Named (SHOCKING)"**\n';
+      response += '   - List format = high retention\n';
+      response += '   - Number in title = specificity\n';
+      response += '   - Multi-celebrity = broad appeal\n\n';
+    }
     response += '**Thumbnail Must-Haves (Based on YOUR Winners):**\n';
     response += '✓ Red arrow pointing at shocking element\n';
     response += '✓ Your face with extreme expression (worked ' + viralVideos.length + ' times)\n';
