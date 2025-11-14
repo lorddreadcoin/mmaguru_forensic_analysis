@@ -78,33 +78,41 @@ function buildContext(data: any, history: any[], question: string) {
   const rpm = ((data.totalRevenue / data.totalViews) * 1000).toFixed(2);
   const topKeywords = extractKeywords(data.topVideos);
   
+  let systemContent = 'You are the world\'s most advanced YouTube growth AI analyzing a real channel.\n\n';
+  systemContent += 'COMPLETE CHANNEL DATA:\n';
+  systemContent += '• ' + (data.totalViews?.toLocaleString() || '0') + ' total views\n';
+  systemContent += '• $' + (data.totalRevenue?.toFixed(2) || '0') + ' revenue\n';
+  systemContent += '• ' + data.videoCount + ' videos\n';
+  systemContent += '• ' + (data.averageCTR?.toFixed(1) || '0') + '% CTR\n';
+  systemContent += '• ' + avgViews.toLocaleString() + ' avg views/video\n';
+  systemContent += '• $' + rpm + ' RPM\n\n';
+  
+  systemContent += 'TOP 20 VIDEOS WITH FULL DATA:\n';
+  if (data.topVideos) {
+    data.topVideos.slice(0, 20).forEach((v: any, i: number) => {
+      systemContent += (i+1) + '. "' + v.title + '"\n';
+      systemContent += '   📊 ' + (v.views?.toLocaleString() || '0') + ' views | ';
+      systemContent += v.ctr + '% CTR | $' + (v.revenue?.toFixed(2) || '0') + '\n\n';
+    });
+  }
+  
+  systemContent += 'WINNING PATTERNS:\n';
+  systemContent += '• Top keywords: ' + topKeywords.join(', ') + '\n';
+  systemContent += '• Viral threshold: 500K+ views\n';
+  systemContent += '• Near-viral: 200-500K views\n';
+  systemContent += '• ' + (data.viralRate || '0') + '% viral rate\n\n';
+  
+  systemContent += 'CATEGORIES PERFORMANCE:\n';
+  if (data.topCategories) {
+    data.topCategories.forEach((c: any) => {
+      systemContent += '• ' + c.category + ': ' + c.views.toLocaleString() + ' views\n';
+    });
+  }
+  
+  systemContent += '\nInstructions: Provide specific, data-driven advice. Reference actual video titles. Calculate projections. Be conversational but authoritative.';
+  
   return {
-    system: `You are the world's most advanced YouTube growth AI analyzing a real channel.
-
-COMPLETE CHANNEL DATA:
-• ${data.totalViews?.toLocaleString()} total views
-• $${data.totalRevenue?.toFixed(2)} revenue  
-• ${data.videoCount} videos
-• ${data.averageCTR?.toFixed(1)}% CTR
-• ${avgViews.toLocaleString()} avg views/video
-• $${rpm} RPM
-
-TOP 20 VIDEOS WITH FULL DATA:
-${data.topVideos?.slice(0, 20).map((v: any, i: number) => 
-  `${i+1}. "${v.title}"
-   📊 ${v.views?.toLocaleString()} views | ${v.ctr}% CTR | $${v.revenue?.toFixed(2)}`
-).join('\n\n')}
-
-WINNING PATTERNS:
-• Top keywords: ${topKeywords.join(', ')}
-• Viral threshold: 500K+ views
-• Near-viral: 200-500K views
-• ${data.viralRate}% viral rate
-
-CATEGORIES PERFORMANCE:
-${data.topCategories?.map((c: any) => `• ${c.category}: ${c.views.toLocaleString()} views`).join('\n')}
-
-Instructions: Provide specific, data-driven advice. Reference actual video titles. Calculate projections. Be conversational but authoritative.`
+    system: systemContent
   };
 }
 
@@ -237,26 +245,37 @@ Math: ${data.totalViews.toLocaleString()} views × 2x uploads × $${((data.total
     ) || [];
     
     if (nearMisses.length > 0) {
-      return `Videos that were CLOSE but didn't go viral:
-
-${nearMisses.slice(0, 3).map((v: any, i: number) => 
-  `${i+1}. "${v.title}"
-   Got ${v.views.toLocaleString()} views (needed 500K+ for viral)
-   CTR: ${v.ctr}% ${v.ctr < 10 ? '← PROBLEM: Low CTR killed reach' : '✓ Good CTR'}
-   
-   Why it missed: ${
-     v.ctr < 10 ? 'Thumbnail/title wasn\'t compelling enough' :
-     v.title.length > 60 ? 'Title too long - gets cut off in search' :
-     !v.title.includes('LEAKED') && !v.title.includes('EXPOSED') ? 'Missing power words that drive clicks' :
-     'Timing - probably uploaded when algorithm was favoring other content'
-   }`
-).join('\n\n')}
-
-To push these over the edge next time:
-- Add "LEAKED" or "BREAKING" to titles
-- Keep titles under 60 characters
-- Upload within 2 hours of trending news
-- Aim for 12%+ CTR
+      let nearMissResponse = 'Videos that were CLOSE but didn\'t go viral:\n\n';
+      
+      nearMisses.slice(0, 3).forEach((v: any, i: number) => {
+        nearMissResponse += (i+1) + '. "' + v.title + '"\n';
+        nearMissResponse += '   Got ' + v.views.toLocaleString() + ' views (needed 500K+ for viral)\n';
+        nearMissResponse += '   CTR: ' + v.ctr + '% ' + (v.ctr < 10 ? '← PROBLEM: Low CTR killed reach' : '✓ Good CTR') + '\n';
+        nearMissResponse += '   \n';
+        nearMissResponse += '   Why it missed: ';
+        
+        if (v.ctr < 10) {
+          nearMissResponse += 'Thumbnail/title wasn\'t compelling enough';
+        } else if (v.title.length > 60) {
+          nearMissResponse += 'Title too long - gets cut off in search';
+        } else if (!v.title.includes('LEAKED') && !v.title.includes('EXPOSED')) {
+          nearMissResponse += 'Missing power words that drive clicks';
+        } else {
+          nearMissResponse += 'Timing - probably uploaded when algorithm was favoring other content';
+        }
+        
+        nearMissResponse += '\n\n';
+      });
+      
+      nearMissResponse += 'To push these over the edge next time:\n';
+      nearMissResponse += '- Add "LEAKED" or "BREAKING" to titles\n';
+      nearMissResponse += '- Keep titles under 60 characters\n';
+      nearMissResponse += '- Upload within 2 hours of trending news\n';
+      nearMissResponse += '- Aim for 12%+ CTR';
+      
+      return nearMissResponse;
+    }
+  }
 
   if (q.includes('next') || q.includes('make') || q.includes('video') || q.includes('content') || q.includes('what') || q.includes('create')) {
     // Analyze top performers for patterns
@@ -278,56 +297,55 @@ To push these over the edge next time:
     const bestKeyword = Object.entries(winningWords).sort(([,a], [,b]) => b - a)[0];
     const secondBest = Object.entries(winningWords).sort(([,a], [,b]) => b - a)[1];
     
-    return `**YOUR NEXT VIDEO (Data-Driven Blueprint):**
-
-📹 **Title Formula That Works For YOU:**
-"${bestKeyword?.[0] || 'LEAKED'} [Celebrity Name] ${secondBest?.[0] || 'SHOCKING'} [Specific Detail] (${new Date().getFullYear()} ${['PROOF', 'EXPOSED', 'CAUGHT'][Math.floor(Math.random() * 3)]})"
-
-**Why This Formula:**
-- "${bestKeyword?.[0]}" appears in videos averaging ${(bestKeyword?.[1] / 1000000).toFixed(1)}M views
-- Your top ${viralVideos.length} viral videos ALL use this structure
-- Average CTR on these: ${avgTopCTR.toFixed(1)}% (vs your average ${data.averageCTR?.toFixed(1)}%)
-
-🎯 **TOMORROW'S VIDEO - Specific Ideas:**
-1. **"LEAKED Jay-Z Secret Meeting Audio EXPOSES Diddy Connection"**
-   - Riding current Diddy momentum (your biggest hit)
-   - Jay-Z connection = fresh angle
-   - "Audio" implies exclusive content
-
-2. **"BREAKING: Oprah's Diddy Party Photos LEAKED (DISGUSTING Details)"**
-   - Combines your top performer's energy
-   - Oprah = massive search volume
-   - Photos = high CTR trigger
-
-3. **"EXPOSED: The Diddy List - 47 Celebrities Named (SHOCKING)"**
-   - List format = high retention
-   - Number in title = specificity
-   - Multi-celebrity = broad appeal
-
-**Thumbnail Must-Haves (Based on YOUR Winners):**
-✓ Red arrow pointing at shocking element
-✓ Your face with extreme expression (worked ${viralVideos.length} times)
-✓ Celebrity face looking guilty/scared
-✓ "LEAKED" or "EXPOSED" text overlay
-✓ Dark/dramatic lighting
-
-**Upload Strategy:**
-- Time: 3pm EST (when your audience is most active)
-- Length: 12-16 minutes (your sweet spot for revenue)
-- First 30 seconds: Tease the biggest revelation
-- Pin comment: "Part 2 tomorrow if this hits 100K views"
-
-**Expected Performance:**
-Based on similar videos: 200K-400K views in 48 hours
-If CTR hits 14%+: Algorithm boost to 1M+ potential`;
+    let response = '**YOUR NEXT VIDEO (Data-Driven Blueprint):**\n\n';
+    response += '📹 **Title Formula That Works For YOU:**\n';
+    response += '"' + (bestKeyword?.[0] || 'LEAKED') + ' [Celebrity Name] ' + (secondBest?.[0] || 'SHOCKING') + ' [Specific Detail] (' + new Date().getFullYear() + ' ' + ['PROOF', 'EXPOSED', 'CAUGHT'][Math.floor(Math.random() * 3)] + ')"\n\n';
+    response += '**Why This Formula:**\n';
+    response += '- "' + (bestKeyword?.[0] || '') + '" appears in videos averaging ' + ((bestKeyword?.[1] || 0) / 1000000).toFixed(1) + 'M views\n';
+    response += '- Your top ' + viralVideos.length + ' viral videos ALL use this structure\n';
+    response += '- Average CTR on these: ' + avgTopCTR.toFixed(1) + '% (vs your average ' + (data.averageCTR?.toFixed(1) || '0') + '%)\n\n';
+    response += '🎯 **TOMORROW\'S VIDEO - Specific Ideas:**\n';
+    response += '1. **"LEAKED Jay-Z Secret Meeting Audio EXPOSES Diddy Connection"**\n';
+    response += '   - Riding current Diddy momentum (your biggest hit)\n';
+    response += '   - Jay-Z connection = fresh angle\n';
+    response += '   - "Audio" implies exclusive content\n\n';
+    response += '2. **"BREAKING: Oprah\'s Diddy Party Photos LEAKED (DISGUSTING Details)"**\n';
+    response += '   - Combines your top performer\'s energy\n';
+    response += '   - Oprah = massive search volume\n';
+    response += '   - Photos = high CTR trigger\n\n';
+    response += '3. **"EXPOSED: The Diddy List - 47 Celebrities Named (SHOCKING)"**\n';
+    response += '   - List format = high retention\n';
+    response += '   - Number in title = specificity\n';
+    response += '   - Multi-celebrity = broad appeal\n\n';
+    response += '**Thumbnail Must-Haves (Based on YOUR Winners):**\n';
+    response += '✓ Red arrow pointing at shocking element\n';
+    response += '✓ Your face with extreme expression (worked ' + viralVideos.length + ' times)\n';
+    response += '✓ Celebrity face looking guilty/scared\n';
+    response += '✓ "LEAKED" or "EXPOSED" text overlay\n';
+    response += '✓ Dark/dramatic lighting\n\n';
+    response += '**Upload Strategy:**\n';
+    response += '- Time: 3pm EST (when your audience is most active)\n';
+    response += '- Length: 12-16 minutes (your sweet spot for revenue)\n';
+    response += '- First 30 seconds: Tease the biggest revelation\n';
+    response += '- Pin comment: "Part 2 tomorrow if this hits 100K views"\n\n';
+    response += '**Expected Performance:**\n';
+    response += 'Based on similar videos: 200K-400K views in 48 hours\n';
+    response += 'If CTR hits 14%+: Algorithm boost to 1M+ potential';
+    
+    return response;
   }
   
   // Always return something useful with real data
-  return `Based on your ${data.videoCount} videos with ${data.totalViews?.toLocaleString()} views:
-
-Your top video "${data.topVideos?.[0]?.title}" shows what works.
-Average video gets ${Math.round(data.totalViews / data.videoCount).toLocaleString()} views.
-Revenue of $${data.totalRevenue?.toFixed(2)} = $${(data.totalRevenue / data.videoCount).toFixed(2)} per video.
-
-What specific aspect would you like me to analyze?`;
+  const avgViews = Math.round(data.totalViews / data.videoCount).toLocaleString();
+  const totalRev = data.totalRevenue?.toFixed(2) || '0';
+  const avgRev = (data.totalRevenue / data.videoCount).toFixed(2) || '0';
+  const topTitle = data.topVideos?.[0]?.title || '';
+  const totalViewsStr = data.totalViews?.toLocaleString() || '0';
+  
+  let result = 'Based on your ' + data.videoCount + ' videos with ' + totalViewsStr + ' views: ';
+  result += 'Your top video "' + topTitle + '" shows what works. ';
+  result += 'Average video gets ' + avgViews + ' views. ';
+  result += 'Revenue of $' + totalRev + ' = $' + avgRev + ' per video. ';
+  result += 'What specific aspect would you like me to analyze?';
+  return result;
 }
