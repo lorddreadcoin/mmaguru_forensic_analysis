@@ -23,15 +23,15 @@ export default function InsightsDisplay({ insights, metrics }: InsightsDisplayPr
     return isNaN(num) ? 0 : num;
   };
 
-  // Format numbers safely
+  // Format numbers safely with proper comma formatting
   const formatNumber = (val: any): string => {
     const num = safeNumber(val);
-    return num.toLocaleString();
+    return num.toLocaleString('en-US', { maximumFractionDigits: 0 });
   };
 
   const formatCurrency = (val: any): string => {
     const num = safeNumber(val);
-    return `$${num.toFixed(2)}`;
+    return `$${num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
   };
 
   const formatPercent = (val: any): string => {
