@@ -3,9 +3,19 @@ import { NextRequest, NextResponse } from 'next/server';
 const GROK_API_KEY = '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';
 
 export async function POST(req: NextRequest) {
+  let body: any = {};
+
+  // Parse the request body once so we can safely reuse it in both
+  // the main logic and the error path without re-reading the stream.
   try {
-    const { question, channelData, conversationHistory = [] } = await req.json();
-    
+    body = await req.json();
+  } catch {
+    body = {};
+  }
+
+  const { question, channelData, conversationHistory = [] } = body;
+
+  try {
     if (!channelData?.totalViews) {
       return NextResponse.json({ 
         answer: "Upload your YouTube CSV files to begin analysis." 
@@ -48,7 +58,6 @@ export async function POST(req: NextRequest) {
     throw new Error('API failed');
     
   } catch (error) {
-    const { question, channelData } = await req.json();
     return NextResponse.json({ 
       answer: generateSmartResponse(question, channelData)
     });
