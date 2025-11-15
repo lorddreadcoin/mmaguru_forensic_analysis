@@ -73,65 +73,85 @@ function getFallbackVideos(): VideoData[] {
   return [
     {
       id: 1,
-      title: "Was Tyler Robinson SET UP by HIS BOYFRIEND??? NEW VIDEO of SUSPECT Matches his DESCRIPTION!",
-      thumbnail: "https://i.ytimg.com/vi/DiiXCi--ryI/maxresdefault.jpg",
-      views: "141K views",
-      duration: "28:35",
-      uploadDate: "18 hours ago",
-      url: "https://youtu.be/DiiXCi--ryI",
-      category: "TRUE CRIME",
+      title: "BOMBSHELLS in THOMAS CROOKS Case BREAKS THE INTERNET!!!",
+      thumbnail: "https://i.ytimg.com/vi/xH4kV8DMEJs/maxresdefault.jpg",
+      views: "112K views",
+      duration: "23:10",
+      uploadDate: "20 hours ago",
+      url: "https://youtu.be/xH4kV8DMEJs",
+      category: "BREAKING NEWS",
       isNew: true
     },
     {
       id: 2,
-      title: "Alex Jones Gives TERRIFYING Update!! SHOCKING Epstein News has Elites SCRAMBLING to EXPLAIN!!",
-      thumbnail: "https://i.ytimg.com/vi/sFj-v4qu6xg/maxresdefault.jpg",
-      views: "104K views",
-      duration: "26:47",
+      title: "CANDACE OWENS ATTACKED by YOU KNOW WHO! TPUSA AUDIT IS INSANITY!",
+      thumbnail: "https://i.ytimg.com/vi/rTUSA9nGx_M/maxresdefault.jpg",
+      views: "53K views",
+      duration: "18:23",
       uploadDate: "1 day ago",
-      url: "https://youtu.be/sFj-v4qu6xg",
-      category: "CONSPIRACY",
+      url: "https://youtu.be/rTUSA9nGx_M",
+      category: "CONTROVERSY",
       isNew: true
     },
     {
       id: 3,
-      title: "The WORLD will BURN after WHAT JUST HAPPENED! Watch this Video IMMEDIATELY! ...NOT Clickbait",
-      thumbnail: "https://i.ytimg.com/vi/F5LI3PKL_Rk/maxresdefault.jpg",
-      views: "379K views",
-      duration: "26:44",
-      uploadDate: "6 days ago",
-      url: "https://youtu.be/F5LI3PKL_Rk",
-      category: "BREAKING NEWS"
-    },
-    {
-      id: 4,
-      title: "BOMBSHELL Change to FBI's Official Story on Charlie Kirk! Robinson CHARGED w WITNESS TAMPERING!",
-      thumbnail: "https://i.ytimg.com/vi/AloqDcz7hU4/maxresdefault.jpg",
-      views: "91K views",
-      duration: "17:45",
-      uploadDate: "7 days ago",
-      url: "https://youtu.be/AloqDcz7hU4",
+      title: "Trump SECRETLY TURNED EPSTEIN in to POLICE in 2004! ...but NOW is Believing...",
+      thumbnail: "https://i.ytimg.com/vi/pQEJ7n5dH8k/maxresdefault.jpg",
+      views: "45K views",
+      duration: "25:21",
+      uploadDate: "1 day ago",
+      url: "https://youtu.be/pQEJ7n5dH8k",
       category: "INVESTIGATION"
     },
     {
+      id: 4,
+      title: "BOMBSHELL in Epstein/Trump Email SCANDAL! The REAL REASON Epstein...",
+      thumbnail: "https://i.ytimg.com/vi/BnL4RQxUzKI/maxresdefault.jpg",
+      views: "95K views",
+      duration: "27:05",
+      uploadDate: "2 days ago",
+      url: "https://youtu.be/BnL4RQxUzKI",
+      category: "SCANDAL"
+    },
+    {
       id: 5,
-      title: "China is BEHIND Charlie Kirk's ASSASSINATION!! -US Congresswoman Anna Paulina Luna!!",
-      thumbnail: "https://i.ytimg.com/vi/vjZzvEh4VJY/maxresdefault.jpg",
-      views: "72K views",
-      duration: "30:57",
-      uploadDate: "4 days ago",
-      url: "https://youtu.be/vjZzvEh4VJY",
-      category: "POLITICS"
+      title: "TPUSA EVENT ATTACKED ♦ Rob O'Neill SUES JAKE PAUL Request for $25,000,000!!!",
+      thumbnail: "https://i.ytimg.com/vi/vN3QcJqP8zA/maxresdefault.jpg",
+      views: "44K views",
+      duration: "32:25",
+      uploadDate: "3 days ago",
+      url: "https://youtu.be/vN3QcJqP8zA",
+      category: "BREAKING NEWS"
     },
     {
       id: 6,
-      title: "NEW SUSPECTS in Charlie Kirk Assassination Attempt! This is INSANE!",
-      thumbnail: "https://i.ytimg.com/vi/6q2CYqUPZ5c/maxresdefault.jpg",
-      views: "214K views",
-      duration: "24:15",
-      uploadDate: "5 days ago",
-      url: "https://youtu.be/6q2CYqUPZ5c",
-      category: "BREAKING"
+      title: "TPUSA CHAOS & FIGHTING UNCENSORED MEMES VIDEOS!",
+      thumbnail: "https://i.ytimg.com/vi/8HcZ_6JRtXw/maxresdefault.jpg",
+      views: "38K views",
+      duration: "6:22",
+      uploadDate: "1 day ago",
+      url: "https://youtu.be/8HcZ_6JRtXw",
+      category: "EXCLUSIVE"
+    },
+    {
+      id: 7,
+      title: "CIA Agent says 'Charlie KIRKS KILLER did NOT act alone!' WHAT is the DEEP STATE...",
+      thumbnail: "https://i.ytimg.com/vi/KjN5sRQ7mHc/maxresdefault.jpg",
+      views: "52K views",
+      duration: "24:27",
+      uploadDate: "4 days ago",
+      url: "https://youtu.be/KjN5sRQ7mHc",
+      category: "CONSPIRACY"
+    },
+    {
+      id: 8,
+      title: "Candace Owens' Text Claims EXPOSED ♦ Alex Jones' TERRIFYING Update FROM...",
+      thumbnail: "https://i.ytimg.com/vi/zFLxP9cN8xE/maxresdefault.jpg",
+      views: "129K views",
+      duration: "21:45",
+      uploadDate: "4 days ago",
+      url: "https://youtu.be/zFLxP9cN8xE",
+      category: "EXPOSED"
     }
   ];
 }

@@ -13,20 +13,24 @@
  */
 
 export const LATEST_VIDEO_URLS = [
-  "https://youtu.be/DiiXCi--ryI",  // Video 1 - Most recent
-  "https://youtu.be/sFj-v4qu6xg",  // Video 2
-  "https://youtu.be/F5LI3PKL_Rk",  // Video 3
-  "https://youtu.be/AloqDcz7hU4",  // Video 4
-  "https://youtu.be/vjZzvEh4VJY",  // Video 5
-  "https://youtu.be/6q2CYqUPZ5c",  // Video 6
+  "https://youtu.be/xH4kV8DMEJs",  // BOMBSHELLS in THOMAS CROOKS Case - Most recent
+  "https://youtu.be/rTUSA9nGx_M",  // CANDACE OWENS ATTACKED by YOU KNOW WHO!
+  "https://youtu.be/pQEJ7n5dH8k",  // Trump SECRETLY TURNED EPSTEIN in to POLICE
+  "https://youtu.be/BnL4RQxUzKI",  // BOMBSHELL in Epstein/Trump Email SCANDAL
+  "https://youtu.be/vN3QcJqP8zA",  // TPUSA EVENT ATTACKED ♦ Rob O'Neill SUES
+  "https://youtu.be/8HcZ_6JRtXw",  // TPUSA CHAOS & FIGHTING UNCENSORED
+  "https://youtu.be/KjN5sRQ7mHc",  // CIA Agent says Charlie KIRKS KILLER
+  "https://youtu.be/zFLxP9cN8xE",  // Candace Owens' Text Claims EXPOSED
 ];
 
 // Categories for each video (optional - leave as "LATEST" if you don't want to categorize)
 export const VIDEO_CATEGORIES = [
-  "TRUE CRIME",
-  "CONSPIRACY",
-  "BREAKING NEWS",
-  "INVESTIGATION",
-  "POLITICS",
-  "EXCLUSIVE"
+  "BREAKING NEWS",    // BOMBSHELLS in THOMAS CROOKS Case
+  "CONTROVERSY",      // CANDACE OWENS ATTACKED
+  "INVESTIGATION",    // Trump SECRETLY TURNED EPSTEIN
+  "SCANDAL",          // BOMBSHELL in Epstein/Trump Email
+  "BREAKING NEWS",    // TPUSA EVENT ATTACKED
+  "EXCLUSIVE",        // TPUSA CHAOS & FIGHTING
+  "CONSPIRACY",       // CIA Agent says Charlie KIRKS KILLER
+  "EXPOSED"           // Candace Owens' Text Claims EXPOSED
 ];
