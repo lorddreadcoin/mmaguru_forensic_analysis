@@ -375,9 +375,15 @@ with tab4:
                 <li><strong>1M+ subs:</strong> 2-4% engagement (mass appeal, lower percentage)</li>
             </ul>
             
-            <p style='color: {COLORS['warning']};'><strong>Key Point:</strong> MMA GURU (389K) and Jesse (517K) are in the SAME bracket!</p>
-            <p>They should have nearly identical engagement rates (within 1% of each other).</p>
-            <p>A 2% difference at this level represents THOUSANDS of missing real viewers.</p>
+            <p style='color: {COLORS['warning']}; font-weight: bold; margin-top: 15px;'>
+                Key Point: MMA GURU (389K) and Jesse (517K) are in the SAME bracket!
+            </p>
+            <p style='color: {COLORS['white']}; margin-top: 10px;'>
+                They should have nearly identical engagement rates (within 1% of each other).
+            </p>
+            <p style='color: {COLORS['white']}; margin-top: 10px;'>
+                A 2% difference at this level represents THOUSANDS of missing real viewers.
+            </p>
         </div>
     </div>
     """, unsafe_allow_html=True)
