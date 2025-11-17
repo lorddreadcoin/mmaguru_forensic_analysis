@@ -1,0 +1,9 @@
+[build]
+  # No build command needed for static HTML
+  command = ""
+  # Serve files from root directory
+  publish = "."
+
+[build.environment]
+  # Override Next.js detection
+  NETLIFY_NEXT_PLUGIN_SKIP = "true"
