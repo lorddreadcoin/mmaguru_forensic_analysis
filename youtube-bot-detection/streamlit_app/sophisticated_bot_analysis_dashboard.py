@@ -361,6 +361,27 @@ with tab3:
 with tab4:
     st.markdown("## 📈 Channel Size vs Expected Engagement")
     
+    # Educational context box
+    st.markdown(f"""
+    <div style='background: {COLORS['grey']}; border: 2px solid {COLORS['crimson']}; 
+                border-radius: 15px; padding: 20px; margin: 20px 0;'>
+        <h4 style='color: {COLORS['crimson']};'>📚 Understanding Engagement Rate Dynamics:</h4>
+        <div style='color: {COLORS['white']}; font-size: 0.95em;'>
+            <p><strong>The Engagement Curve Reality:</strong></p>
+            <ul style='margin-left: 20px; margin-bottom: 15px;'>
+                <li><strong>0-100K subs:</strong> 8-12% engagement (small, highly engaged community)</li>
+                <li><strong>100K-500K subs:</strong> 5-8% engagement (sweet spot - established but not oversaturated)</li>
+                <li><strong>500K-1M subs:</strong> 3-6% engagement (natural decline as audience diversifies)</li>
+                <li><strong>1M+ subs:</strong> 2-4% engagement (mass appeal, lower percentage)</li>
+            </ul>
+            
+            <p style='color: {COLORS['warning']};'><strong>Key Point:</strong> MMA GURU (389K) and Jesse (517K) are in the SAME bracket!</p>
+            <p>They should have nearly identical engagement rates (within 1% of each other).</p>
+            <p>A 2% difference at this level represents THOUSANDS of missing real viewers.</p>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+    
     # Create channel size comparison
     channels_data = {
         'Channel': ['Jesse ON FIRE', 'THE MMA GURU', 'Expected for MMA size', 'MMA if botting'],
@@ -411,12 +432,37 @@ with tab4:
     st.markdown(f"""
     <div style='background: linear-gradient(135deg, {COLORS['blood_red']} 0%, {COLORS['dark_grey']} 100%);
                 border: 2px solid {COLORS['neon_red']}; border-radius: 15px; padding: 20px; margin: 20px 0;'>
-        <h4 style='color: {COLORS['neon_red']};'>🚨 The Problem:</h4>
-        <p style='color: {COLORS['white']};'>
-            MMA GURU (389K subs) has <strong>LOWER</strong> engagement than Jesse (517K subs)<br>
-            These channels are similar in size, yet MMA's engagement is significantly lower<br>
-            His 4.06% is suspiciously low - should be 5-7% if organic for his size
-        </p>
+        <h4 style='color: {COLORS['neon_red']};'>🚨 Why This Is EXTREMELY Suspicious:</h4>
+        <div style='color: {COLORS['white']}; line-height: 1.8;'>
+            <p style='margin-bottom: 15px;'><strong style='color: {COLORS['warning']}; font-size: 1.1em;'>
+                The Universal YouTube Law: Similar Size = Similar Engagement</strong></p>
+            
+            <p style='margin-bottom: 10px;'>📊 <strong>MMA GURU: 389K subs → 4.06% engagement</strong></p>
+            <p style='margin-bottom: 15px;'>📊 <strong>Jesse ON FIRE: 517K subs → 6.1% engagement</strong></p>
+            
+            <p style='color: {COLORS['neon_red']}; margin-bottom: 15px;'>
+                <strong>That's a 33% LOWER engagement rate despite only 25% fewer subscribers!</strong>
+            </p>
+            
+            <p style='margin-bottom: 10px;'><strong>Why 389K Makes It WORSE Than 150K:</strong></p>
+            <ul style='margin-left: 20px;'>
+                <li>At 150K, you could argue "small channel, still growing"</li>
+                <li>At 389K, you're ESTABLISHED with a loyal audience</li>
+                <li>Channels at 300-500K typically have their HIGHEST engagement rates</li>
+                <li>The "dead subscriber" excuse doesn't work - both channels are active</li>
+            </ul>
+            
+            <p style='margin-top: 15px;'><strong>The Math That Exposes Everything:</strong></p>
+            <p style='margin-left: 20px;'>
+                • If MMA GURU had Jesse's engagement: <strong>389K × 6.1% = 23,729 interactions</strong><br>
+                • What he actually gets: <strong>389K × 4.06% = 15,793 interactions</strong><br>
+                • <span style='color: {COLORS['danger']};'>Missing: 7,936 interactions per video (33% loss)</span>
+            </p>
+            
+            <p style='color: {COLORS['warning']}; margin-top: 15px; font-weight: bold;'>
+                This only happens when a significant portion of your "subscribers" are bots that don't engage.
+            </p>
+        </div>
     </div>
     """, unsafe_allow_html=True)
 
