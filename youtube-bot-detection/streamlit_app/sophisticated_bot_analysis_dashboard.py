@@ -113,7 +113,7 @@ with tab1:
             x=dates, y=real_views,
             name='Real Audience',
             fill='tonexty',
-            line=dict(color=COLORS['wintergreen'], width=2),
+            line=dict(color=wintergreen_color, width=2),
             fillcolor='rgba(46,139,87,0.3)'
         ))
         
@@ -122,16 +122,16 @@ with tab1:
             x=dates, y=total_views,
             name='Bot Views Added',
             fill='tonexty',
-            line=dict(color=COLORS['danger'], width=2),
+            line=dict(color=danger_color, width=2),
             fillcolor='rgba(255,0,0,0.3)'
         ))
         
         fig_mixed.update_layout(
             title="MMA GURU October 18-26: Mixed Traffic Pattern",
-            title_font=dict(family='Orbitron', size=18, color=COLORS['crimson']),
-            plot_bgcolor=COLORS['black'],
-            paper_bgcolor=COLORS['dark_grey'],
-            font=dict(color=COLORS['silver']),
+            title_font=dict(family='Orbitron', size=18, color=crimson_color),
+            plot_bgcolor=black_color,
+            paper_bgcolor=dark_grey_color,
+            font=dict(color=silver_color),
             xaxis_title="Date",
             yaxis_title="Daily Views",
             height=400,
@@ -200,7 +200,7 @@ with tab2:
     fig_pattern.add_trace(go.Scatter(
         x=x_positions, y=views_pattern,
         name='MMA GURU (Rectangular Bot Pattern)',
-        line=dict(color=COLORS['danger'], width=3),
+        line=dict(color=danger_color, width=3),
         mode='lines+markers'
     ))
     
@@ -208,7 +208,7 @@ with tab2:
     fig_pattern.add_trace(go.Scatter(
         x=x_positions, y=jesse_pattern,
         name='Jesse ON FIRE (Organic Pattern)',
-        line=dict(color=COLORS['wintergreen'], width=2, dash='dash'),
+        line=dict(color=wintergreen_color, width=2, dash='dash'),
         mode='lines'
     ))
     
@@ -216,11 +216,11 @@ with tab2:
     bot_end_idx = date_to_index['2024-10-26']
     bot_start_idx = date_to_index['2024-10-18']
     fig_pattern.add_vline(x=bot_end_idx, line_dash="dash",
-                         line_color=COLORS['warning'], annotation_text="UFC 308")
+                         line_color=warning_color, annotation_text="UFC 308")
     
     # Highlight bot period using numeric coordinates
     fig_pattern.add_vrect(x0=bot_start_idx, x1=bot_end_idx,
-                          fillcolor=COLORS['danger'], opacity=0.1,
+                          fillcolor=danger_color, opacity=0.1,
                           annotation_text="9-Day Rectangular Pattern", annotation_position="top")
     
     tick_step = max(1, len(date_labels) // 8)
@@ -229,10 +229,10 @@ with tab2:
     
     fig_pattern.update_layout(
         title="The Smoking Gun: Rectangular vs Organic Pattern",
-        title_font=dict(family='Orbitron', size=18, color=COLORS['crimson']),
-        plot_bgcolor=COLORS['black'],
-        paper_bgcolor=COLORS['dark_grey'],
-        font=dict(color=COLORS['silver']),
+        title_font=dict(family='Orbitron', size=18, color=crimson_color),
+        plot_bgcolor=black_color,
+        paper_bgcolor=dark_grey_color,
+        font=dict(color=silver_color),
         xaxis=dict(
             title="Date",
             tickmode='array',
@@ -280,7 +280,7 @@ with tab2:
             <p style='color: {white_color}; text-align: center;'>
                 250K → 30K in 1 day
             </p>
-            <p style='color: {COLORS['danger']}; font-size: 1.2em; text-align: center;'>UNNATURAL</p>
+            <p style='color: {danger_color}; font-size: 1.2em; text-align: center;'>UNNATURAL</p>
         </div>
         """, unsafe_allow_html=True)
 
@@ -301,17 +301,17 @@ with tab3:
             x=services,
             y=prices_per_100k,
             name='Cost per 100K views ($)',
-            marker_color=[COLORS['danger'], COLORS['warning'], COLORS['warning'], COLORS['wintergreen']],
+            marker_color=[danger_color, warning_color, warning_color, wintergreen_color],
             text=['$30', '$150', '$500', '$1,500'],
             textposition='outside'
         ))
         
         fig_price.update_layout(
             title="Bot Service Pricing (Per 100K Views)",
-            title_font=dict(family='Orbitron', size=18, color=COLORS['crimson']),
-            plot_bgcolor=COLORS['black'],
-            paper_bgcolor=COLORS['dark_grey'],
-            font=dict(color=COLORS['silver']),
+            title_font=dict(family='Orbitron', size=18, color=crimson_color),
+            plot_bgcolor=black_color,
+            paper_bgcolor=dark_grey_color,
+            font=dict(color=silver_color),
             yaxis_title="Cost (USD)",
             height=350
         )
@@ -326,20 +326,20 @@ with tab3:
             x=services,
             y=engagement_rates,
             name='Engagement Rate (%)',
-            marker_color=[COLORS['danger'], COLORS['warning'], COLORS['wintergreen'], COLORS['wintergreen']],
+            marker_color=[danger_color, warning_color, wintergreen_color, wintergreen_color],
             text=['0%', '1%', '3%', '4%'],
             textposition='outside'
         ))
         
-        fig_eng_type.add_hline(y=1, line_dash="dash", line_color=COLORS['danger'],
+        fig_eng_type.add_hline(y=1, line_dash="dash", line_color=danger_color,
                                annotation_text="Bot Detection Threshold")
         
         fig_eng_type.update_layout(
             title="Engagement Rate by Bot Type",
-            title_font=dict(family='Orbitron', size=18, color=COLORS['crimson']),
-            plot_bgcolor=COLORS['black'],
-            paper_bgcolor=COLORS['dark_grey'],
-            font=dict(color=COLORS['silver']),
+            title_font=dict(family='Orbitron', size=18, color=crimson_color),
+            plot_bgcolor=black_color,
+            paper_bgcolor=dark_grey_color,
+            font=dict(color=silver_color),
             yaxis_title="Engagement %",
             height=350
         )
@@ -348,24 +348,24 @@ with tab3:
     
     # Cost calculation for MMA GURU
     st.markdown(f"""
-    <div style='background: {COLORS['grey']}; border: 2px solid {COLORS['crimson']}; 
+    <div style='background: {grey_color}; border: 2px solid {crimson_color}; 
                 border-radius: 15px; padding: 20px; margin: 20px 0;'>
-        <h3 style='color: {COLORS['crimson']}; text-align: center;'>💰 Estimated Cost for MMA GURU's October Campaign</h3>
+        <h3 style='color: {crimson_color}; text-align: center;'>💰 Estimated Cost for MMA GURU's October Campaign</h3>
         <div style='display: flex; justify-content: space-around; flex-wrap: wrap; margin-top: 20px;'>
             <div style='text-align: center; flex: 1; margin: 10px;'>
-                <p style='color: {COLORS['warning']}; font-size: 1.5em; margin: 0;'>2.3M</p>
-                <p style='color: {COLORS['silver']};'>Bot Views</p>
+                <p style='color: {warning_color}; font-size: 1.5em; margin: 0;'>2.3M</p>
+                <p style='color: {silver_color};'>Bot Views</p>
             </div>
             <div style='text-align: center; flex: 1; margin: 10px;'>
-                <p style='color: {COLORS['warning']}; font-size: 1.5em; margin: 0;'>2.99%</p>
-                <p style='color: {COLORS['silver']};'>Engagement</p>
+                <p style='color: {warning_color}; font-size: 1.5em; margin: 0;'>2.99%</p>
+                <p style='color: {silver_color};'>Engagement</p>
             </div>
             <div style='text-align: center; flex: 1; margin: 10px;'>
-                <p style='color: {COLORS['danger']}; font-size: 1.5em; margin: 0;'>$3,500-7,000</p>
-                <p style='color: {COLORS['silver']};'>Estimated Cost</p>
+                <p style='color: {danger_color}; font-size: 1.5em; margin: 0;'>$3,500-7,000</p>
+                <p style='color: {silver_color};'>Estimated Cost</p>
             </div>
         </div>
-        <p style='color: {COLORS['white']}; text-align: center; margin-top: 20px;'>
+        <p style='color: {white_color}; text-align: center; margin-top: 20px;'>
             Using "Premium Package" with engagement bots to maintain 3% rate
         </p>
     </div>
@@ -374,14 +374,10 @@ with tab3:
 with tab4:
     st.markdown("## 📈 Channel Size vs Expected Engagement")
     
-    # Educational context box - extract colors to avoid f-string issues
-    grey_bg = COLORS['grey']
-    crimson_color = COLORS['crimson']
-    white_color = COLORS['white']
-    warning_color = COLORS['warning']
+    # Educational context box - colors already extracted
     
     st.markdown(f"""
-    <div style='background: {grey_bg}; border: 2px solid {crimson_color}; 
+    <div style='background: {grey_color}; border: 2px solid {crimson_color}; 
                 border-radius: 15px; padding: 20px; margin: 20px 0;'>
         <h4 style='color: {crimson_color};'>📚 Understanding Engagement Rate Dynamics:</h4>
         <div style='color: {white_color}; font-size: 0.95em;'>
