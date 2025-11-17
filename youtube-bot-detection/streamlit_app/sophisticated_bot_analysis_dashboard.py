@@ -364,7 +364,7 @@ with tab4:
     # Create channel size comparison
     channels_data = {
         'Channel': ['Jesse ON FIRE', 'THE MMA GURU', 'Expected for MMA size', 'MMA if botting'],
-        'Subscribers': [517000, 150000, 150000, 150000],
+        'Subscribers': [517000, 389000, 389000, 389000],
         'Actual_Engagement': [6.1, 4.06, 7.0, 4.06],
         'Type': ['Verified Organic', 'Suspicious', 'Expected Organic', 'Actual']
     }
@@ -413,9 +413,9 @@ with tab4:
                 border: 2px solid {COLORS['neon_red']}; border-radius: 15px; padding: 20px; margin: 20px 0;'>
         <h4 style='color: {COLORS['neon_red']};'>🚨 The Problem:</h4>
         <p style='color: {COLORS['white']};'>
-            MMA GURU (150K subs) has <strong>LOWER</strong> engagement than Jesse (517K subs)<br>
-            This is <strong>BACKWARDS</strong> - smaller channels have more engaged audiences<br>
-            His 4.06% is suspiciously low for his size - should be 6-8% if organic
+            MMA GURU (389K subs) has <strong>LOWER</strong> engagement than Jesse (517K subs)<br>
+            These channels are similar in size, yet MMA's engagement is significantly lower<br>
+            His 4.06% is suspiciously low - should be 5-7% if organic for his size
         </p>
     </div>
     """, unsafe_allow_html=True)
