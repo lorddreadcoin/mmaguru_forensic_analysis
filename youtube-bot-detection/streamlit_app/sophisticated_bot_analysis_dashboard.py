@@ -10,6 +10,7 @@ import plotly.express as px
 import pandas as pd
 import numpy as np
 from datetime import datetime, timedelta
+import textwrap
 
 st.set_page_config(
     page_title="ReaperLabs.AI | Sophisticated Bot Analysis",
@@ -376,7 +377,7 @@ with tab4:
     
     # Educational context box - colors already extracted
     
-    st.markdown(f"""
+    st.markdown(textwrap.dedent(f"""
     <div style='background: {grey_color}; border: 2px solid {crimson_color}; 
                 border-radius: 15px; padding: 20px; margin: 20px 0;'>
         <h4 style='color: {crimson_color};'>📚 Understanding Engagement Rate Dynamics:</h4>
@@ -400,7 +401,7 @@ with tab4:
             </p>
         </div>
     </div>
-    """, unsafe_allow_html=True)
+    """), unsafe_allow_html=True)
     
     # Create channel size comparison
     channels_data = {
@@ -449,7 +450,7 @@ with tab4:
     
     st.plotly_chart(fig_size, use_container_width=True)
     
-    st.markdown(f"""
+    st.markdown(textwrap.dedent(f"""
     <div style='background: linear-gradient(135deg, {blood_red_color} 0%, {dark_grey_color} 100%);
                 border: 2px solid {neon_red_color}; border-radius: 15px; padding: 20px; margin: 20px 0;'>
         <h4 style='color: {neon_red_color};'>🚨 Why This Is EXTREMELY Suspicious:</h4>
@@ -484,7 +485,7 @@ with tab4:
             </p>
         </div>
     </div>
-    """, unsafe_allow_html=True)
+    """), unsafe_allow_html=True)
 
 with tab5:
     st.markdown("## 🔍 The Metrics That Would Expose Everything")
