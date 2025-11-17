@@ -1,9 +1,10 @@
 [build]
-  # No build command needed for static HTML
-  command = ""
-  # Serve files from streamlit_app directory where our dashboard is
+  # No build command - this is static HTML
+  command = "echo 'No build needed'"
+  # Serve files from streamlit_app directory
   publish = "streamlit_app"
 
-[build.environment]
-  # Override Next.js detection
-  NETLIFY_NEXT_PLUGIN_SKIP = "true"
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
