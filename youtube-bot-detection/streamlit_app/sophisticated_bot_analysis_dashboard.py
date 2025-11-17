@@ -415,10 +415,10 @@ with tab4:
     fig_size = go.Figure()
     
     colors_map = {
-        'Verified Organic': COLORS['wintergreen'],
-        'Suspicious': COLORS['warning'],
-        'Expected Organic': COLORS['wintergreen'],
-        'Actual': COLORS['danger']
+        'Verified Organic': wintergreen_color,
+        'Suspicious': warning_color,
+        'Expected Organic': wintergreen_color,
+        'Actual': danger_color
     }
     
     for channel_type in df['Type'].unique():
@@ -432,15 +432,15 @@ with tab4:
             textposition='outside'
         ))
     
-    fig_size.add_hline(y=5, line_dash="dash", line_color=COLORS['silver'],
+    fig_size.add_hline(y=5, line_dash="dash", line_color=silver_color,
                        annotation_text="Expected minimum for small channels")
     
     fig_size.update_layout(
         title="Small Channels Should Have HIGHER Engagement",
-        title_font=dict(family='Orbitron', size=18, color=COLORS['crimson']),
-        plot_bgcolor=COLORS['black'],
-        paper_bgcolor=COLORS['dark_grey'],
-        font=dict(color=COLORS['silver']),
+        title_font=dict(family='Orbitron', size=18, color=crimson_color),
+        plot_bgcolor=black_color,
+        paper_bgcolor=dark_grey_color,
+        font=dict(color=silver_color),
         yaxis_title="Engagement Rate (%)",
         xaxis_title="Channel",
         height=400,
@@ -450,17 +450,17 @@ with tab4:
     st.plotly_chart(fig_size, use_container_width=True)
     
     st.markdown(f"""
-    <div style='background: linear-gradient(135deg, {COLORS['blood_red']} 0%, {COLORS['dark_grey']} 100%);
-                border: 2px solid {COLORS['neon_red']}; border-radius: 15px; padding: 20px; margin: 20px 0;'>
-        <h4 style='color: {COLORS['neon_red']};'>🚨 Why This Is EXTREMELY Suspicious:</h4>
-        <div style='color: {COLORS['white']}; line-height: 1.8;'>
-            <p style='margin-bottom: 15px;'><strong style='color: {COLORS['warning']}; font-size: 1.1em;'>
+    <div style='background: linear-gradient(135deg, {blood_red_color} 0%, {dark_grey_color} 100%);
+                border: 2px solid {neon_red_color}; border-radius: 15px; padding: 20px; margin: 20px 0;'>
+        <h4 style='color: {neon_red_color};'>🚨 Why This Is EXTREMELY Suspicious:</h4>
+        <div style='color: {white_color}; line-height: 1.8;'>
+            <p style='margin-bottom: 15px;'><strong style='color: {warning_color}; font-size: 1.1em;'>
                 The Universal YouTube Law: Similar Size = Similar Engagement</strong></p>
             
             <p style='margin-bottom: 10px;'>📊 <strong>MMA GURU: 389K subs → 4.06% engagement</strong></p>
             <p style='margin-bottom: 15px;'>📊 <strong>Jesse ON FIRE: 517K subs → 6.1% engagement</strong></p>
             
-            <p style='color: {COLORS['neon_red']}; margin-bottom: 15px;'>
+            <p style='color: {neon_red_color}; margin-bottom: 15px;'>
                 <strong>That's a 33% LOWER engagement rate despite only 25% fewer subscribers!</strong>
             </p>
             
@@ -476,10 +476,10 @@ with tab4:
             <p style='margin-left: 20px;'>
                 • If MMA GURU had Jesse's engagement: <strong>389K × 6.1% = 23,729 interactions</strong><br>
                 • What he actually gets: <strong>389K × 4.06% = 15,793 interactions</strong><br>
-                • <span style='color: {COLORS['danger']};'>Missing: 7,936 interactions per video (33% loss)</span>
+                • <span style='color: {danger_color};'>Missing: 7,936 interactions per video (33% loss)</span>
             </p>
             
-            <p style='color: {COLORS['warning']}; margin-top: 15px; font-weight: bold;'>
+            <p style='color: {warning_color}; margin-top: 15px; font-weight: bold;'>
                 This only happens when a significant portion of your "subscribers" are bots that don't engage.
             </p>
         </div>
@@ -495,7 +495,7 @@ with tab5:
         # AVD comparison
         avd_types = ['Organic Content', 'Smart Bots', 'Cheap Bots', 'MMA GURU (Est)']
         avd_minutes = [4.5, 1.0, 0.1, 0.8]
-        avd_colors = [COLORS['wintergreen'], COLORS['warning'], COLORS['danger'], COLORS['danger']]
+        avd_colors = [wintergreen_color, warning_color, danger_color, danger_color]
         
         fig_avd = go.Figure(data=[
             go.Bar(
@@ -507,17 +507,17 @@ with tab5:
             )
         ])
         
-        fig_avd.add_hline(y=2, line_dash="dash", line_color=COLORS['warning'],
+        fig_avd.add_hline(y=2, line_dash="dash", line_color=warning_color,
                          annotation_text="Suspicious threshold")
-        fig_avd.add_hline(y=1, line_dash="dash", line_color=COLORS['danger'],
+        fig_avd.add_hline(y=1, line_dash="dash", line_color=danger_color,
                          annotation_text="Definite bot threshold")
         
         fig_avd.update_layout(
             title="Average View Duration (The Smoking Gun)",
-            title_font=dict(family='Orbitron', size=16, color=COLORS['crimson']),
-            plot_bgcolor=COLORS['black'],
-            paper_bgcolor=COLORS['dark_grey'],
-            font=dict(color=COLORS['silver']),
+            title_font=dict(family='Orbitron', size=16, color=crimson_color),
+            plot_bgcolor=black_color,
+            paper_bgcolor=dark_grey_color,
+            font=dict(color=silver_color),
             yaxis_title="Minutes",
             height=350
         )
@@ -541,27 +541,27 @@ with tab5:
     
     # Additional metrics
     st.markdown(f"""
-    <div style='background: linear-gradient(135deg, {COLORS['blood_red']} 0%, {COLORS['dark_grey']} 100%);
-                border: 2px solid {COLORS['neon_red']}; border-radius: 15px; padding: 20px; margin: 20px 0;'>
-        <h3 style='color: {COLORS['neon_red']}; text-align: center;'>📊 Additional Red Flags We Can't See (But YouTube Can)</h3>
+    <div style='background: linear-gradient(135deg, {blood_red_color} 0%, {dark_grey_color} 100%);
+                border: 2px solid {neon_red_color}; border-radius: 15px; padding: 20px; margin: 20px 0;'>
+        <h3 style='color: {neon_red_color}; text-align: center;'>📊 Additional Red Flags We Can't See (But YouTube Can)</h3>
         <div style='display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 20px;'>
             <div style='text-align: center;'>
-                <p style='color: {COLORS['neon_red']}; font-size: 1.2em;'>🌍 Geographic</p>
-                <p style='color: {COLORS['white']}; font-size: 0.9em;'>
+                <p style='color: {neon_red_color}; font-size: 1.2em;'>🌍 Geographic</p>
+                <p style='color: {white_color}; font-size: 0.9em;'>
                     Bots from India/Bangladesh<br>
                     MMA content for US/UK
                 </p>
             </div>
             <div style='text-align: center;'>
-                <p style='color: {COLORS['neon_red']}; font-size: 1.2em;'>📱 Device Type</p>
-                <p style='color: {COLORS['white']}; font-size: 0.9em;'>
+                <p style='color: {neon_red_color}; font-size: 1.2em;'>📱 Device Type</p>
+                <p style='color: {white_color}; font-size: 0.9em;'>
                     90% mobile (bot farms)<br>
                     vs 60% normal
                 </p>
             </div>
             <div style='text-align: center;'>
-                <p style='color: {COLORS['neon_red']}; font-size: 1.2em;'>🔄 Session Depth</p>
-                <p style='color: {COLORS['white']}; font-size: 0.9em;'>
+                <p style='color: {neon_red_color}; font-size: 1.2em;'>🔄 Session Depth</p>
+                <p style='color: {white_color}; font-size: 0.9em;'>
                     1 video per session<br>
                     vs 3-5 normal
                 </p>
@@ -595,7 +595,7 @@ with tab6:
             x=df_evidence['Weight'],
             y=df_evidence['Evidence'],
             orientation='h',
-            marker_color=[COLORS['danger'] if w > 80 else COLORS['warning'] 
+            marker_color=[danger_color if w > 80 else warning_color 
                          for w in df_evidence['Weight']],
             text=[f"{w}%" for w in df_evidence['Weight']],
             textposition='outside'
@@ -604,10 +604,10 @@ with tab6:
     
     fig_evidence.update_layout(
         title="Evidence Weight Analysis",
-        title_font=dict(family='Orbitron', size=18, color=COLORS['crimson']),
-        plot_bgcolor=COLORS['black'],
-        paper_bgcolor=COLORS['dark_grey'],
-        font=dict(color=COLORS['silver']),
+        title_font=dict(family='Orbitron', size=18, color=crimson_color),
+        plot_bgcolor=black_color,
+        paper_bgcolor=dark_grey_color,
+        font=dict(color=silver_color),
         xaxis_title="Evidence Strength (%)",
         height=400
     )
@@ -656,9 +656,9 @@ This report is grounded in:
 
 # Footer
 st.markdown(f"""
-<div style='text-align: center; padding: 30px; color: {COLORS['silver']}; margin-top: 50px;
-            border-top: 2px solid {COLORS['crimson']};'>
-    <p style='font-size: 1.2em;'><strong style='color: {COLORS['crimson']};'>REAPERLABS.AI</strong></p>
+<div style='text-align: center; padding: 30px; color: {silver_color}; margin-top: 50px;
+            border-top: 2px solid {crimson_color};'>
+    <p style='font-size: 1.2em;'><strong style='color: {crimson_color};'>REAPERLABS.AI</strong></p>
     <p>Sophisticated Bot Analysis System</p>
     <p>Evidence-Based | Reality-Focused | No Bias</p>
 </div>
