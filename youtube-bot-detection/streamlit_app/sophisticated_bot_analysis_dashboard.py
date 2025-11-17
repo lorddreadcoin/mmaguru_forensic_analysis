@@ -361,12 +361,17 @@ with tab3:
 with tab4:
     st.markdown("## 📈 Channel Size vs Expected Engagement")
     
-    # Educational context box
+    # Educational context box - extract colors to avoid f-string issues
+    grey_bg = COLORS['grey']
+    crimson_color = COLORS['crimson']
+    white_color = COLORS['white']
+    warning_color = COLORS['warning']
+    
     st.markdown(f"""
-    <div style='background: {COLORS['grey']}; border: 2px solid {COLORS['crimson']}; 
+    <div style='background: {grey_bg}; border: 2px solid {crimson_color}; 
                 border-radius: 15px; padding: 20px; margin: 20px 0;'>
-        <h4 style='color: {COLORS['crimson']};'>📚 Understanding Engagement Rate Dynamics:</h4>
-        <div style='color: {COLORS['white']}; font-size: 0.95em;'>
+        <h4 style='color: {crimson_color};'>📚 Understanding Engagement Rate Dynamics:</h4>
+        <div style='color: {white_color}; font-size: 0.95em;'>
             <p><strong>The Engagement Curve Reality:</strong></p>
             <ul style='margin-left: 20px; margin-bottom: 15px;'>
                 <li><strong>0-100K subs:</strong> 8-12% engagement (small, highly engaged community)</li>
@@ -375,13 +380,13 @@ with tab4:
                 <li><strong>1M+ subs:</strong> 2-4% engagement (mass appeal, lower percentage)</li>
             </ul>
             
-            <p style='color: {COLORS['warning']}; font-weight: bold; margin-top: 15px;'>
+            <p style='color: {warning_color}; font-weight: bold; margin-top: 15px;'>
                 Key Point: MMA GURU (389K) and Jesse (517K) are in the SAME bracket!
             </p>
-            <p style='color: {COLORS['white']}; margin-top: 10px;'>
+            <p style='color: {white_color}; margin-top: 10px;'>
                 They should have nearly identical engagement rates (within 1% of each other).
             </p>
-            <p style='color: {COLORS['white']}; margin-top: 10px;'>
+            <p style='color: {white_color}; margin-top: 10px;'>
                 A 2% difference at this level represents THOUSANDS of missing real viewers.
             </p>
         </div>
