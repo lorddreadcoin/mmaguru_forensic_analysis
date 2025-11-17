@@ -32,18 +32,31 @@ COLORS = {
     'danger': '#ff0000'
 }
 
+# Extract all colors to variables to avoid f-string interpolation issues
+black_color = COLORS['black']
+crimson_color = COLORS['crimson']
+neon_red_color = COLORS['neon_red']
+silver_color = COLORS['silver']
+wintergreen_color = COLORS['wintergreen']
+blood_red_color = COLORS['blood_red']
+dark_grey_color = COLORS['dark_grey']
+grey_color = COLORS['grey']
+white_color = COLORS['white']
+warning_color = COLORS['warning']
+danger_color = COLORS['danger']
+
 # Custom CSS
 st.markdown(f"""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
 
 .stApp {{
-    background: linear-gradient(135deg, {COLORS['black']} 0%, {COLORS['dark_grey']} 50%, {COLORS['black']} 100%);
+    background: linear-gradient(135deg, {black_color} 0%, {dark_grey_color} 50%, {black_color} 100%);
 }}
 
 h1, h2, h3 {{
     font-family: 'Orbitron', monospace !important;
-    color: {COLORS['crimson']} !important;
+    color: {crimson_color} !important;
     text-shadow: 0 0 20px rgba(220,20,60,0.5);
 }}
 </style>
@@ -51,15 +64,15 @@ h1, h2, h3 {{
 
 # Header
 st.markdown(f"""
-<div style='background: linear-gradient(135deg, {COLORS['black']} 0%, {COLORS['crimson']} 50%, {COLORS['black']} 100%); 
+<div style='background: linear-gradient(135deg, {black_color} 0%, {crimson_color} 50%, {black_color} 100%); 
             padding: 60px 20px; text-align: center; border-radius: 0 0 30px 30px;
             box-shadow: 0 10px 50px rgba(220,20,60,0.5); margin-bottom: 40px;
-            border: 2px solid {COLORS['crimson']};'>
+            border: 2px solid {neon_red_color};'>
     <h1 style='font-size: 3.5em; margin: 0; letter-spacing: 5px;'>SOPHISTICATED BOT ANALYSIS</h1>
-    <p style='font-size: 1.3em; color: {COLORS['silver']}; margin: 10px 0; font-family: Orbitron;'>
+    <p style='font-size: 1.3em; color: {silver_color}; margin: 10px 0; font-family: Orbitron;'>
         How Modern Bots Maintain 3% Engagement While Faking Views
     </p>
-    <p style='font-size: 1.1em; color: {COLORS['warning']}; margin-top: 15px;'>
+    <p style='font-size: 1.1em; color: {warning_color}; margin-top: 15px;'>
         🔬 Evidence-Based Analysis | No Fiction, No Bias
     </p>
 </div>
@@ -237,34 +250,34 @@ with tab2:
     
     with col1:
         st.markdown(f"""
-        <div style='background: linear-gradient(135deg, {COLORS['blood_red']} 0%, {COLORS['dark_grey']} 100%);
-                    border: 2px solid {COLORS['neon_red']}; border-radius: 15px; padding: 20px; margin: 20px 0;'>
-            <h4 style='color: {COLORS['neon_red']}; text-align: center;'>❌ Instant Activation</h4>
-            <p style='color: {COLORS['white']}; text-align: center;'>
+        <div style='background: linear-gradient(135deg, {blood_red_color} 0%, {dark_grey_color} 100%);
+                    border: 2px solid {neon_red_color}; border-radius: 15px; padding: 20px; margin: 20px 0;'>
+            <h4 style='color: {neon_red_color}; text-align: center;'>❌ Instant Activation</h4>
+            <p style='color: {white_color}; text-align: center;'>
                 0 → 250K in 1 day
             </p>
-            <p style='color: {COLORS['danger']}; font-size: 1.2em; text-align: center;'>NOT ORGANIC</p>
+            <p style='color: {danger_color}; font-size: 1.2em; text-align: center;'>NOT ORGANIC</p>
         </div>
         """, unsafe_allow_html=True)
     
     with col2:
         st.markdown(f"""
-        <div style='background: linear-gradient(135deg, {COLORS['blood_red']} 0%, {COLORS['dark_grey']} 100%);
-                    border: 2px solid {COLORS['neon_red']}; border-radius: 15px; padding: 20px; margin: 20px 0;'>
-            <h4 style='color: {COLORS['neon_red']}; text-align: center;'>❌ Perfect Plateau</h4>
-            <p style='color: {COLORS['white']}; text-align: center;'>
+        <div style='background: linear-gradient(135deg, {blood_red_color} 0%, {dark_grey_color} 100%);
+                    border: 2px solid {neon_red_color}; border-radius: 15px; padding: 20px; margin: 20px 0;'>
+            <h4 style='color: {neon_red_color}; text-align: center;'>❌ Perfect Plateau</h4>
+            <p style='color: {white_color}; text-align: center;'>
                 250K ± 2K for 9 days
             </p>
-            <p style='color: {COLORS['danger']}; font-size: 1.2em; text-align: center;'>BOT SIGNATURE</p>
+            <p style='color: {danger_color}; font-size: 1.2em; text-align: center;'>BOT SIGNATURE</p>
         </div>
         """, unsafe_allow_html=True)
     
     with col3:
         st.markdown(f"""
-        <div style='background: linear-gradient(135deg, {COLORS['blood_red']} 0%, {COLORS['dark_grey']} 100%);
-                    border: 2px solid {COLORS['neon_red']}; border-radius: 15px; padding: 20px; margin: 20px 0;'>
-            <h4 style='color: {COLORS['neon_red']}; text-align: center;'>❌ Instant Drop</h4>
-            <p style='color: {COLORS['white']}; text-align: center;'>
+        <div style='background: linear-gradient(135deg, {blood_red_color} 0%, {dark_grey_color} 100%);
+                    border: 2px solid {neon_red_color}; border-radius: 15px; padding: 20px; margin: 20px 0;'>
+            <h4 style='color: {neon_red_color}; text-align: center;'>❌ Instant Drop</h4>
+            <p style='color: {white_color}; text-align: center;'>
                 250K → 30K in 1 day
             </p>
             <p style='color: {COLORS['danger']}; font-size: 1.2em; text-align: center;'>UNNATURAL</p>
