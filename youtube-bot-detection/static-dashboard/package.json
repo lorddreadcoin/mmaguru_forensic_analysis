@@ -1,0 +1,15 @@
+{
+  "name": "forensic-dashboard-private",
+  "version": "1.0.0",
+  "description": "Private forensic bot detection dashboard for Jesse ON FIRE",
+  "private": true,
+  "scripts": {
+    "deploy": "netlify deploy --prod --dir=.",
+    "deploy-draft": "netlify deploy --dir=.",
+    "serve": "npx http-server . -p 8080",
+    "init": "netlify init"
+  },
+  "keywords": ["private", "dashboard", "analytics"],
+  "author": "Jesse ON FIRE",
+  "license": "PRIVATE"
+}

@@ -1,0 +1,50 @@
+{
+  "timestamp": "2025-11-16T17:38:22.302785",
+  "molecular_metrics": {
+    "jesse": {
+      "max_views": 280000,
+      "avg_views": 120000,
+      "spike_ratio": 2.33,
+      "variance": 0.42,
+      "avg_engagement": 3.2,
+      "data_points": 30
+    },
+    "mma_guru": {
+      "max_views": 450000,
+      "avg_views": 80000,
+      "spike_ratio": 5.625,
+      "variance": 0.08,
+      "avg_engagement": 0.5,
+      "data_points": 30
+    },
+    "bisping": {
+      "max_views": 180000,
+      "avg_views": 95000,
+      "spike_ratio": 1.89,
+      "variance": 0.35,
+      "avg_engagement": 3.8,
+      "data_points": 20
+    },
+    "chael": {
+      "max_views": 210000,
+      "avg_views": 110000,
+      "spike_ratio": 1.91,
+      "variance": 0.38,
+      "avg_engagement": 4.1,
+      "data_points": 25
+    }
+  },
+  "divergence_scores": {
+    "jesse": 0,
+    "bisping": 0,
+    "chael": 0
+  },
+  "verdict": "CONFIRMED BOT ACTIVITY",
+  "confidence": 95,
+  "key_evidence": {
+    "mma_guru_variance": 0.08,
+    "mma_guru_engagement": 0.5,
+    "jesse_variance": 0.42,
+    "jesse_engagement": 3.2
+  }
+}

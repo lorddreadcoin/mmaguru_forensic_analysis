@@ -1,8 +1,8 @@
 [build]
   # No build command needed for static HTML
   command = ""
-  # Serve files from root directory
-  publish = "."
+  # Serve files from streamlit_app directory where our dashboard is
+  publish = "streamlit_app"
 
 [build.environment]
   # Override Next.js detection
