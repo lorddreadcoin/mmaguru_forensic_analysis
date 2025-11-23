@@ -1,0 +1,6 @@
+# This file controls search engine indexing
+# If you want this PUBLIC and indexed by Google, delete this file
+# If you want this PRIVATE, keep this file
+
+User-agent: *
+Disallow: /
